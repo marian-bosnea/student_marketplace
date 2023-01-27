@@ -1,9 +1,8 @@
 const LocalStrategy = require('passport-local').Strategy;
-const { pool } = require('./dbConfig');
+const { pool } = require('./db/dbConfig');
 const bcrypt = require('bcrypt');
 
-const SELECT_USER_WHERE_EMAIL_QUERY = 'SELECT * FROM users WHERE email = $1';
-const SELECT_USER_WHERE_ID_QUERY = 'SELECT * FROM users WHERE id = $1';
+
 
 function initialize(passport) {
     const authenticateUser = (email, password, done) => {
@@ -12,7 +11,7 @@ function initialize(passport) {
                 throw err;
             }
 
-            console.log(result.rows);
+            //console.log(result.rows);
 
             if (result.rows.length > 0) {
                 const user = result.rows[0];
@@ -38,6 +37,7 @@ function initialize(passport) {
     passport.use(
         new LocalStrategy(
             {
+                
                 usernameField: "email",
                 passwordField: "password"
             },
