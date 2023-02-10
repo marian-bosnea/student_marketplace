@@ -66,7 +66,7 @@ app.get('/users/login/local_strategy',
 
 //#endregion
 
-app.get('/faculties/fetch-all',
+app.get('/faculties/get/all',
    (req, res) => {
       requestHandler.handleGetFaculties(req, res);
    });
@@ -74,6 +74,21 @@ app.get('/faculties/fetch-all',
 app.post('/sale-object/post',
    (req, res) => {
       requestHandler.handlePostSaleObject(req, res);
+   });
+
+app.post('/sale-object/post',
+   (req, res) => {
+      requestHandler.handlePostSaleObject(req, res);
+   });
+
+app.get('/sale-object/get/category',
+   (req, res) => {
+      requestHandler.handleGetSaleObjectByCategory(req, res);
+   });
+
+app.get('/sale-object/get/owner',
+   (req, res) => {
+      requestHandler.handleGetSaleObjectByOwner(req, res);
    });
 
 /// Main loop

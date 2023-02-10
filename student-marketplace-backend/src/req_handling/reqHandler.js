@@ -32,8 +32,7 @@ module.exports.handlePostUser = async (req, res) => {
 
          if (emailCheckRes.rows.length > 0) {
             error_message = errMsg.EMAIL_ALREADY_USED;
-            res.send({ body: { message: error_message, status_code: INVALID_INPUT_CODE } });
-            throw e;
+            throw new Error(error_message);
          }
 
          const hashedPassword = await bcrypt.hash(password, 10);
@@ -50,7 +49,7 @@ module.exports.handlePostUser = async (req, res) => {
             ///TODO here should query for partial insertion
             secondaryLastName = "null";
          }
-       
+
          const userProfileInsertRes = await client.query(sql.USER_PROFILE_INSERT_FULL, [firstName, lastName, secondaryLastName, avatarImage]);
          const profileId = userProfileInsertRes.rows[0].id;
 
@@ -67,13 +66,15 @@ module.exports.handlePostUser = async (req, res) => {
 
       } catch (e) {
          await client.query('ROLLBACK')
-         throw e
+         res.send({ body: { message: e.message, status_code: INVALID_INPUT_CODE } });
+
+         // throw e
       } finally {
 
          client.release()
       }
 
-   } 
+   }
 }
 
 module.exports.handleUserLogin = (req, res) => {
@@ -177,13 +178,69 @@ module.exports.handlePostSaleObject = async (req, res) => {
       res.send({ body: { status_code: POST_SUCCESS_CODE, sale_object_id: objectRes.rows[0].id } });
    } catch (e) {
       await client.query('ROLLBACK')
-      throw e
+      res.send({ body: { status_code: INVALID_INPUT_CODE, message: "Invalid input" } });
+
    } finally {
 
       client.release()
    }
 }
 
+module.exports.handleGetSaleObjectByCategory = async (req, res) => {
+   const categoryId = req.body.categoryId;
+   const client = await pool.connect()
 
+   try {
+      const result = await client.query(sql.SALE_OBJECT_READ_CATEGORY, [categoryId]);
+        
+      let saleObjectsJson  = [];
 
+      for(i = 0; i<result.rowCount; i++) {
+         saleObjectsJson.push({
+         title: result.rows[0].title,
+         description:  result.rows[0].description,
+         price :  result.rows[0].price,
+         owner_id :  result.rows[0].owner_id
+         });
+      }
+
+      res.send({ body: { status_code: GET_SUCCESS_CODE, results: saleObjectsJson } });
+
+   } catch (e) {
+      res.send({ body: { status_code: INVALID_INPUT_CODE, message: "Invalid input" } });
+
+      throw e
+   } finally {
+      client.release()
+   }
+}
+
+module.exports.handleGetSaleObjectByOwner = async (req, res) => {
+   const ownerId = req.body.ownerId;
+   const client = await pool.connect()
+
+   try {
+      const result = await client.query(sql.SALE_OBJECT_READ_OWNER, [ownerId]);
+        
+      let saleObjectsJson  = [];
+
+      for(i = 0; i<result.rowCount; i++) {
+         saleObjectsJson.push({
+         title: result.rows[0].title,
+         description:  result.rows[0].description,
+         price :  result.rows[0].price,
+         category_id :  result.rows[0].category_id
+         });
+      }
+
+      res.send({ body: { status_code: GET_SUCCESS_CODE, results: saleObjectsJson } });
+
+   } catch (e) {
+      res.send({ body: { status_code: INVALID_INPUT_CODE, message: "Invalid input" } });
+
+      throw e
+   } finally {
+      client.release()
+   }
+}
 //#endregion
