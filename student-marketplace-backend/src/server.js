@@ -7,24 +7,23 @@ const WebSocket = require('ws');
 const wss = new WebSocket.Server({ server: server });
 
 const session = require('express-session');
-const requestHandler = require('./req_handling/reqHandler');
-
 const passport = require('passport');
 const initializePassport = require('./passportConfig')
 initializePassport(passport);
 
-
-
 // For production
 //app.use(express.urlencoded({extended: false}));
-
-// For Postman testing purposes
 const bodyParser = require('body-parser');
 
-/// App uses
+const authRouter = require('./routes/auth');
+const productRouter = require('./routes/products');
+const userRouter = require('./routes/user')
+
+// Middleware
 app.use(bodyParser.urlencoded({
    extended: true
 }));
+
 app.use(bodyParser.json());
 
 app.use(session({
@@ -35,6 +34,10 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(authRouter);
+app.use(productRouter);
+app.use(userRouter);
 
 // WebSocket
 wss.on('connection', (ws) => {
@@ -47,52 +50,11 @@ wss.on('connection', (ws) => {
 
 });
 
-//#region ROUTES
-
 app.get('/', (req, res) => res.send("Connected to server!"));
 
-//#region Authentication
-app.post('/users/register', async (req, res) => {
-   requestHandler.handlePostUser(req, res);
-});
-
-app.get('/users/login/local_strategy',
-   (req, res) => {
-      requestHandler.handleUserLogin(req, res);
-   });
-
-
-//#endregion
-
-//#endregion
-
-app.get('/faculties/get/all',
-   (req, res) => {
-      requestHandler.handleGetFaculties(req, res);
-   });
-
-app.post('/sale-object/post',
-   (req, res) => {
-      requestHandler.handlePostSaleObject(req, res);
-   });
-
-app.post('/sale-object/post',
-   (req, res) => {
-      requestHandler.handlePostSaleObject(req, res);
-   });
-
-app.get('/sale-object/get/category',
-   (req, res) => {
-      requestHandler.handleGetSaleObjectByCategory(req, res);
-   });
-
-app.get('/sale-object/get/owner',
-   (req, res) => {
-      requestHandler.handleGetSaleObjectByOwner(req, res);
-   });
-
-/// Main loop
 server.listen(PORT, () => {
    console.log(`Server running on port ${PORT}`);
 }
 );
+
+
