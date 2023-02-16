@@ -1,12 +1,16 @@
 import 'package:dartz/dartz.dart';
-import '../../repositories/authentication_credentials_repository.dart';
+import 'package:equatable/equatable.dart';
+import '../../../core/usecases/usecase.dart';
+import '../../repositories/user/authentication_credentials_repository.dart';
 
 import '../../../core/error/failures.dart';
 
-class SignInUser {
+class SignInUser implements Usecase<String, NoParams> {
   final AuthenticationCredentialsRepository repository;
 
   SignInUser({required this.repository});
 
-  Future<Either<Failure, String>> call() async => await repository.signInUser();
+  @override
+  Future<Either<Failure, String>> call(NoParams n) async =>
+      await repository.signInUser();
 }

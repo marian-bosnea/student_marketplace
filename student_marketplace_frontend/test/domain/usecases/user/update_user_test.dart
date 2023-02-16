@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:mockito/mockito.dart';
+import 'package:student_marketplace_frontend/core/usecases/usecase.dart';
 import 'package:student_marketplace_frontend/domain/usecases/user/update_user.dart';
 
 import 'user_repository_mocks.dart';
@@ -20,7 +21,7 @@ void main() {
         .thenAnswer((_) async => const Right(true));
     // act
 
-    final result = await usecase();
+    final result = await usecase(NoParams());
 
     // assert
     expect(result, const Right(true));

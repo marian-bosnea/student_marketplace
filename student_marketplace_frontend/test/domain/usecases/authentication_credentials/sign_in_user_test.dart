@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:student_marketplace_frontend/core/usecases/usecase.dart';
 import 'package:student_marketplace_frontend/domain/entities/user/authentication_credentials.dart';
 import 'package:student_marketplace_frontend/domain/usecases/authentication_credentials/sign_in_user.dart';
 
@@ -25,7 +26,7 @@ void main() {
     when(mockAuthenticationCredentialsRepository.signInUser())
         .thenAnswer((_) async => const Right('token'));
     // act
-    final result = await usecase();
+    final result = await usecase(NoParams());
 
     // assert
     expect(result, const Right('token'));

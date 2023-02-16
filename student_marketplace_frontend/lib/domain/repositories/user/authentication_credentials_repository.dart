@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 
-import '../../core/error/failures.dart';
+import '../../../core/error/failures.dart';
 
 abstract class AuthenticationCredentialsRepository {
   Future<Either<Failure, bool>> checkEmailAvailability(String email);

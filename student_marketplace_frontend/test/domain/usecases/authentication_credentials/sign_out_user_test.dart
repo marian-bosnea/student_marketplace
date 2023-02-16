@@ -23,7 +23,7 @@ void main() {
     when(mockAuthenticationCredentialsRepository.signOutUser(token))
         .thenAnswer((_) async => Right(true));
     // act
-    final result = await usecase(token: token);
+    final result = await usecase(token);
 
     // assert
     expect(result, const Right(true));

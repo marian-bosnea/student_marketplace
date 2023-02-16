@@ -1,13 +1,15 @@
 import 'package:dartz/dartz.dart';
-import '../../repositories/authentication_credentials_repository.dart';
+import '../../../core/usecases/usecase.dart';
+import '../../repositories/user/authentication_credentials_repository.dart';
 
 import '../../../core/error/failures.dart';
 
-class CheckIfEmailIsAssociated {
+class CheckIfEmailIsAssociated implements Usecase<bool, String> {
   final AuthenticationCredentialsRepository repository;
 
   CheckIfEmailIsAssociated({required this.repository});
 
-  Future<Either<Failure, bool>> call({required String email}) async =>
+  @override
+  Future<Either<Failure, bool>> call(String email) async =>
       await repository.checkIfEmailIsAssociatedWithAnAccount(email);
 }

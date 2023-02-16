@@ -8,7 +8,7 @@ import 'dart:async' as _i4;
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:student_marketplace_frontend/core/error/failures.dart' as _i5;
-import 'package:student_marketplace_frontend/domain/repositories/authentication_credentials_repository.dart'
+import 'package:student_marketplace_frontend/domain/repositories/user/authentication_credentials_repository.dart'
     as _i3;
 
 // ignore_for_file: type=lint
