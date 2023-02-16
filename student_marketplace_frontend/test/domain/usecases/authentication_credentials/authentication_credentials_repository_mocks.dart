@@ -59,44 +59,35 @@ class MockAuthenticationCredentialsRepository extends _i1.Mock
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, bool>>);
   @override
-  _i4.Future<_i2.Either<_i5.Failure, bool>> isEmailAssociatedWithAnAccount(
-          String? email) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #isEmailAssociatedWithAnAccount,
-          [email],
-        ),
-        returnValue: _i4.Future<_i2.Either<_i5.Failure, bool>>.value(
-            _FakeEither_0<_i5.Failure, bool>(
-          this,
-          Invocation.method(
-            #isEmailAssociatedWithAnAccount,
-            [email],
-          ),
-        )),
-      ) as _i4.Future<_i2.Either<_i5.Failure, bool>>);
+  _i4.Future<_i2.Either<_i5.Failure, bool>>
+      checkIfEmailIsAssociatedWithAnAccount(String? email) =>
+          (super.noSuchMethod(
+            Invocation.method(
+              #checkIfEmailIsAssociatedWithAnAccount,
+              [email],
+            ),
+            returnValue: _i4.Future<_i2.Either<_i5.Failure, bool>>.value(
+                _FakeEither_0<_i5.Failure, bool>(
+              this,
+              Invocation.method(
+                #checkIfEmailIsAssociatedWithAnAccount,
+                [email],
+              ),
+            )),
+          ) as _i4.Future<_i2.Either<_i5.Failure, bool>>);
   @override
-  _i4.Future<_i2.Either<_i5.Failure, String>> signInUser(
-    String? email,
-    String? password,
-  ) =>
+  _i4.Future<_i2.Either<_i5.Failure, String>> signInUser() =>
       (super.noSuchMethod(
         Invocation.method(
           #signInUser,
-          [
-            email,
-            password,
-          ],
+          [],
         ),
         returnValue: _i4.Future<_i2.Either<_i5.Failure, String>>.value(
             _FakeEither_0<_i5.Failure, String>(
           this,
           Invocation.method(
             #signInUser,
-            [
-              email,
-              password,
-            ],
+            [],
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, String>>);
