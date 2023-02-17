@@ -1,8 +1,7 @@
+
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-
-import 'models/user_profile.dart';
 
 class HttpInterface {
   final ip = "192.168.0.105";
@@ -43,23 +42,23 @@ class HttpInterface {
     return true;
   }
 
-  Future<UserProfile?> fetchUserProfile() async {
-    final requestUrl = "$baseUrl/user/get/profile";
+  // Future<UserProfile?> fetchUserProfile() async {
+  //   final requestUrl = "$baseUrl/user/get/profile";
 
-    print(token);
+  //   print(token);
 
-    final response = await http.get(
-      Uri.parse(requestUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $token'
-      },
-    );
+  //   final response = await http.get(
+  //     Uri.parse(requestUrl),
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'authorization': 'Bearer $token'
+  //     },
+  //   );
 
-    if (response.statusCode != getSuccessCode) return null;
-    final resultJson = json.decode(response.body) as Map<String, dynamic>;
-    print(resultJson.toString());
+  //   if (response.statusCode != getSuccessCode) return null;
+  //   final resultJson = json.decode(response.body) as Map<String, dynamic>;
+  //   print(resultJson.toString());
 
-    return UserProfile.fromJson(resultJson);
-  }
+  //   return UserProfile.fromJson(resultJson);
+  // }
 }

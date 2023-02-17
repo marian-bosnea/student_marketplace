@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../http_interface.dart';
-import 'user_profile_page.dart';
+import '../../../core/services/http_interface.dart';
 
 class AuthenticationPage extends StatefulWidget {
   const AuthenticationPage({super.key});
@@ -143,13 +141,13 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             _emailTextfieldController.text, _passwordTextfielController.text)
         .then((success) {
       if (success) {
-        Navigator.of(context).push(platformPageRoute(
-            context: context,
-            builder: (context) {
-              return UserProfilePage(
-                httpInterface: httpInterface,
-              );
-            }));
+        // Navigator.of(context).push(platformPageRoute(
+        //     context: context,
+        //     builder: (context) {
+        //       return UserProfilePage(
+        //         httpInterface: httpInterface,
+        //       );
+        //     }));
       } else {
         _showIncorrectPasswordDialog(context);
       }
