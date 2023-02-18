@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:student_marketplace_frontend/features/domain/entities/user_entity.dart';
+import '../../features/domain/entities/user_entity.dart';
 
 import '../error/failures.dart';
 

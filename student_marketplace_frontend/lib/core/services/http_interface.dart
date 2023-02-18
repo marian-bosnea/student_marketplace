@@ -1,7 +1,9 @@
-
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import '../../features/domain/entities/user_entity.dart';
+
+import '../../features/data/models/user_model.dart';
 
 class HttpInterface {
   final ip = "192.168.0.105";
@@ -26,22 +28,84 @@ class HttpInterface {
     return response.statusCode == postSuccessCode;
   }
 
-  Future<bool> logUser(String email, String password) async {
+  Future<String> signInUser(String email, String password) async {
     final requestUrl = "$baseUrl/users/login/local-strategy";
+    try {
+      final response = await http.post(Uri.parse(requestUrl),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(
+              <String, String>{'email': email, 'password': password}));
 
-    final response = await http.post(Uri.parse(requestUrl),
-        headers: {"Content-Type": "application/json"},
-        body:
-            jsonEncode(<String, String>{'email': email, 'password': password}));
+      if (response.statusCode != postSuccessCode) throw Exception();
 
-    if (response.statusCode != postSuccessCode) return false;
+      final map = json.decode(response.body) as Map<String, dynamic>;
+      token = map['accessToken'] as String;
 
-    final map = json.decode(response.body) as Map<String, dynamic>;
-    token = map['accessToken'] as String;
-
-    return true;
+      return token;
+    } catch (e) {
+      rethrow;
+    }
   }
 
+  Future<bool> registerUser(UserEntity user) async {
+    final requestUrl = "$baseUrl/users/register";
+    try {
+      final response = await http.post(Uri.parse(requestUrl),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(<String, String>{
+            'email': user.email!,
+            'password': user.password!,
+            'passwordConfirm': user.password!,
+            'firstName': user.firstName!,
+            'lastName': user.lastName!,
+            'secondaryLastName': user.secondaryLastName ?? 'null',
+            'facultyId': user.facultyName!
+          }));
+
+      if (response.statusCode != postSuccessCode) return false;
+
+      final map = json.decode(response.body) as Map<String, dynamic>;
+      token = map['accessToken'] as String;
+
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> isUserLoggedIn(String token) async {
+    final requestUrl = "$baseUrl/users/check-authentication";
+    try {
+      final response = await http.get(
+        Uri.parse(requestUrl),
+        headers: {
+          "Content-Type": "application/json",
+          'authorization': 'Bearer $token'
+        },
+      );
+
+      return response.statusCode == getSuccessCode;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> logOutUser(String token) async {
+    final requestUrl = "$baseUrl/users/logout";
+    try {
+      final response = await http.get(
+        Uri.parse(requestUrl),
+        headers: {
+          "Content-Type": "application/json",
+          'authorization': 'Bearer $token'
+        },
+      );
+
+      return response.statusCode == getSuccessCode;
+    } catch (e) {
+      rethrow;
+    }
+  }
   // Future<UserProfile?> fetchUserProfile() async {
   //   final requestUrl = "$baseUrl/user/get/profile";
 

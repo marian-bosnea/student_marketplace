@@ -1,7 +1,8 @@
-import 'package:student_marketplace_frontend/core/error/failures.dart';
+import '../../../core/error/failures.dart';
 import 'package:dartz/dartz.dart';
-import 'package:student_marketplace_frontend/features/data/data_sources/contracts/user_repository_remote_data_source.dart';
-import 'package:student_marketplace_frontend/features/domain/repositories/user_repository.dart';
+import '../data_sources/contracts/user_repository_remote_data_source.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
   final UserRepositoryRemoteDataSource remoteDataSource;
@@ -9,6 +10,6 @@ class UserRepositoryImpl implements UserRepository {
   const UserRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, bool>> getUser(String id) async =>
+  Future<Either<Failure, UserEntity>> getUser(String id) async =>
       remoteDataSource.getUser(id);
 }

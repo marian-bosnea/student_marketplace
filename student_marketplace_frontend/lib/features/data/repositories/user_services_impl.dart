@@ -1,20 +1,23 @@
-import 'package:student_marketplace_frontend/features/data/data_sources/contracts/user_services_remote_data_source.dart';
-import 'package:student_marketplace_frontend/features/domain/entities/user_entity.dart';
-import 'package:student_marketplace_frontend/core/error/failures.dart';
+import '../data_sources/contracts/user_services_local_data_source.dart';
+import '../data_sources/contracts/user_services_remote_data_source.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../../core/error/failures.dart';
 import 'package:dartz/dartz.dart';
-import 'package:student_marketplace_frontend/features/domain/repositories/user_services.dart';
+import '../../domain/repositories/user_services.dart';
 
-class UserServiceImpl implements UserServices {
+class UserServicesImpl implements UserServices {
   final UserServicesRemoteDataSource remoteDataSource;
+  final UserServicesLocalDataSource localDataSource;
 
-  const UserServiceImpl({required this.remoteDataSource});
-
-  @override
-  Future<Either<Failure, bool>> isSignedIn() async =>
-      remoteDataSource.isSignedIn();
+  const UserServicesImpl(
+      {required this.remoteDataSource, required this.localDataSource});
 
   @override
-  Future<Either<Failure, bool>> signInUser(UserEntity user) async =>
+  Future<Either<Failure, bool>> isSignedIn(UserEntity user) async =>
+      remoteDataSource.isSignedIn(user);
+
+  @override
+  Future<Either<Failure, String>> signInUser(UserEntity user) async =>
       remoteDataSource.signInUser(user);
   @override
   Future<Either<Failure, bool>> signOutUser(UserEntity user) async =>
@@ -23,4 +26,8 @@ class UserServiceImpl implements UserServices {
   @override
   Future<Either<Failure, bool>> signUpUser(UserEntity user) async =>
       remoteDataSource.signUpUser(user);
+
+  @override
+  Future<Either<Failure, String>> getAuthorizationToken() async =>
+      localDataSource.getAuthorizationToken();
 }

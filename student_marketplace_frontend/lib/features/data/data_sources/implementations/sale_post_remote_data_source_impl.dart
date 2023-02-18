@@ -1,6 +1,6 @@
-import 'package:student_marketplace_frontend/features/domain/entities/sale_post_entity.dart';
+import '../../../domain/entities/sale_post_entity.dart';
 
-import 'package:student_marketplace_frontend/core/error/failures.dart';
+import '../../../../core/error/failures.dart';
 
 import 'package:dartz/dartz.dart';
 

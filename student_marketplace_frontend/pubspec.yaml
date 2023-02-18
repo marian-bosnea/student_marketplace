@@ -14,11 +14,14 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.2
-  flutter_platform_widgets: ^3.0.0
-  http: ^0.13.5
-  dartz: ^0.10.1
-  equatable: ^2.0.5
-  image_picker: ^0.8.6+1
+  flutter_platform_widgets: 
+  http: 
+  dartz: 
+  equatable:
+  image_picker: 
+  get_it: 
+  flutter_bloc: 
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_test:
