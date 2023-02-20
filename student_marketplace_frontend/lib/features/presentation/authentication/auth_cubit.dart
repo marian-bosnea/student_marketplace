@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../core/usecases/usecase.dart';
 import '../../data/models/user_model.dart';
 import '../../domain/usecases/user/get_auth_token_usecase.dart';
@@ -23,11 +25,13 @@ class AuthCubit extends Cubit<AuthState> {
 
     if (token != '') {
       try {
-        bool isSignIn =
-            (await isSignedInUsecase(UserParam(user: UserModel(id: token))))
-                .getOrElse(() => false);
+        bool isSignIn = (await isSignedInUsecase(
+                UserParam(user: UserModel(authToken: token))))
+            .getOrElse(() => false);
 
-        if (isSignIn) {
+        final sharedPrefs = await SharedPreferences.getInstance();
+        final hasCheckedKeepSignedIn = sharedPrefs.getBool('keepSignedIn');
+        if (isSignIn && hasCheckedKeepSignedIn!) {
           emit(Authenticated(token: token));
         } else {
           emit(Unauthenticated());
@@ -55,7 +59,7 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       final token = (await getAuthTokenUsecase(NoParams())).getOrElse(() => '');
       if (token != '') {
-        await signOutUsecase(UserParam(user: UserModel(id: token)));
+        await signOutUsecase(UserParam(user: UserModel(authToken: token)));
         emit(Unauthenticated());
       }
       emit(Unauthenticated());

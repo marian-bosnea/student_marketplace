@@ -4,8 +4,9 @@ import '../../../core/error/failures.dart';
 import '../entities/sale_post_entity.dart';
 
 abstract class SalePostRepository {
-  Future<Either<Failure, List<SalePost>>> getAllPosts();
-  Future<Either<Failure, List<SalePost>>> getAllPostsByCategory(
+  Future<Either<Failure, List<SalePostEntity>>> getAllPosts();
+  Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
       String categoryId);
-  Future<Either<Failure, List<SalePost>>> getAllPostsByOwner(String ownerId);
+  Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
+      String ownerId);
 }

@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import '../login/login_state.dart';
 
 import '../../../core/on_generate_route.dart';
-import '../../../core/services/http_interface.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -28,6 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
+      appBar: PlatformAppBar(),
       body: Center(
         child: Material(
           elevation: 5,

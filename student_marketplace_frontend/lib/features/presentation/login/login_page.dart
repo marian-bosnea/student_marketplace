@@ -6,56 +6,33 @@ import '../../../core/on_generate_route.dart';
 import '../authentication/auth_cubit.dart';
 import '../authentication/auth_state.dart';
 import 'login_cubit.dart';
-import 'login_form_submission_status.dart';
-import 'login_state.dart';
+import 'login_page_state.dart';
 import '../user_profile/profile_page.dart';
 
 import '../../data/models/user_model.dart';
 
-class AuthenticationPage extends StatefulWidget {
-  const AuthenticationPage({super.key});
-
-  @override
-  State<AuthenticationPage> createState() => _AuthenticationPageState();
-}
-
-class _AuthenticationPageState extends State<AuthenticationPage> {
+class AuthenticationPage extends StatelessWidget {
   final TextEditingController _emailTextfieldController =
       TextEditingController();
   final TextEditingController _passwordTextfielController =
       TextEditingController();
 
+  late LoginPageState state;
+
   late FocusNode _passwordFieldFocusNode;
 
-  late bool _isEmailFieldFocused;
-  late bool _isPasswordFieldFocused;
-  late bool _keepSignedIn;
-
-  @override
-  void initState() {
+  AuthenticationPage() {
     _passwordFieldFocusNode = FocusNode();
-
-    _isEmailFieldFocused = false;
-    _isPasswordFieldFocused = false;
-    _keepSignedIn = false;
-
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
       backgroundColor: Colors.amber,
-      body: BlocConsumer<LoginCubit, LoginState>(
-        listener: (context, loginState) {
-          if (loginState.status is SubmissionSuccess) {
-            BlocProvider.of<AuthCubit>(context).onSignIn();
-          } else if (loginState.status is SubmissionFailed) {
-            _showIncorrectPasswordDialog(context);
-          }
-        },
+      body: BlocConsumer<LoginCubit, LoginPageState>(
+        listener: _onStateChangedListener,
         builder: (context, state) {
-          if (state.status is SubmissionSuccess) {
+          if (state.status == LoginStatus.succesSubmission) {
             return BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, authState) {
               if (authState is Authenticated) {
@@ -63,18 +40,18 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 return const ProfilePage();
               } else {
                 // Form submitted succesful and authentication was not succcesful
-                return _bodyWidget();
+                return _bodyWidget(context, state);
               }
             });
           }
           // Form not submitted
-          return _bodyWidget();
+          return _bodyWidget(context, state);
         },
       ),
     );
   }
 
-  Widget _bodyWidget() {
+  Widget _bodyWidget(BuildContext context, LoginPageState state) {
     return Center(
       child: Material(
         elevation: 5,
@@ -102,18 +79,29 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                   PlatformTextField(
                     hintText: "E-mail",
                     controller: _emailTextfieldController,
-                    cupertino: _emailCupertinoTextFieldData,
+                    onTap: () => BlocProvider.of<LoginCubit>(context)
+                        .focusEmailTextField(),
+                    cupertino: (context, target) =>
+                        _emailCupertinoTextFieldData(context, state),
+                    onChanged: (text) => BlocProvider.of<LoginCubit>(context)
+                        .checkIfEmailIsRegistered(UserModel(email: text)),
                   ),
                   PlatformTextField(
                     focusNode: _passwordFieldFocusNode,
                     hintText: "Password",
-                    cupertino: _passwordCupertinoTextFieldData,
+                    onTap: () => BlocProvider.of<LoginCubit>(context)
+                        .focusPasswordTextField(),
+                    cupertino: (context, target) =>
+                        _passwordCupertinoTextFieldData(context, state),
                     controller: _passwordTextfielController,
                   ),
                   SizedBox(
                     child: PlatformElevatedButton(
                       padding: const EdgeInsets.all(10),
-                      onPressed: () => _onLoginButtonPressed(),
+                      onPressed: () => BlocProvider.of<LoginCubit>(context)
+                          .signInUser(UserModel(
+                              email: _emailTextfieldController.text,
+                              password: _passwordTextfielController.text)),
                       child: const Text("Sign In"),
                     ),
                   ),
@@ -126,15 +114,15 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                           width: 25,
                           child: PlatformIconButton(
                               padding: EdgeInsets.zero,
-                              onPressed: () => setState(
-                                  () => _keepSignedIn = !_keepSignedIn),
+                              onPressed: () =>
+                                  BlocProvider.of<LoginCubit>(context)
+                                      .changeKeepSignedIn(),
                               icon: Icon(
-                                _keepSignedIn
+                                state.keepSignedIn
                                     ? Icons.check_box
                                     : Icons.check_box_outline_blank,
-                                color: _keepSignedIn
-                                    ? Colors.blueAccent
-                                    : Colors.black12,
+                                color:
+                                    true ? Colors.blueAccent : Colors.black12,
                               )),
                         ),
                         const Text("Keep me signed in")
@@ -163,21 +151,12 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     );
   }
 
-  _onLoginButtonPressed() {
-    BlocProvider.of<LoginCubit>(context)
-        .signInUser(UserModel(
-            email: _emailTextfieldController.text,
-            password: _passwordTextfielController.text))
-        .then((value) {
-      _clear();
-    });
-  }
-
-  _clear() {
-    setState(() {
-      _emailTextfieldController.clear();
-      _passwordTextfielController.clear();
-    });
+  _onStateChangedListener(BuildContext context, LoginPageState state) {
+    if (state.status == LoginStatus.succesSubmission) {
+      BlocProvider.of<AuthCubit>(context).onSignIn();
+    } else if (state.status == LoginStatus.failedSubmission) {
+      _showIncorrectPasswordDialog(context);
+    }
   }
 
   _showIncorrectPasswordDialog(BuildContext context) {
@@ -199,34 +178,33 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
 
   @pragma("Platform specific")
   CupertinoTextFieldData _emailCupertinoTextFieldData(
-      BuildContext context, PlatformTarget target) {
+      BuildContext context, LoginPageState state) {
     return CupertinoTextFieldData(
-      onTap: () => setState(() {
-        _isEmailFieldFocused = true;
-        _isPasswordFieldFocused = false;
-      }),
+      suffix: state.isEmailCorrect
+          ? const Icon(
+              CupertinoIcons.check_mark,
+              color: Colors.green,
+            )
+          : null,
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(5), topRight: Radius.circular(5)),
           border: Border.all(
-              color:
-                  _isEmailFieldFocused ? Colors.blueAccent : Colors.black12)),
+              color: state.isEmailFieldFocused
+                  ? Colors.blueAccent
+                  : Colors.black12)),
     );
   }
 
   CupertinoTextFieldData _passwordCupertinoTextFieldData(
-      BuildContext context, PlatformTarget target) {
+      BuildContext context, LoginPageState state) {
     return CupertinoTextFieldData(
-        onTap: () => setState(() {
-              _isPasswordFieldFocused = true;
-              _isEmailFieldFocused = false;
-            }),
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(5),
                 bottomRight: Radius.circular(5)),
             border: Border.all(
-                color: _isPasswordFieldFocused
+                color: state.isPasswordFieldFocused
                     ? Colors.blueAccent
                     : Colors.black12)),
         obscureText: true,

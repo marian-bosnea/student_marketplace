@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import '../../features/domain/entities/user_entity.dart';
 
-import '../../features/data/models/user_model.dart';
+import '../../features/domain/entities/user_entity.dart';
 
 class HttpInterface {
   final ip = "192.168.0.105";
@@ -11,7 +10,7 @@ class HttpInterface {
 
   late String token;
 
-  final baseUrl = "http://192.168.0.105:3000";
+  final baseUrl = "http://192.168.0.106:3000";
   final int getSuccessCode = 200;
   final int postSuccessCode = 201;
 

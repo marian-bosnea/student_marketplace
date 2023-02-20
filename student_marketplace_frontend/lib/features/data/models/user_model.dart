@@ -9,7 +9,7 @@ class UserModel extends UserEntity {
       super.email,
       super.password,
       super.posts,
-      super.id});
+      super.authToken});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     String? secondaryLastName;
@@ -27,7 +27,7 @@ class UserModel extends UserEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'id': authToken,
       'firstName': firstName,
       'lastName': lastName,
       if (secondaryLastName != null) 'secondaryLastName': secondaryLastName,

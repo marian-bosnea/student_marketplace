@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/usecases/usecase.dart';
-import '../../repositories/user_services.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../../repositories/user_services.dart';
 
 class SignOutUsecase implements Usecase<bool, UserParam> {
   final UserServices repository;

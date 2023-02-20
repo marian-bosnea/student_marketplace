@@ -1,9 +1,10 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../core/error/failures.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/repositories/user_services.dart';
 import '../data_sources/contracts/user_services_local_data_source.dart';
 import '../data_sources/contracts/user_services_remote_data_source.dart';
-import '../../domain/entities/user_entity.dart';
-import '../../../core/error/failures.dart';
-import 'package:dartz/dartz.dart';
-import '../../domain/repositories/user_services.dart';
 
 class UserServicesImpl implements UserServices {
   final UserServicesRemoteDataSource remoteDataSource;
@@ -30,4 +31,9 @@ class UserServicesImpl implements UserServices {
   @override
   Future<Either<Failure, String>> getAuthorizationToken() async =>
       localDataSource.getAuthorizationToken();
+
+  @override
+  Future<Either<Failure, bool>> checkIfEmailIsAvailable(
+          UserEntity user) async =>
+      remoteDataSource.checkIfEmailIsAvailable(user);
 }

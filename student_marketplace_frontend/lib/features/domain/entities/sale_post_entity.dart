@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-class SalePost extends Equatable {
+class SalePostEntity extends Equatable {
   String title;
   String description;
   String ownerName;
   String postingDate;
   List<String> images;
 
-  SalePost(
+  SalePostEntity(
       {required this.title,
       required this.description,
       required this.ownerName,

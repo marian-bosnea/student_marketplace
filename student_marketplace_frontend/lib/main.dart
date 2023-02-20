@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+
+import 'core/injection_container.dart' as di;
+import 'core/on_generate_route.dart';
 import 'features/presentation/authentication/auth_cubit.dart';
 import 'features/presentation/authentication/auth_state.dart';
 import 'features/presentation/login/login_cubit.dart';
-import 'features/presentation/login/login_form_submission_status.dart';
-import 'features/presentation/login/login_state.dart';
-import 'features/presentation/user_profile/profile_page.dart';
-
-import 'core/on_generate_route.dart';
-import 'core/injection_container.dart' as di;
 import 'features/presentation/login/login_page.dart';
-import 'features/presentation/register/register_page.dart';
+import 'features/presentation/user_profile/profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

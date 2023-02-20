@@ -1,12 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import '../authentication/auth_cubit.dart';
-import '../login/login_state.dart';
 
-import '../../../core/services/http_interface.dart';
-import '../login/login_cubit.dart';
+import '../authentication/auth_cubit.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import '../../features/domain/entities/user_entity.dart';
 
+import '../../features/domain/entities/user_entity.dart';
 import '../error/failures.dart';
 
 abstract class Usecase<Type, Params> {
