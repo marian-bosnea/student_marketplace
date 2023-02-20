@@ -1,23 +1,17 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
-abstract class RegisterPageState extends Equatable {}
+import 'package:student_marketplace_frontend/core/enums.dart';
 
-class InitialRegisterState extends RegisterPageState {
-  @override
-  List<Object?> get props => [];
-}
+class RegisterPageState extends Equatable {
+  final bool isEmailAvailable;
+  final FormStatus status;
 
-class RegisterValidEmail extends RegisterPageState {
-  @override
-  List<Object?> get props => [];
-}
+  const RegisterPageState({
+    this.status = FormStatus.intial,
+    this.isEmailAvailable = false,
+  });
 
-class RegisterInvalidEmail extends RegisterPageState {
   @override
-  List<Object?> get props => [];
-}
-
-class RegisterSubmitted extends RegisterPageState {
-  @override
-  List<Object?> get props => [];
+  List<Object?> get props => [status];
 }

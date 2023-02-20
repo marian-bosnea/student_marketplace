@@ -13,7 +13,7 @@ class OnGenerateRoute {
       case PageNames.authenticationPage:
         return routeBuilder(AuthenticationPage());
       case PageNames.registerPage:
-        return routeBuilder(const RegisterPage());
+        return routeBuilder(RegisterPage());
       case PageNames.userProfilePage:
         return routeBuilder(const ProfilePage());
       default:

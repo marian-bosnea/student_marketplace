@@ -8,6 +8,7 @@ import 'features/presentation/authentication/auth_cubit.dart';
 import 'features/presentation/authentication/auth_state.dart';
 import 'features/presentation/login/login_cubit.dart';
 import 'features/presentation/login/login_page.dart';
+import 'features/presentation/register/register_cubit.dart';
 import 'features/presentation/user_profile/profile_page.dart';
 
 void main() async {
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => di.sl<AuthCubit>()..onAppStarted(context)),
         BlocProvider(create: (_) => di.sl<LoginCubit>()),
+        BlocProvider(create: (_) => di.sl<RegisterCubit>()),
       ],
       child: PlatformApp(
         title: 'Student Marketplace',

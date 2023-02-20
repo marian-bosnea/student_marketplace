@@ -16,20 +16,25 @@ class RegisterCubit extends Cubit<RegisterPageState> {
       {required this.signUpUsecase,
       required this.getAllFacultiesUsecase,
       required this.checkEmailRegistrationUsecase})
-      : super(InitialRegisterState());
+      : super(const RegisterPageState());
 
   Future<void> checkEmailForAvailability(String email) async {
-    final result = await checkEmailRegistrationUsecase(
-        UserParam(user: UserModel(email: email)));
+    if (email.isEmpty) {
+      emit(const RegisterPageState(isEmailAvailable: false));
+      print("not available!");
+    } else {
+      final result = await checkEmailRegistrationUsecase(
+          UserParam(user: UserModel(email: email)));
 
-    final isEmailAlreadyRegistered = result.getOrElse(() => false);
+      final isEmailAlreadyRegistered = result.getOrElse(() => false);
 
-    emit(isEmailAlreadyRegistered
-        ? RegisterInvalidEmail()
-        : RegisterValidEmail());
+      print(!isEmailAlreadyRegistered ? "not available!" : "available!");
+
+      emit(RegisterPageState(isEmailAvailable: !isEmailAlreadyRegistered));
+    }
   }
 
-  Future<void> registerUser(UserModel user) async {
-    final result = await signUpUsecase(UserParam(user: user));
+  Future<void> registerUser(List<String> input) async {
+    // final result = await signUpUsecase(UserParam(user: user));
   }
 }

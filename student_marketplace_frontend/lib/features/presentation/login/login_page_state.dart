@@ -1,29 +1,21 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-enum LoginStatus {
-  intial,
-  inProgress,
-  submittingLoading,
-  succesSubmission,
-  failedSubmission,
-}
+import 'package:equatable/equatable.dart';
 
-class LoginPageState {
+import '../../../core/enums.dart';
+
+class LoginPageState extends Equatable {
   final bool isEmailCorrect;
   final bool keepSignedIn;
   final bool isEmailFieldFocused;
   final bool isPasswordFieldFocused;
-  final String email;
-  final String password;
-  final LoginStatus status;
+  final FormStatus status;
 
-  LoginPageState({
+  const LoginPageState({
     this.isEmailCorrect = false,
     this.keepSignedIn = false,
     this.isEmailFieldFocused = false,
     this.isPasswordFieldFocused = false,
-    this.email = '',
-    this.password = '',
-    this.status = LoginStatus.intial,
+    this.status = FormStatus.intial,
   });
 
   LoginPageState copyWith(
@@ -33,15 +25,22 @@ class LoginPageState {
       bool? isPasswordFieldFocused,
       String? email,
       String? password,
-      LoginStatus? status}) {
+      FormStatus? status}) {
     return LoginPageState(
         isEmailCorrect: isEmailCorrect ?? this.isEmailCorrect,
         isEmailFieldFocused: isEmailFieldFocused ?? this.isEmailFieldFocused,
         isPasswordFieldFocused:
             isPasswordFieldFocused ?? this.isPasswordFieldFocused,
-        email: email ?? this.email,
-        password: password ?? this.password,
         keepSignedIn: keepSignedIn ?? false,
         status: status ?? this.status);
   }
+
+  @override
+  List<Object?> get props => [
+        isEmailCorrect,
+        isEmailFieldFocused,
+        isPasswordFieldFocused,
+        keepSignedIn,
+        status
+      ];
 }

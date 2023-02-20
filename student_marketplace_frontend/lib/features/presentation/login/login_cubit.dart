@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/enums.dart';
 import '../../domain/usecases/user/check_email_registration.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../domain/usecases/user/sign_in_usecase.dart';
@@ -19,27 +20,30 @@ class LoginCubit extends Cubit<LoginPageState> {
       {required this.checkEmailRegistrationUsecase,
       required this.signInUsecase,
       required this.signUpUsecase})
-      : super(LoginPageState());
+      : super(const LoginPageState());
 
   Future<void> signInUser(UserModel user) async {
-    emit(LoginPageState().copyWith(status: LoginStatus.submittingLoading));
+    emit(const LoginPageState().copyWith(status: FormStatus.submittingLoading));
 
     try {
       final result =
           (await signInUsecase(UserParam(user: user))).getOrElse(() => '');
 
       if (result == '') {
-        emit(LoginPageState().copyWith(status: LoginStatus.failedSubmission));
+        emit(const LoginPageState()
+            .copyWith(status: FormStatus.failedSubmission));
       } else {
         final sharedPrefs = await SharedPreferences.getInstance();
         final keepUserSignedIn = sharedPrefs.getBool('keepSignedIn');
         if (keepUserSignedIn != null && keepUserSignedIn) {
           sharedPrefs.setString('authorizationToken', result);
         }
-        emit(LoginPageState().copyWith(status: LoginStatus.succesSubmission));
+        emit(const LoginPageState()
+            .copyWith(status: FormStatus.succesSubmission));
       }
     } catch (_) {
-      emit(LoginPageState().copyWith(status: LoginStatus.failedSubmission));
+      emit(
+          const LoginPageState().copyWith(status: FormStatus.failedSubmission));
     }
   }
 
@@ -49,15 +53,15 @@ class LoginCubit extends Cubit<LoginPageState> {
           (await checkEmailRegistrationUsecase(UserParam(user: user)))
               .getOrElse(() => false);
       if (result) {
-        emit(LoginPageState()
-            .copyWith(status: LoginStatus.inProgress, isEmailCorrect: true));
+        emit(const LoginPageState()
+            .copyWith(status: FormStatus.inProgress, isEmailCorrect: true));
       } else {
-        emit(LoginPageState()
-            .copyWith(status: LoginStatus.inProgress, isEmailCorrect: false));
+        emit(const LoginPageState()
+            .copyWith(status: FormStatus.inProgress, isEmailCorrect: false));
       }
     } catch (_) {
-      emit(LoginPageState()
-          .copyWith(status: LoginStatus.inProgress, isEmailCorrect: false));
+      emit(const LoginPageState()
+          .copyWith(status: FormStatus.inProgress, isEmailCorrect: false));
     }
   }
 
@@ -66,16 +70,16 @@ class LoginCubit extends Cubit<LoginPageState> {
     keepSignedIn = !keepSignedIn;
 
     sharedPrefs.setBool('keepSignedIn', keepSignedIn);
-    emit(LoginPageState().copyWith(keepSignedIn: keepSignedIn));
+    emit(const LoginPageState().copyWith(keepSignedIn: keepSignedIn));
   }
 
   Future<void> focusEmailTextField() async {
-    emit(LoginPageState()
+    emit(const LoginPageState()
         .copyWith(isEmailFieldFocused: true, isPasswordFieldFocused: false));
   }
 
   Future<void> focusPasswordTextField() async {
-    emit(LoginPageState()
+    emit(const LoginPageState()
         .copyWith(isEmailFieldFocused: false, isPasswordFieldFocused: true));
   }
 }

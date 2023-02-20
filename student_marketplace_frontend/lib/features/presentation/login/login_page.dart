@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import '../../../core/enums.dart';
 import '../../../core/on_generate_route.dart';
 import '../authentication/auth_cubit.dart';
 import '../authentication/auth_state.dart';
@@ -16,14 +17,9 @@ class AuthenticationPage extends StatelessWidget {
       TextEditingController();
   final TextEditingController _passwordTextfielController =
       TextEditingController();
+  final FocusNode _passwordFieldFocusNode = FocusNode();
 
-  late LoginPageState state;
-
-  late FocusNode _passwordFieldFocusNode;
-
-  AuthenticationPage() {
-    _passwordFieldFocusNode = FocusNode();
-  }
+  AuthenticationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +28,7 @@ class AuthenticationPage extends StatelessWidget {
       body: BlocConsumer<LoginCubit, LoginPageState>(
         listener: _onStateChangedListener,
         builder: (context, state) {
-          if (state.status == LoginStatus.succesSubmission) {
+          if (state.status == FormStatus.succesSubmission) {
             return BlocBuilder<AuthCubit, AuthState>(
                 builder: (context, authState) {
               if (authState is Authenticated) {
@@ -152,9 +148,9 @@ class AuthenticationPage extends StatelessWidget {
   }
 
   _onStateChangedListener(BuildContext context, LoginPageState state) {
-    if (state.status == LoginStatus.succesSubmission) {
+    if (state.status == FormStatus.succesSubmission) {
       BlocProvider.of<AuthCubit>(context).onSignIn();
-    } else if (state.status == LoginStatus.failedSubmission) {
+    } else if (state.status == FormStatus.failedSubmission) {
       _showIncorrectPasswordDialog(context);
     }
   }
