@@ -15,7 +15,7 @@ class OnGenerateRoute {
       case PageNames.registerPage:
         return routeBuilder(RegisterPage());
       case PageNames.userProfilePage:
-        return routeBuilder(const ProfilePage());
+        return routeBuilder(ProfilePage());
       default:
         return routeBuilder(NoPage());
     }

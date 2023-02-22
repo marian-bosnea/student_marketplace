@@ -4,6 +4,7 @@ import 'package:student_marketplace_frontend/features/data/data_sources/implemen
 import 'package:student_marketplace_frontend/features/data/repositories/faculty_repository_impl.dart';
 import 'package:student_marketplace_frontend/features/domain/repositories/faculty_repository.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/faculty/get_all_faculties_usecase.dart';
+import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/register/register_cubit.dart';
 
 import '../features/data/data_sources/contracts/sale_post_remote_data_source.dart';
@@ -32,6 +33,7 @@ import '../features/domain/usecases/user/sign_out_usecase.dart';
 import '../features/domain/usecases/user/sign_up_usecase.dart';
 import '../features/presentation/authentication/auth_cubit.dart';
 import '../features/presentation/login/login_cubit.dart';
+import '../features/presentation/user_profile/profile_cubit.dart';
 
 /// Service locator
 ///
@@ -54,6 +56,10 @@ Future<void> init() async {
       signUpUsecase: sl.call(),
       getAllFacultiesUsecase: sl.call(),
       checkEmailRegistrationUsecase: sl.call()));
+
+  sl.registerFactory(() => HomeCubit());
+
+  sl.registerFactory(() => ProfileCubit(getUserUsecase: sl.call()));
   // Usecases
 
   sl.registerLazySingleton(() => GetAllFaculties(repository: sl.call()));

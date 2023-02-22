@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:student_marketplace_frontend/features/presentation/home/home_page.dart';
 import '../../../core/enums.dart';
 import '../../../core/on_generate_route.dart';
 import '../authentication/auth_cubit.dart';
@@ -33,7 +34,7 @@ class AuthenticationPage extends StatelessWidget {
                 builder: (context, authState) {
               if (authState is Authenticated) {
                 // Form submitted succesful and authentication was succcesful
-                return const ProfilePage();
+                return HomePage();
               } else {
                 // Form submitted succesful and authentication was not succcesful
                 return _bodyWidget(context, state);

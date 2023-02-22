@@ -2,13 +2,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
+import '../../features/data/models/user_model.dart';
 import '../../features/domain/entities/user_entity.dart';
 
 class HttpInterface {
   final ip = "192.168.0.105";
   final port = "3000";
-
-  late String token;
 
   final baseUrl = "http://192.168.0.106:3000";
   final int getSuccessCode = 200;
@@ -38,7 +37,7 @@ class HttpInterface {
       if (response.statusCode != postSuccessCode) throw Exception();
 
       final map = json.decode(response.body) as Map<String, dynamic>;
-      token = map['accessToken'] as String;
+      final token = map['accessToken'] as String;
 
       return token;
     } catch (e) {
@@ -64,7 +63,7 @@ class HttpInterface {
       if (response.statusCode != postSuccessCode) return false;
 
       final map = json.decode(response.body) as Map<String, dynamic>;
-      token = map['accessToken'] as String;
+      final token = map['accessToken'] as String;
 
       return true;
     } catch (e) {
@@ -105,23 +104,21 @@ class HttpInterface {
       rethrow;
     }
   }
-  // Future<UserProfile?> fetchUserProfile() async {
-  //   final requestUrl = "$baseUrl/user/get/profile";
 
-  //   print(token);
+  Future<UserModel?> fetchUserProfile(String token) async {
+    final requestUrl = "$baseUrl/user/get/profile";
 
-  //   final response = await http.get(
-  //     Uri.parse(requestUrl),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'authorization': 'Bearer $token'
-  //     },
-  //   );
+    final response = await http.get(
+      Uri.parse(requestUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token'
+      },
+    );
 
-  //   if (response.statusCode != getSuccessCode) return null;
-  //   final resultJson = json.decode(response.body) as Map<String, dynamic>;
-  //   print(resultJson.toString());
+    if (response.statusCode != getSuccessCode) return null;
+    final resultJson = json.decode(response.body) as Map<String, dynamic>;
 
-  //   return UserProfile.fromJson(resultJson);
-  // }
+    return UserModel.fromJson(resultJson);
+  }
 }

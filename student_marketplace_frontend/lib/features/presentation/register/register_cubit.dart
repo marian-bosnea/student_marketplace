@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_marketplace_frontend/core/enums.dart';
+import 'package:student_marketplace_frontend/features/presentation/register/register_page.dart';
 
 import '../../../core/usecases/usecase.dart';
 import '../../domain/usecases/faculty/get_all_faculties_usecase.dart';
@@ -12,6 +14,8 @@ class RegisterCubit extends Cubit<RegisterPageState> {
   final GetAllFaculties getAllFacultiesUsecase;
   final CheckEmailRegistration checkEmailRegistrationUsecase;
 
+  late RegisterPageState state = RegisterPageState();
+
   RegisterCubit(
       {required this.signUpUsecase,
       required this.getAllFacultiesUsecase,
@@ -19,22 +23,43 @@ class RegisterCubit extends Cubit<RegisterPageState> {
       : super(const RegisterPageState());
 
   Future<void> checkEmailForAvailability(String email) async {
-    if (email.isEmpty) {
-      emit(const RegisterPageState(isEmailAvailable: false));
-      print("not available!");
+    if (email.trim().isEmpty) {
+      emit(state.copyWith(showEmailCheckmark: false));
     } else {
       final result = await checkEmailRegistrationUsecase(
           UserParam(user: UserModel(email: email)));
-
       final isEmailAlreadyRegistered = result.getOrElse(() => false);
+      emit(state.copyWith(showEmailCheckmark: !isEmailAlreadyRegistered));
+    }
+  }
 
-      print(!isEmailAlreadyRegistered ? "not available!" : "available!");
+  Future<void> checkIfPasswordIsValid(List<String> input) async {
+    final password = input[1];
+    emit(state.copyWith(showPasswordWarning: password.length <= 4));
+  }
 
-      emit(RegisterPageState(isEmailAvailable: !isEmailAlreadyRegistered));
+  Future<void> checkIfPasswordsMatch(List<String> input) async {
+    if (input[2].length > 4) {
+      final arePasswordsTheSame = input[1].compareTo(input[2]) == 0;
+      emit(state.copyWith(showConfirmPasswordWarning: !arePasswordsTheSame));
     }
   }
 
   Future<void> registerUser(List<String> input) async {
-    // final result = await signUpUsecase(UserParam(user: user));
+    final result = await signUpUsecase(UserParam(
+        user: UserModel(
+            email: input[0],
+            password: input[1],
+            firstName: input[3],
+            lastName: input[4],
+            secondaryLastName: input[5],
+            facultyName: input[6])));
+
+    final success = result.getOrElse(() => false);
+    if (success) {
+      emit(state.copyWith(status: FormStatus.succesSubmission));
+    } else {
+      emit(state.copyWith(status: FormStatus.failedSubmission));
+    }
   }
 }

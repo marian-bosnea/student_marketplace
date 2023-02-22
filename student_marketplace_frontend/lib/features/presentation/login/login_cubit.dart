@@ -15,6 +15,7 @@ class LoginCubit extends Cubit<LoginPageState> {
   final CheckEmailRegistration checkEmailRegistrationUsecase;
 
   late bool keepSignedIn = false;
+  late bool isEmailCorrect = false;
 
   LoginCubit(
       {required this.checkEmailRegistrationUsecase,
@@ -53,13 +54,18 @@ class LoginCubit extends Cubit<LoginPageState> {
           (await checkEmailRegistrationUsecase(UserParam(user: user)))
               .getOrElse(() => false);
       if (result) {
+        isEmailCorrect = true;
         emit(const LoginPageState()
             .copyWith(status: FormStatus.inProgress, isEmailCorrect: true));
       } else {
+        isEmailCorrect = false;
+
         emit(const LoginPageState()
             .copyWith(status: FormStatus.inProgress, isEmailCorrect: false));
       }
     } catch (_) {
+      isEmailCorrect = false;
+
       emit(const LoginPageState()
           .copyWith(status: FormStatus.inProgress, isEmailCorrect: false));
     }
@@ -70,16 +76,21 @@ class LoginCubit extends Cubit<LoginPageState> {
     keepSignedIn = !keepSignedIn;
 
     sharedPrefs.setBool('keepSignedIn', keepSignedIn);
-    emit(const LoginPageState().copyWith(keepSignedIn: keepSignedIn));
+    emit(const LoginPageState()
+        .copyWith(keepSignedIn: keepSignedIn, isEmailCorrect: isEmailCorrect));
   }
 
   Future<void> focusEmailTextField() async {
-    emit(const LoginPageState()
-        .copyWith(isEmailFieldFocused: true, isPasswordFieldFocused: false));
+    emit(const LoginPageState().copyWith(
+        isEmailFieldFocused: true,
+        isPasswordFieldFocused: false,
+        isEmailCorrect: isEmailCorrect));
   }
 
   Future<void> focusPasswordTextField() async {
-    emit(const LoginPageState()
-        .copyWith(isEmailFieldFocused: false, isPasswordFieldFocused: true));
+    emit(const LoginPageState().copyWith(
+        isEmailFieldFocused: false,
+        isPasswordFieldFocused: true,
+        isEmailCorrect: isEmailCorrect));
   }
 }
