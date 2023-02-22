@@ -12,7 +12,7 @@ import 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final IsSignedInUsecase isSignedInUsecase;
   final SignOutUsecase signOutUsecase;
-  final GetAuthToken getAuthTokenUsecase;
+  final GetAuthTokenUsecase getAuthTokenUsecase;
 
   AuthCubit(
       {required this.isSignedInUsecase,

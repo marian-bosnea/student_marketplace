@@ -9,3 +9,5 @@ enum FormStatus {
 enum ProfilePageStatus { initial, loading, loaded, editting }
 
 enum HomePageStatus { home, search, addPost, profile, settings }
+
+enum PostsViewStatus { initial, loading, loaded, fail }

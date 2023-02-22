@@ -5,13 +5,13 @@ import '../../repositories/user_repository.dart';
 
 import '../../../../core/error/failures.dart';
 
-class GetUserUsecase implements Usecase<UserEntity, IdParam> {
+class GetUserUsecase implements Usecase<UserEntity, TokenParam> {
   final UserRepository repository;
 
   GetUserUsecase({required this.repository});
 
   @override
-  Future<Either<Failure, UserEntity>> call(IdParam params) async {
-    return await repository.getUser(params.id);
+  Future<Either<Failure, UserEntity>> call(TokenParam params) async {
+    return await repository.getUser(params.token);
   }
 }

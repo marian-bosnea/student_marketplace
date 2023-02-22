@@ -9,32 +9,32 @@ class HomeCubit extends Cubit<HomePageState> {
   HomeCubit() : super(const HomePageState());
 
   void goToHome() {
-    if (state.status != HomePageStatus.home) {
-      emit(state.copyWith(status: HomePageStatus.home));
-    }
+    emit(state.copyWith(
+        status: HomePageStatus.home, title: "UnitBvMarketplace"));
   }
 
   void goToSearch() {
     if (state.status != HomePageStatus.search) {
-      emit(state.copyWith(status: HomePageStatus.search));
+      emit(state.copyWith(status: HomePageStatus.search, title: "Search"));
     }
   }
 
   void goToAddPost() {
     if (state.status != HomePageStatus.addPost) {
-      emit(state.copyWith(status: HomePageStatus.addPost));
+      emit(state.copyWith(
+          status: HomePageStatus.addPost, title: "Sell an item"));
     }
   }
 
   void goToProfile() {
     if (state.status != HomePageStatus.profile) {
-      emit(state.copyWith(status: HomePageStatus.profile));
+      emit(state.copyWith(status: HomePageStatus.profile, title: "Profile"));
     }
   }
 
   void goToSettings() {
     if (state.status != HomePageStatus.settings) {
-      emit(state.copyWith(status: HomePageStatus.settings));
+      emit(state.copyWith(status: HomePageStatus.settings, title: 'Settings'));
     }
   }
 }

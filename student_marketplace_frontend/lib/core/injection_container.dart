@@ -5,6 +5,7 @@ import 'package:student_marketplace_frontend/features/data/repositories/faculty_
 import 'package:student_marketplace_frontend/features/domain/repositories/faculty_repository.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/faculty/get_all_faculties_usecase.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/register/register_cubit.dart';
 
 import '../features/data/data_sources/contracts/sale_post_remote_data_source.dart';
@@ -60,12 +61,16 @@ Future<void> init() async {
   sl.registerFactory(() => HomeCubit());
 
   sl.registerFactory(() => ProfileCubit(getUserUsecase: sl.call()));
+
+  sl.registerFactory(() => PostViewCubit(
+      getAllPostsUsecase: sl.call(), getAuthTokenUsecase: sl.call()));
+
   // Usecases
 
   sl.registerLazySingleton(() => GetAllFaculties(repository: sl.call()));
 
   sl.registerLazySingleton(() => CheckEmailRegistration(repository: sl.call()));
-  sl.registerLazySingleton(() => GetAuthToken(repository: sl.call()));
+  sl.registerLazySingleton(() => GetAuthTokenUsecase(repository: sl.call()));
   sl.registerLazySingleton(() => SignInUsecase(repository: sl.call()));
   sl.registerLazySingleton(() => SignUpUsecase(repository: sl.call()));
   sl.registerLazySingleton(() => IsSignedInUsecase(repository: sl.call()));

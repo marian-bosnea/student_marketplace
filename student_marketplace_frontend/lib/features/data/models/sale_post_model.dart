@@ -12,8 +12,8 @@ class SalePostModel extends SalePostEntity {
     return SalePostModel(
       title: json['title'],
       description: json['description'],
-      ownerName: json['ownerName'],
-      postingDate: json['postingDate'],
+      ownerName: json['owner_name'],
+      postingDate: json['date'],
       images: [],
     );
   }

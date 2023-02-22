@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:student_marketplace_frontend/features/data/models/sale_post_model.dart';
 
 import '../../features/data/models/user_model.dart';
 import '../../features/domain/entities/user_entity.dart';
@@ -103,6 +104,30 @@ class HttpInterface {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<List<SalePostModel>?> fetchAllSalePosts(String token) async {
+    final requestUrl = "$baseUrl/sale-object/get/all";
+    final response = await http.get(
+      Uri.parse(requestUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode != getSuccessCode) return null;
+    final bodyJson = json.decode(response.body) as Map<String, dynamic>;
+    final resultJson = bodyJson['results'];
+
+    List<SalePostModel> salePosts = [];
+
+    for (var json in resultJson) {
+      final map = json as Map<String, dynamic>;
+      salePosts.add(SalePostModel.fromJson(json));
+    }
+
+    return salePosts;
   }
 
   Future<UserModel?> fetchUserProfile(String token) async {

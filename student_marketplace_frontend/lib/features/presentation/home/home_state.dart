@@ -5,13 +5,14 @@ import '../../../core/enums.dart';
 
 class HomePageState extends Equatable {
   final HomePageStatus status;
+  final String title;
 
-  const HomePageState({
-    this.status = HomePageStatus.home,
-  });
+  const HomePageState(
+      {this.status = HomePageStatus.home, this.title = 'UniTBv Marketplace'});
 
-  HomePageState copyWith({HomePageStatus? status}) {
-    return HomePageState(status: status ?? this.status);
+  HomePageState copyWith({String? title, HomePageStatus? status}) {
+    return HomePageState(
+        status: status ?? this.status, title: title ?? this.title);
   }
 
   @override

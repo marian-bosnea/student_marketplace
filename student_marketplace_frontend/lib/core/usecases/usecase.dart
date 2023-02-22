@@ -13,13 +13,33 @@ class NoParams extends Equatable {
   List<Object?> get props => [];
 }
 
-class IdParam extends Equatable {
+class TokenParam extends Equatable {
+  final String token;
+
+  const TokenParam({required this.token});
+
+  @override
+  List<Object?> get props => [token];
+}
+
+class TokenIdParam extends Equatable {
+  final String token;
   final String id;
 
-  const IdParam({required this.id});
+  const TokenIdParam({required this.token, required this.id});
 
   @override
   List<Object?> get props => [id];
+}
+
+class CategoryParam extends Equatable {
+  final String token;
+  final String categoryId;
+
+  const CategoryParam({required this.token, required this.categoryId});
+
+  @override
+  List<Object?> get props => [token, categoryId];
 }
 
 class UserParam extends Equatable {

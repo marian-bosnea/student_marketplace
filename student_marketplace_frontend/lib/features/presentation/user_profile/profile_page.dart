@@ -11,8 +11,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocProvider.of<ProfileCubit>(context).fetchUserProfile();
     return PlatformScaffold(
-      body: BlocConsumer<ProfileCubit, ProfilePageState>(
-        listener: (context, state) {},
+      body: BlocBuilder<ProfileCubit, ProfilePageState>(
         builder: (context, state) => _getBodyWidget(context, state),
       ),
     );

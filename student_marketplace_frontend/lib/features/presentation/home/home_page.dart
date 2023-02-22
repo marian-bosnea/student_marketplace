@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_frontend/core/enums.dart';
+import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view_page.dart';
 import 'package:student_marketplace_frontend/features/presentation/user_profile/profile_page.dart';
 
 import 'home_cubit.dart';
@@ -11,10 +11,6 @@ import 'home_state.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
-
-  Widget currentPage = const Center(
-    child: Text("Home page"),
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +20,12 @@ class HomePage extends StatelessWidget {
         return PlatformScaffold(
           appBar: PlatformAppBar(
             title: PlatformText(
-              "UniTBv Marketplace",
+              state.title,
               style: const TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.black,
           ),
-          body: _getCurrentPage(state),
+          body: _getCurrentPage(context, state),
           bottomNavBar: PlatformNavBar(
             backgroundColor: Colors.black,
             items: const [
@@ -66,12 +62,10 @@ class HomePage extends StatelessWidget {
     }
   }
 
-  Widget _getCurrentPage(HomePageState state) {
+  Widget _getCurrentPage(BuildContext context, HomePageState state) {
     switch (state.status) {
       case HomePageStatus.home:
-        return const Center(
-          child: Text("HomePage"),
-        );
+        return const PostViewPage();
       case HomePageStatus.search:
         return const Center(
           child: Text("Search Page"),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/user_profile/profile_cubit.dart';
 
 import 'core/injection_container.dart' as di;
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<RegisterCubit>()),
         BlocProvider(create: (_) => di.sl<ProfileCubit>()),
         BlocProvider(create: (_) => di.sl<HomeCubit>()),
+        BlocProvider(create: (_) => di.sl<PostViewCubit>()),
       ],
       child: PlatformApp(
         title: 'Student Marketplace',

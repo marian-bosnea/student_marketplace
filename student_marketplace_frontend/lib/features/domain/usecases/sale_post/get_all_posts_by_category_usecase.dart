@@ -5,13 +5,14 @@ import '../../../../core/usecases/usecase.dart';
 import '../../entities/sale_post_entity.dart';
 import '../../repositories/sale_post_repository.dart';
 
-class GetAllPostsByCategory implements Usecase<List<SalePostEntity>, IdParam> {
+class GetAllPostsByCategory
+    implements Usecase<List<SalePostEntity>, CategoryParam> {
   final SalePostRepository repository;
 
   GetAllPostsByCategory({required this.repository});
 
   @override
-  Future<Either<Failure, List<SalePostEntity>>> call(IdParam params) {
-    return repository.getAllPostsByCategory(params.id);
+  Future<Either<Failure, List<SalePostEntity>>> call(CategoryParam params) {
+    return repository.getAllPostsByCategory(params.token, params.categoryId);
   }
 }

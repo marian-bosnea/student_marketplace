@@ -6,13 +6,13 @@ import '../../entities/sale_post_entity.dart';
 import '../../repositories/sale_post_repository.dart';
 
 class GetAllPostsByOwnerUsecase
-    implements Usecase<List<SalePostEntity>, IdParam> {
+    implements Usecase<List<SalePostEntity>, TokenIdParam> {
   final SalePostRepository repository;
 
   GetAllPostsByOwnerUsecase({required this.repository});
 
   @override
-  Future<Either<Failure, List<SalePostEntity>>> call(IdParam params) {
-    return repository.getAllPostsByOwner(params.id);
+  Future<Either<Failure, List<SalePostEntity>>> call(TokenIdParam params) {
+    return repository.getAllPostsByOwner(params.token, params.id);
   }
 }
