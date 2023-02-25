@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:student_marketplace_frontend/networking/http_interface.dart';
-import 'pages/authentication_page.dart';
+import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/user_profile/profile_cubit.dart';
+
+import 'core/injection_container.dart' as di;
+import 'core/on_generate_route.dart';
+import 'features/presentation/authentication/auth_cubit.dart';
+import 'features/presentation/authentication/auth_state.dart';
+import 'features/presentation/home/home_page.dart';
+import 'features/presentation/login/login_cubit.dart';
+import 'features/presentation/login/login_page.dart';
+import 'features/presentation/register/register_cubit.dart';
+import 'features/presentation/user_profile/profile_page.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
+
   runApp(const MyApp());
 }
 
@@ -12,9 +27,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const PlatformApp(
-      title: 'Flutter Demo',
-      home: AuthenticationPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => di.sl<AuthCubit>()..onAppStarted(context)),
+        BlocProvider(create: (_) => di.sl<LoginCubit>()),
+        BlocProvider(create: (_) => di.sl<RegisterCubit>()),
+        BlocProvider(create: (_) => di.sl<ProfileCubit>()),
+        BlocProvider(create: (_) => di.sl<HomeCubit>()),
+        BlocProvider(create: (_) => di.sl<PostViewCubit>()),
+      ],
+      child: PlatformApp(
+        title: 'Student Marketplace',
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: OnGenerateRoute.route,
+        initialRoute: '/',
+        routes: {
+          '/': (context) =>
+              BlocBuilder<AuthCubit, AuthState>(builder: (context, authState) {
+                if (authState is Authenticated) {
+                  return HomePage();
+                } else {
+                  return AuthenticationPage();
+                }
+              })
+        },
+      ),
     );
   }
 }
