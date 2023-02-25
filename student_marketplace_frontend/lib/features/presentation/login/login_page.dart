@@ -200,7 +200,7 @@ class AuthenticationPage extends StatelessWidget {
     }
     if (state.status == LoginPageStatus.emailSucces) {
       return const SizedBox(
-        height: 30,
+        height: 40,
         child: Icon(
           Icons.check,
           color: Colors.green,
@@ -209,12 +209,12 @@ class AuthenticationPage extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 30,
-      height: 30,
+      height: 40,
       child: PlatformIconButton(
         padding: EdgeInsets.zero,
         icon: const Icon(
           CupertinoIcons.arrow_right_circle,
+          size: 30,
         ),
         onPressed: state.isEmailPrefixActive
             ? () => BlocProvider.of<LoginCubit>(context)
@@ -239,11 +239,13 @@ class AuthenticationPage extends StatelessWidget {
                     : Colors.black12)),
         obscureText: true,
         suffix: SizedBox(
-            width: 30,
-            height: 30,
+            height: 40,
             child: PlatformIconButton(
                 padding: EdgeInsets.zero,
-                icon: const Icon(CupertinoIcons.arrow_right_circle),
+                icon: const Icon(
+                  CupertinoIcons.arrow_right_circle,
+                  size: 30,
+                ),
                 onPressed: state.isPasswordPrefixActive
                     ? () => BlocProvider.of<LoginCubit>(context).signInUser(
                           UserModel(

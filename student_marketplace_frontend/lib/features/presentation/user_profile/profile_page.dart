@@ -42,6 +42,8 @@ class ProfilePage extends StatelessWidget {
                           TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
                     ),
                   ),
+                  if (state.avatarBytes != null)
+                    Image.memory(state.avatarBytes!),
                   PlatformText(
                     state.firstName,
                   ),

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 
 class UserEntity extends Equatable {
@@ -5,6 +7,7 @@ class UserEntity extends Equatable {
   final String? lastName;
   final String? secondaryLastName;
   final String? facultyName;
+  final Uint8List? avatarImage;
 
   final List? posts;
 
@@ -16,6 +19,7 @@ class UserEntity extends Equatable {
 
   const UserEntity(
       {this.firstName,
+      this.avatarImage,
       this.lastName,
       this.secondaryLastName,
       this.facultyName,

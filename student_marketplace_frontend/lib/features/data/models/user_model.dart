@@ -8,6 +8,7 @@ class UserModel extends UserEntity {
       super.facultyName,
       super.email,
       super.password,
+      super.avatarImage,
       super.posts,
       super.authToken});
 

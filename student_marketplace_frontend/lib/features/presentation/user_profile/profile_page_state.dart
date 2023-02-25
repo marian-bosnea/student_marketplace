@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 
 import '../../../core/enums.dart';
@@ -9,13 +11,15 @@ class ProfilePageState extends Equatable {
   final String secondLastName;
   final String emailAdress;
   final String facultyName;
+  late Uint8List? avatarBytes;
   final ProfilePageStatus status;
 
-  const ProfilePageState(
+  ProfilePageState(
       {this.firstName = '',
       this.lastName = '',
       this.secondLastName = '',
       this.emailAdress = '',
+      this.avatarBytes,
       this.facultyName = '',
       this.status = ProfilePageStatus.initial});
 
@@ -25,6 +29,7 @@ class ProfilePageState extends Equatable {
           String? secondLastName,
           String? emailAdress,
           String? facultyName,
+          Uint8List? avatarBytes,
           ProfilePageStatus? status}) =>
       ProfilePageState(
           firstName: firstName ?? this.firstName,
@@ -32,6 +37,7 @@ class ProfilePageState extends Equatable {
           secondLastName: secondLastName ?? this.secondLastName,
           emailAdress: emailAdress ?? this.emailAdress,
           facultyName: facultyName ?? this.facultyName,
+          avatarBytes: avatarBytes ?? this.avatarBytes,
           status: status ?? this.status);
 
   @override

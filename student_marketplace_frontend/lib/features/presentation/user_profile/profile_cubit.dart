@@ -9,7 +9,7 @@ import 'package:student_marketplace_frontend/features/presentation/user_profile/
 
 class ProfileCubit extends Cubit<ProfilePageState> {
   final GetUserUsecase getUserUsecase;
-  late ProfilePageState state = const ProfilePageState();
+  late ProfilePageState state = ProfilePageState();
 
   ProfileCubit({required this.getUserUsecase}) : super(ProfilePageState());
 
@@ -32,6 +32,7 @@ class ProfileCubit extends Cubit<ProfilePageState> {
           lastName: user.lastName,
           secondLastName: user.secondaryLastName,
           emailAdress: user.email,
+          avatarBytes: user.avatarImage,
           facultyName: user.facultyName,
           status: ProfilePageStatus.loaded));
     } else {}

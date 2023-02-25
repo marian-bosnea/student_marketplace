@@ -19,6 +19,7 @@ class HomePage extends StatelessWidget {
       builder: (context, state) {
         return PlatformScaffold(
           appBar: PlatformAppBar(
+            automaticallyImplyLeading: false,
             title: PlatformText(
               state.title,
               style: const TextStyle(color: Colors.white),

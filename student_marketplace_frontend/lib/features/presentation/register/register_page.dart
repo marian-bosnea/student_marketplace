@@ -23,10 +23,15 @@ class RegisterPage extends StatelessWidget {
   ];
 
   late final List<TextEditingController> _edittingControllers = [];
+  late final List<FocusNode> _focusNodes = [];
+
+  final double textFieldHeight = 40;
+  final double textFieldBorderRadius = 20;
 
   RegisterPage({super.key}) {
     for (var a in _fieldsPlaceholders) {
       _edittingControllers.add(TextEditingController());
+      _focusNodes.add(FocusNode());
     }
   }
   @override
@@ -52,22 +57,27 @@ class RegisterPage extends StatelessWidget {
       BuildContext context, RegisterPageState state) {
     return CupertinoTextFieldData(
       suffix: state.showEmailCheckmark
-          ? const Icon(
-              Icons.check,
-              color: Colors.green,
+          ? Container(
+              margin: const EdgeInsets.only(right: 5),
+              child: const Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
             )
           : null,
-      prefix: const SizedBox(
-        width: 30,
-        height: 30,
-        child: Icon(
+      prefix: Container(
+        height: textFieldHeight,
+        margin: const EdgeInsets.only(left: 5),
+        child: const Icon(
           Icons.email,
+          size: 25,
           color: Colors.black12,
         ),
       ),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
+          borderRadius:
+              BorderRadius.all(Radius.circular(textFieldBorderRadius)),
           border: Border.all(color: Colors.black12)),
     );
   }
@@ -75,36 +85,46 @@ class RegisterPage extends StatelessWidget {
   CupertinoTextFieldData _passwordCupertinoTextDataField(
       BuildContext context, RegisterPageState state) {
     return CupertinoTextFieldData(
-      prefix: const SizedBox(
-        width: 30,
-        height: 30,
-        child: Icon(
+      prefix: Container(
+        height: textFieldHeight,
+        margin: const EdgeInsets.only(left: 5),
+        child: const Icon(
           Icons.lock,
+          size: 25,
           color: Colors.black12,
         ),
       ),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
+          borderRadius:
+              BorderRadius.all(Radius.circular(textFieldBorderRadius)),
           border: Border.all(color: Colors.black12)),
     );
   }
 
   CupertinoTextFieldData _personalInfoCupertinoTextDataField(
-      BuildContext context, RegisterPageState state, IconData iconData) {
+      BuildContext context,
+      RegisterPageState state,
+      int index,
+      IconData iconData) {
     return CupertinoTextFieldData(
-      prefix: SizedBox(
-        width: 30,
-        height: 30,
+      prefix: Container(
+        height: textFieldHeight,
+        margin: const EdgeInsets.only(left: 5),
         child: Icon(
           iconData,
+          size: 25,
           color: Colors.black12,
         ),
       ),
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
-          border: Border.all(color: Colors.black12)),
+          borderRadius:
+              BorderRadius.all(Radius.circular(textFieldBorderRadius)),
+          border: Border.all(
+              color: _focusNodes[index].hasPrimaryFocus
+                  ? Colors.blue
+                  : Colors.black12)),
     );
   }
 
@@ -113,42 +133,46 @@ class RegisterPage extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.3,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.black12),
-                borderRadius: const BorderRadius.all(Radius.circular(30))),
-            width: 50,
-            height: 50,
-            child: const Icon(Icons.photo),
-          ),
-          PlatformTextField(
-            hintText: _fieldsPlaceholders[3],
-            controller: _edittingControllers[3],
-            cupertino: (contex, target) => _personalInfoCupertinoTextDataField(
-                context, state, Icons.person),
-          ),
-          PlatformTextField(
-            hintText: _fieldsPlaceholders[4],
-            controller: _edittingControllers[4],
-            cupertino: (contex, target) => _personalInfoCupertinoTextDataField(
-                context, state, Icons.person),
-          ),
-          PlatformTextField(
-            hintText: _fieldsPlaceholders[5],
-            controller: _edittingControllers[5],
-            cupertino: (contex, target) => _personalInfoCupertinoTextDataField(
-                context, state, Icons.person),
-          ),
-          PlatformTextField(
-            hintText: _fieldsPlaceholders[6],
-            controller: _edittingControllers[6],
-            cupertino: (contex, target) => _personalInfoCupertinoTextDataField(
-                context, state, Icons.school),
-          ),
-        ],
+        children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12),
+                    borderRadius: const BorderRadius.all(Radius.circular(30))),
+                width: 50,
+                height: 50,
+                child: const Icon(Icons.photo),
+              ),
+            ] +
+            _generatePersonalInfoTextFields(context, state),
       ),
     );
+  }
+
+  List<Widget> _generatePersonalInfoTextFields(
+      BuildContext context, RegisterPageState state) {
+    List<Widget> textFields = [];
+
+    for (int i = 3; i < _fieldsPlaceholders.length; i++) {
+      textFields.add(
+        PlatformTextField(
+          hintText: _fieldsPlaceholders[i],
+          controller: _edittingControllers[i],
+          focusNode: _focusNodes[i],
+          onTap: () => _focusNodes[i].requestFocus(),
+          onSubmitted: i != _fieldsPlaceholders.length - 1
+              ? (value) => _focusNodes[i + 1].requestFocus()
+              : null,
+          cupertino: (contex, target) => _personalInfoCupertinoTextDataField(
+              context,
+              state,
+              i,
+              i != _fieldsPlaceholders.length - 1
+                  ? Icons.person
+                  : Icons.school),
+        ),
+      );
+    }
+    return textFields;
   }
 
   Widget _credentialsForm(BuildContext context, RegisterPageState state) {

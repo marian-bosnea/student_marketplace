@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:http/http.dart' as http;
 import 'package:student_marketplace_frontend/features/data/models/sale_post_model.dart';
@@ -104,6 +106,20 @@ class HttpInterface {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<Uint8List> getUserAvatar(String token) async {
+    final requestUrl = "$baseUrl/user/get/avatar_image";
+    final response = await http.get(
+      Uri.parse(requestUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token'
+      },
+    );
+    final a = response.bodyBytes;
+
+    return response.bodyBytes;
   }
 
   Future<List<SalePostModel>?> fetchAllSalePosts(String token) async {
