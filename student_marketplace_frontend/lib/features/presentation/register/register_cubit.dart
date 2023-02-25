@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:student_marketplace_frontend/core/enums.dart';
-import 'package:student_marketplace_frontend/features/presentation/register/register_page.dart';
-
+import 'package:student_marketplace_frontend/core/input_validators.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../domain/usecases/faculty/get_all_faculties_usecase.dart';
 import '../../domain/usecases/user/check_email_registration.dart';
@@ -23,29 +21,81 @@ class RegisterCubit extends Cubit<RegisterPageState> {
       : super(const RegisterPageState());
 
   Future<void> checkEmailForAvailability(String email) async {
-    if (email.trim().isEmpty) {
-      emit(state.copyWith(showEmailCheckmark: false));
+    state.copyWith(emailValue: email);
+    final isEmailValid = checkEmail(email);
+
+    if (email.trim().isEmpty || !isEmailValid) {
+      state = state.copyWith(showEmailCheckmark: false);
     } else {
       final result = await checkEmailRegistrationUsecase(
           UserParam(user: UserModel(email: email)));
       final isEmailAlreadyRegistered = result.getOrElse(() => false);
-      emit(state.copyWith(showEmailCheckmark: !isEmailAlreadyRegistered));
+      state = state.copyWith(showEmailCheckmark: !isEmailAlreadyRegistered);
+    }
+    emit(state);
+    _checkIfCredentialsFormIsValid();
+  }
+
+  Future<void> checkIfPasswordIsValid(String value) async {
+    state = state.copyWith(passwordValue: value);
+
+    if (value.trim().isEmpty) {
+      state = state.copyWith(showPasswordWarning: false);
+      emit(state);
+      return;
+    }
+
+    final isPasswordValid = checkPassword(value);
+    state = state.copyWith(
+        passwordValue: value, showPasswordWarning: !isPasswordValid);
+    emit(state);
+
+    checkIfPasswordsMatch(state.confirmPasswordValue);
+  }
+
+  Future<void> checkIfPasswordsMatch(String value) async {
+    if (value.trim().isEmpty) {
+      state = state.copyWith(showConfirmPasswordWarning: false);
+      emit(state);
+      return;
+    }
+
+    final arePasswordsTheSame = state.passwordValue.compareTo(value) == 0;
+    state = state.copyWith(
+        confirmPasswordValue: value,
+        showConfirmPasswordWarning: !arePasswordsTheSame);
+    emit(state);
+  }
+
+  Future<void> goToNextStep() async {
+    if (state.status == RegisterPageStatus.validCredentials) {
+      state = state.copyWith(status: RegisterPageStatus.personalInfoInProgress);
+      emit(state);
+    }
+    if (state.status == RegisterPageStatus.personalInfoInProgress) {
+      //state = state.copyWith(status: RegisterPageStatus.credentialsInProgress);
+      //emit(state);
+    }
+    if (state.status == RegisterPageStatus.validPersonalInfo) {
+      //_registerUser
     }
   }
 
-  Future<void> checkIfPasswordIsValid(List<String> input) async {
-    final password = input[1];
-    emit(state.copyWith(showPasswordWarning: password.length <= 4));
+  Future<void> goToPreviousStep() async {
+    state = state.copyWith(status: RegisterPageStatus.validCredentials);
+    emit(state);
   }
 
-  Future<void> checkIfPasswordsMatch(List<String> input) async {
-    if (input[2].length > 4) {
-      final arePasswordsTheSame = input[1].compareTo(input[2]) == 0;
-      emit(state.copyWith(showConfirmPasswordWarning: !arePasswordsTheSame));
+  _checkIfCredentialsFormIsValid() {
+    if (state.showEmailCheckmark &&
+        !state.showPasswordWarning &&
+        !state.showConfirmPasswordWarning) {
+      state = state.copyWith(status: RegisterPageStatus.validCredentials);
+      emit(state);
     }
   }
 
-  Future<void> registerUser(List<String> input) async {
+  Future<void> _registerUser(List<String> input) async {
     final result = await signUpUsecase(UserParam(
         user: UserModel(
             email: input[0],
@@ -56,10 +106,10 @@ class RegisterCubit extends Cubit<RegisterPageState> {
             facultyName: input[6])));
 
     final success = result.getOrElse(() => false);
-    if (success) {
-      emit(state.copyWith(status: FormStatus.succesSubmission));
-    } else {
-      emit(state.copyWith(status: FormStatus.failedSubmission));
-    }
+    state = state.copyWith(
+        status: success
+            ? RegisterPageStatus.submissionSuccessful
+            : RegisterPageStatus.submissionFailed);
+    emit(state);
   }
 }

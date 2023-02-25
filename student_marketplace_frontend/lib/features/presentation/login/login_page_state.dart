@@ -1,46 +1,45 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 
-import '../../../core/enums.dart';
+enum LoginPageStatus {
+  intial,
+  emailSubmitting,
+  emailSucces,
+  passwordSubmitting,
+  loginSuccesful,
+  loginFailed
+}
 
 class LoginPageState extends Equatable {
-  final bool isEmailCorrect;
   final bool keepSignedIn;
-  final bool isEmailFieldFocused;
-  final bool isPasswordFieldFocused;
-  final FormStatus status;
+  final bool isEmailPrefixActive;
+  final bool isPasswordPrefixActive;
+  final LoginPageStatus status;
 
   const LoginPageState({
-    this.isEmailCorrect = false,
     this.keepSignedIn = false,
-    this.isEmailFieldFocused = false,
-    this.isPasswordFieldFocused = false,
-    this.status = FormStatus.intial,
+    this.isEmailPrefixActive = false,
+    this.isPasswordPrefixActive = false,
+    this.status = LoginPageStatus.intial,
   });
 
   LoginPageState copyWith(
       {bool? isEmailCorrect,
       bool? keepSignedIn,
-      bool? isEmailFieldFocused,
-      bool? isPasswordFieldFocused,
+      bool? isEmailPrefixActive,
+      bool? isPasswordPrefixActive,
       String? email,
       String? password,
-      FormStatus? status}) {
+      LoginPageStatus? status}) {
     return LoginPageState(
-        isEmailCorrect: isEmailCorrect ?? this.isEmailCorrect,
-        isEmailFieldFocused: isEmailFieldFocused ?? this.isEmailFieldFocused,
-        isPasswordFieldFocused:
-            isPasswordFieldFocused ?? this.isPasswordFieldFocused,
+        isEmailPrefixActive: isEmailPrefixActive ?? this.isEmailPrefixActive,
+        isPasswordPrefixActive:
+            isPasswordPrefixActive ?? this.isPasswordPrefixActive,
         keepSignedIn: keepSignedIn ?? false,
         status: status ?? this.status);
   }
 
   @override
-  List<Object?> get props => [
-        isEmailCorrect,
-        isEmailFieldFocused,
-        isPasswordFieldFocused,
-        keepSignedIn,
-        status
-      ];
+  List<Object?> get props =>
+      [isEmailPrefixActive, isPasswordPrefixActive, keepSignedIn, status];
 }

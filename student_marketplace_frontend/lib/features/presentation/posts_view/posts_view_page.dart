@@ -23,7 +23,6 @@ class PostViewPage extends StatelessWidget {
         return ListView.builder(
             itemCount: state.posts.length,
             itemBuilder: (contex, index) {
-              print(state.posts.length);
               return Container(
                 child: Text(state.posts.elementAt(index).title),
               );
