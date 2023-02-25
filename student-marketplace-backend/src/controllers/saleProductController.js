@@ -59,6 +59,38 @@ insert = async (req, res) => {
    }
 }
 
+getAll = async (req, res) => {
+   console.log("Requested all sale posts");
+   const client = await pool.connect()
+
+   try {
+      const results = await client.query(sql.SALE_OBJECT_READ_ALL);
+      let saleObjectsJson = [];
+   
+      for (i = 0; i < results.rowCount; i++) {
+         saleObjectsJson.push({
+            title: results.rows[i].title,
+            description: results.rows[i].description,
+            price: results.rows[i].price,
+            date: results.rows[i].date,
+            owner_id: results.rows[i].owner_id,
+            owner_name: results.rows[i].owner_name
+         });
+      }
+      
+      res.status(codes.GET_SUCCESS_CODE);
+      res.send({results: saleObjectsJson});
+   } catch (e) {
+      res.status(codes.INVALID_INPUT_CODE);
+      res.send({message: "Invalid input"});
+      throw e
+   } finally {
+      client.release()
+   }
+
+
+}
+
 getAllFromCategory = async (req, res) => {
    const categoryId = req.body.categoryId;
    const client = await pool.connect()
@@ -70,10 +102,10 @@ getAllFromCategory = async (req, res) => {
 
       for (i = 0; i < result.rowCount; i++) {
          saleObjectsJson.push({
-            title: result.rows[0].title,
-            description: result.rows[0].description,
-            price: result.rows[0].price,
-            ownerId: result.rows[0].owner_id
+            title: result.rows[i].title,
+            description: result.rows[i].description,
+            price: result.rows[i].price,
+            ownerId: result.rows[i].owner_id
          });
       }
  
@@ -125,5 +157,6 @@ module.exports = {
    getCategories,
    insert,
    getAllFromCategory,
-   getAllByOwnerId
+   getAllByOwnerId,
+   getAll
 }

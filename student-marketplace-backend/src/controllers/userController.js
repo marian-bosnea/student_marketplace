@@ -2,6 +2,7 @@ const { pool } = require("../db/dbConfig");
 const sql = require('../db/sqlQuerries');
 
 const codes = require('../constants/statusCodes');
+var path = require('path');
 
 getAllFaculties = (req, res) => {
     pool.query(sql.FACULTY_READ_ALL, [], (err, result) => {
@@ -36,11 +37,14 @@ getUserProfile = async (req, res) => {
           firstName: result.rows[0].first_name,
           lastName: result.rows[0].last_name,
           secondaryLastName: result.rows[0].secondary_last_name,
-          avatarImage: result.rows[0].avatar_image,
+          //avatarImage: result.rows[0].avatar_image,
           facultyName: result.rows[0].faculty_name
        }
- 
+       const fileSrc = result.rows[0].avatar_image;
+       const filePath = path.resolve(__dirname + '../../../' +  fileSrc);
+       res.sendFile(filePath);
        res.status(codes.GET_SUCCESS_CODE);
+       
        res.send(profileJson);
  
     } catch (e) {
@@ -53,7 +57,35 @@ getUserProfile = async (req, res) => {
     }
  }
 
+  
+getUserAvatar = async (req, res) => {
+   //const userId = req.userId;
+  const userId = res.locals.decryptedId;
+
+   const client = await pool.connect()
+
+   try {
+      const results = await client.query(sql.GET_USER_AVATAR, [userId]);
+      const fileSrc = results.rows[0].avatar_image;
+
+      const filePath = path.resolve(__dirname + '../../../' +  fileSrc);
+      res.sendFile(filePath);
+      res.status(codes.GET_SUCCESS_CODE);
+
+   } catch (e) {
+      res.status(codes.INVALID_INPUT_CODE);
+      res.send({ message: "Invalid input"});
+      throw e
+      
+   } finally {
+      client.release()
+   }
+
+}
+ 
+
  module.exports = {
     getAllFaculties,
-    getUserProfile
+    getUserProfile,
+    getUserAvatar
  }

@@ -11,6 +11,12 @@ userRouter.get('/user/get/profile',
         userController.getUserProfile(req, res);
     });
 
+userRouter.get('/user/get/avatar_image',
+    authorization.authenticateToken,
+    (req, res) => {
+        userController.getUserAvatar(req, res);
+    });
+
 userRouter.get('/faculties/get/all',
     (req, res) => {
         userController.getAllFaculties(req, res);

@@ -16,7 +16,7 @@ authenticateToken = (req, res, next) => {
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, userId) => {
        if(err) return res.sendStatus(codes.FORBIDDEN);
-
+       res.locals.decryptedId = userId;
        req.userId = userId;
        next();
     });

@@ -10,12 +10,22 @@ module.exports.USER_CENTRALIZED_INSERT = 'INSERT INTO user_centralized (role_id,
 module.exports.FACULTY_READ_ALL = 'SELECT * FROM faculty';
 
 module.exports.USER_PROFILE_READ = 'SELECT p.first_name, p.last_name, p.secondary_last_name, p.avatar_image, f.name As faculty_name FROM user_profile p INNER JOIN user_centralized u ON u.profile_id = p.id INNER JOIN faculty f  ON u.faculty_id = f.id WHERE u.id = $1';
+module.exports.UPDATE_PROFILE_AVATAR = 'UPDATE user_profile SET avatar_image = $1 WHERE id = $2';
 
+module.exports.GET_PROFILE_ID = 'SELECT profile_id FROM user_centralized WHERE id = $1';
+module.exports.GET_USER_AVATAR = 'SELECT p.avatar_image FROM user_profile p INNER JOIN user_centralized u ON u.profile_id = p.id WHERE u.id = $1';
 // Order of inseration must be: credentials -> profile -> user_centralized
 //#endregion
 
+module.exports.INSERT_TOKEN = 'INSERT INTO authorization_token (token) VALUES ($1)';
+module.exports.READ_TOKEN = 'SELECT * FROM authorization_token WHERE token = $1';
+module.exports.DELETE_TOKEN = 'DELETE FROM authorization_token WHERE token = $1';
 //#region Sale
 module.exports.CATEGORY_READ_ALL = 'SELECT * FROM object_category';
+
+
+
+module.exports.SALE_OBJECT_READ_ALL = 'SELECT d.title, d.description, d.price, o.date, o.owner_id, p.last_name as owner_name FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id INNER JOIN user_centralized c ON o.owner_id = c.id INNER JOIN user_profile p ON p.id = c.profile_id';
 
 module.exports.SALE_OBJECT_DESCRIPTION_INSERT = 'INSERT INTO object_description (title, description, price) VALUES ($1, $2, $3) RETURNING id';
 module.exports.OBJECT_IMAGE_INSERT = 'INSERT INTO object_image (data, description_id) VALUES ($1, $2)';
