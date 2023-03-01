@@ -67,7 +67,7 @@ Future<void> init() async {
 
   // Usecases
 
-  sl.registerLazySingleton(() => GetAllFaculties(repository: sl.call()));
+  sl.registerLazySingleton(() => GetAllFacultiesUsecase(repository: sl.call()));
 
   sl.registerLazySingleton(() => CheckEmailRegistration(repository: sl.call()));
   sl.registerLazySingleton(() => GetAuthTokenUsecase(repository: sl.call()));

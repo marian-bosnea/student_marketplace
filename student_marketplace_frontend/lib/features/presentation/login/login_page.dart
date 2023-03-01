@@ -55,7 +55,7 @@ class AuthenticationPage extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           width: MediaQuery.of(context).size.width * 0.75,
           height: state.status == LoginPageStatus.emailSucces
-              ? MediaQuery.of(context).size.height * 0.4
+              ? MediaQuery.of(context).size.height * 0.35
               : MediaQuery.of(context).size.height * 0.3,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -125,7 +125,8 @@ class AuthenticationPage extends StatelessWidget {
                                 : Colors.black12,
                           )),
                     ),
-                    const Text("Keep me signed in")
+                    const Text("Keep me signed in",
+                        style: TextStyle(fontSize: 16))
                   ],
                 ),
               ),
@@ -134,13 +135,13 @@ class AuthenticationPage extends StatelessWidget {
                 children: [
                   const Text(
                     "Don't have an account?",
-                    style: TextStyle(fontSize: 13),
+                    style: TextStyle(fontSize: 16),
                   ),
                   PlatformTextButton(
                     onPressed: () =>
                         Navigator.of(context).pushNamed(PageNames.registerPage),
                     child:
-                        const Text("Register", style: TextStyle(fontSize: 13)),
+                        const Text("Register", style: TextStyle(fontSize: 16)),
                   )
                 ],
               ),
@@ -196,7 +197,7 @@ class AuthenticationPage extends StatelessWidget {
 
   Widget _getEmailTextFieldPrefix(BuildContext context, LoginPageState state) {
     if (state.status == LoginPageStatus.emailSubmitting) {
-      return const CupertinoActivityIndicator();
+      return SizedBox(height: 40, child: const CupertinoActivityIndicator());
     }
     if (state.status == LoginPageStatus.emailSucces) {
       return const SizedBox(

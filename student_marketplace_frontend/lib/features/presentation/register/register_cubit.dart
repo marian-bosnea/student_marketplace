@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+import 'dart:ui';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:student_marketplace_frontend/core/input_validators.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../domain/usecases/faculty/get_all_faculties_usecase.dart';
@@ -9,7 +13,7 @@ import '../../data/models/user_model.dart';
 
 class RegisterCubit extends Cubit<RegisterPageState> {
   final SignUpUsecase signUpUsecase;
-  final GetAllFaculties getAllFacultiesUsecase;
+  final GetAllFacultiesUsecase getAllFacultiesUsecase;
   final CheckEmailRegistration checkEmailRegistrationUsecase;
 
   late RegisterPageState state = RegisterPageState();
@@ -18,7 +22,15 @@ class RegisterCubit extends Cubit<RegisterPageState> {
       {required this.signUpUsecase,
       required this.getAllFacultiesUsecase,
       required this.checkEmailRegistrationUsecase})
-      : super(const RegisterPageState());
+      : super(RegisterPageState());
+
+  Future<void> fetchAllFaculties() async {
+    final result = await getAllFacultiesUsecase(NoParams());
+    final faculties = result.getOrElse(() => []);
+
+    state = state.copyWith(faculties: faculties);
+    emit(state);
+  }
 
   Future<void> checkEmailForAvailability(String email) async {
     state.copyWith(emailValue: email);
@@ -84,6 +96,14 @@ class RegisterCubit extends Cubit<RegisterPageState> {
   Future<void> goToPreviousStep() async {
     state = state.copyWith(status: RegisterPageStatus.validCredentials);
     emit(state);
+  }
+
+  Future<void> onSelectImage() async {
+    final ImagePicker picker = ImagePicker();
+    // Pick an image
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    final result = await image!.readAsBytes();
+    state = state.copyWith(avatarImage: result);
   }
 
   _checkIfCredentialsFormIsValid() {

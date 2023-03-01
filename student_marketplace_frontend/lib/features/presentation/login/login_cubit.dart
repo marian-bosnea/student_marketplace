@@ -46,13 +46,13 @@ class LoginCubit extends Cubit<LoginPageState> {
     keepSignedIn = !keepSignedIn;
 
     sharedPrefs.setBool('keepSignedIn', keepSignedIn);
-    state = state.copyWith(
-        keepSignedIn: keepSignedIn, isEmailCorrect: isEmailCorrect);
+    state = state.copyWith(keepSignedIn: keepSignedIn);
     emit(state);
   }
 
   Future<void> focusPasswordTextField() async {
-    emit(const LoginPageState().copyWith(isEmailCorrect: isEmailCorrect));
+    state = state.copyWith(isEmailCorrect: true);
+    emit(state);
   }
 
   Future<void> onPasswordInputChanged(String text) async {

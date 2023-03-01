@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:http/http.dart' as http;
+import 'package:student_marketplace_frontend/features/data/models/faculty_model.dart';
 import 'package:student_marketplace_frontend/features/data/models/sale_post_model.dart';
 
 import '../../features/data/models/user_model.dart';
@@ -53,14 +54,15 @@ class HttpInterface {
     try {
       final response = await http.post(Uri.parse(requestUrl),
           headers: {"Content-Type": "application/json"},
-          body: jsonEncode(<String, String>{
+          body: jsonEncode(<String, dynamic>{
             'email': user.email!,
             'password': user.password!,
             'passwordConfirm': user.password!,
             'firstName': user.firstName!,
             'lastName': user.lastName!,
             'secondaryLastName': user.secondaryLastName ?? 'null',
-            'facultyId': user.facultyName!
+            'facultyId': user.facultyName!,
+            'avatarImage': user.avatarImage!,
           }));
 
       if (response.statusCode != postSuccessCode) return false;
@@ -161,5 +163,26 @@ class HttpInterface {
     final resultJson = json.decode(response.body) as Map<String, dynamic>;
 
     return UserModel.fromJson(resultJson);
+  }
+
+  Future<List<FacultyModel>> fetchAllFaculties() async {
+    final requestUrl = "$baseUrl/faculties/get/all";
+    final response = await http.get(
+      Uri.parse(requestUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+
+    final bodyJson = json.decode(response.body) as Map<String, dynamic>;
+    final resultJson = bodyJson['faculties'];
+
+    List<FacultyModel> faculties = [];
+
+    for (var json in resultJson) {
+      final map = json as Map<String, dynamic>;
+      faculties.add(FacultyModel.fromJson(json));
+    }
+    return faculties;
   }
 }

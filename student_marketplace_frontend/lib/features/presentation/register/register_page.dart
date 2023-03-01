@@ -1,3 +1,5 @@
+import 'package:drop_down_list/drop_down_list.dart';
+import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -129,18 +131,26 @@ class RegisterPage extends StatelessWidget {
   }
 
   Widget _personalInfoForm(BuildContext context, RegisterPageState state) {
+    BlocProvider.of<RegisterCubit>(context).fetchAllFaculties();
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.3,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black12),
-                    borderRadius: const BorderRadius.all(Radius.circular(30))),
-                width: 50,
-                height: 50,
-                child: const Icon(Icons.photo),
+              GestureDetector(
+                onTap: () =>
+                    BlocProvider.of<RegisterCubit>(context).onSelectImage(),
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black12),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(30))),
+                  width: 50,
+                  height: 50,
+                  child: state.avatarImage != null
+                      ? Image.memory(state.avatarImage!)
+                      : Icon(Icons.photo),
+                ),
               ),
             ] +
             _generatePersonalInfoTextFields(context, state),
@@ -148,27 +158,64 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
+  void _openDrowDownFacultiesList(
+      RegisterPageState state, BuildContext context) {
+    DropDownState(
+      DropDown(
+        bottomSheetTitle: const Text(
+          'Faculties',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20.0,
+          ),
+        ),
+        submitButtonChild: const Text(
+          'Done',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        data: _getListItemsData(state),
+        selectedItems: (List<dynamic> selectedList) {
+          List<String> list = [];
+          for (var item in selectedList) {
+            if (item is SelectedListItem) {
+              list.add(item.name);
+            }
+          }
+        },
+        enableMultipleSelection: false,
+      ),
+    ).showModal(context);
+  }
+
+  List<SelectedListItem> _getListItemsData(RegisterPageState state) {
+    List<SelectedListItem> items = [];
+    for (var f in state.faculties) {
+      items.add(SelectedListItem(name: f.name.toString()));
+    }
+    return items;
+  }
+
   List<Widget> _generatePersonalInfoTextFields(
       BuildContext context, RegisterPageState state) {
     List<Widget> textFields = [];
 
     for (int i = 3; i < _fieldsPlaceholders.length; i++) {
+      final bool isLast = i == _fieldsPlaceholders.length - 1;
       textFields.add(
         PlatformTextField(
           hintText: _fieldsPlaceholders[i],
           controller: _edittingControllers[i],
           focusNode: _focusNodes[i],
-          onTap: () => _focusNodes[i].requestFocus(),
-          onSubmitted: i != _fieldsPlaceholders.length - 1
-              ? (value) => _focusNodes[i + 1].requestFocus()
-              : null,
+          readOnly: isLast,
+          onTap: () =>
+              isLast ? _openDrowDownFacultiesList(state, context) : null,
+          onSubmitted:
+              !isLast ? (value) => _focusNodes[i + 1].requestFocus() : null,
           cupertino: (contex, target) => _personalInfoCupertinoTextDataField(
-              context,
-              state,
-              i,
-              i != _fieldsPlaceholders.length - 1
-                  ? Icons.person
-                  : Icons.school),
+              context, state, i, !isLast ? Icons.person : Icons.school),
         ),
       );
     }
@@ -198,7 +245,7 @@ class RegisterPage extends StatelessWidget {
             onChanged: (text) => BlocProvider.of<RegisterCubit>(context)
                 .checkIfPasswordIsValid(text),
           ),
-          if (state.showPasswordWarning) getWarningText('Password too short'),
+          if (state.showPasswordWarning) _getWarningText('Password too short'),
           PlatformTextField(
             hintText: _fieldsPlaceholders[2],
             controller: _edittingControllers[2],
@@ -209,13 +256,16 @@ class RegisterPage extends StatelessWidget {
                 .checkIfPasswordsMatch(text),
           ),
           if (state.showConfirmPasswordWarning)
-            getWarningText('Passwords do not match'),
+            _getWarningText('Passwords do not match'),
         ],
       ),
     );
   }
 
   Widget _getBodyWidget(BuildContext context, RegisterPageState state) {
+    if (state.faculties.isEmpty) {
+      BlocProvider.of<RegisterCubit>(context).fetchAllFaculties();
+    }
     return Material(
       elevation: 2,
       borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -258,7 +308,7 @@ class RegisterPage extends StatelessWidget {
                         ? 1
                         : 0,
                     totalSwitches: 2,
-                    labels: ['Credentials', 'Profile'],
+                    labels: const ['Credentials', 'Profile'],
                     radiusStyle: true,
                     onToggle: (index) {
                       if (index == 0) {
@@ -312,7 +362,7 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  Widget getWarningText(String text) {
+  Widget _getWarningText(String text) {
     return Text(
       text,
       style: const TextStyle(fontSize: 12, color: Colors.red),
@@ -320,8 +370,8 @@ class RegisterPage extends StatelessWidget {
   }
 
   String _getFormTitle(RegisterPageState state) {
-    final String credentialsMessage = "Let's create your account!";
-    final String personalInfoMessage = "Complete your profile";
+    const String credentialsMessage = "Let's create your account!";
+    const String personalInfoMessage = "Complete your profile";
 
     switch (state.status) {
       case RegisterPageStatus.validCredentials:

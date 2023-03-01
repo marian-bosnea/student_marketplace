@@ -14,8 +14,6 @@ class UserRepositortRemoteDataSourceImpl
   Future<Either<Failure, UserEntity>> getUser(String token) async {
     UserModel? result = await http.fetchUserProfile(token);
     final avatarImageBytes = await http.getUserAvatar(token);
-
-    var a = 0;
     if (result != null) {
       return Right(UserModel(
           firstName: result.firstName,

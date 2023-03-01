@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<HomeCubit>()),
         BlocProvider(create: (_) => di.sl<PostViewCubit>()),
       ],
-      child: PlatformApp(
+      child: MaterialApp(
         title: 'Student Marketplace',
         debugShowCheckedModeBanner: false,
         onGenerateRoute: OnGenerateRoute.route,
