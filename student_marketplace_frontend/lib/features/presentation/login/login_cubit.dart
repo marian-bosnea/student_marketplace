@@ -1,10 +1,12 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_marketplace_frontend/features/data/models/auth_session_model.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/authentication/authenticate_usecase.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/credentials/check_email_availability_usecase.dart';
 import '../../../core/input_validators.dart';
-import '../../domain/usecases/user/check_email_registration.dart';
 import '../../../core/usecases/usecase.dart';
+import '../../data/models/credentials_model.dart';
 import '../../domain/usecases/user/sign_up_usecase.dart';
 import 'login_page_state.dart';
 import '../../data/models/user_model.dart';
@@ -12,7 +14,7 @@ import '../../data/models/user_model.dart';
 class LoginCubit extends Cubit<LoginPageState> {
   final SignUpUsecase signUpUsecase;
   final AuthenticateUsecase authenticateUsecase;
-  final CheckEmailRegistration checkEmailRegistrationUsecase;
+  final CheckEmailAvailabilityUsecase checkEmailAvailabilityUsecase;
 
   late bool keepSignedIn = false;
   late bool isEmailCorrect = false;
@@ -20,22 +22,28 @@ class LoginCubit extends Cubit<LoginPageState> {
   late LoginPageState state = LoginPageState();
 
   LoginCubit(
-      {required this.checkEmailRegistrationUsecase,
+      {required this.checkEmailAvailabilityUsecase,
       required this.authenticateUsecase,
       required this.signUpUsecase})
       : super(const LoginPageState());
 
-  Future<void> checkIfEmailIsRegistered(UserModel user) async {
+  Future<void> checkIfEmailIsRegistered(CredentialsModel credentials) async {
     state = state.copyWith(status: LoginPageStatus.emailSubmitting);
     emit(state);
 
     try {
-      final success =
-          (await checkEmailRegistrationUsecase(UserParam(user: user)))
-              .getOrElse(() => false);
-      state = state.copyWith(
-          status:
-              success ? LoginPageStatus.emailSucces : LoginPageStatus.intial);
+      final result = await checkEmailAvailabilityUsecase(
+          CredentialsParams(credentials: credentials));
+
+      var a = 0;
+      if (result is Left) {
+        state = state.copyWith(status: LoginPageStatus.intial);
+      } else {
+        final success = (result as Right).value;
+        state = state.copyWith(
+            status:
+                success ? LoginPageStatus.emailSucces : LoginPageStatus.intial);
+      }
     } catch (_) {
       state = state.copyWith(status: LoginPageStatus.intial);
     }
@@ -70,26 +78,23 @@ class LoginCubit extends Cubit<LoginPageState> {
     emit(state);
   }
 
-  Future<void> signInUser(UserModel user) async {
+  Future<void> signInUser(CredentialsModel credentials) async {
     state = state.copyWith(status: LoginPageStatus.passwordSubmitting);
     emit(state);
 
     try {
       final result = await authenticateUsecase(
-          CredentialsParams(email: user.email!, password: user.password!));
+          CredentialsParams(credentials: credentials));
 
-      final session = result.getOrElse(() => const AuthSessionModel(token: ''));
-
-      if (session.token == '') {
+      if (result is Left) {
         state = state.copyWith(status: LoginPageStatus.loginFailed);
-      } else {
-        final sharedPrefs = await SharedPreferences.getInstance();
-        final keepUserSignedIn = sharedPrefs.getBool('keepSignedIn');
-        if (keepUserSignedIn != null && keepUserSignedIn) {
-          sharedPrefs.setString('authorizationToken', session.token);
-        }
-        state = state.copyWith(status: LoginPageStatus.loginSuccesful);
       }
+
+      final session = (result as Right).value;
+      final sharedPrefs = await SharedPreferences.getInstance();
+      final keepUserSignedIn = sharedPrefs.getBool('keepSignedIn');
+      sharedPrefs.setString('authorizationToken', session.token);
+      state = state.copyWith(status: LoginPageStatus.loginSuccesful);
     } catch (_) {
       state = state.copyWith(status: LoginPageStatus.loginFailed);
     }

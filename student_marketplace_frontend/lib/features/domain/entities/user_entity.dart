@@ -7,15 +7,10 @@ class UserEntity extends Equatable {
   final String? lastName;
   final String? secondaryLastName;
   final String? facultyName;
-  final Uint8List? avatarImage;
-
-  final List? posts;
-
-  /// Credentials
   final String? email;
   final String? password;
-
-  final String? authToken;
+  final String? confirmPassword;
+  final Uint8List? avatarImage;
 
   const UserEntity(
       {this.firstName,
@@ -25,18 +20,9 @@ class UserEntity extends Equatable {
       this.facultyName,
       this.email,
       this.password,
-      this.posts,
-      this.authToken});
+      this.confirmPassword});
 
   @override
-  List<Object?> get props => [
-        firstName,
-        lastName,
-        secondaryLastName,
-        facultyName,
-        email,
-        password,
-        posts,
-        authToken
-      ];
+  List<Object?> get props =>
+      [firstName, lastName, secondaryLastName, facultyName, email];
 }

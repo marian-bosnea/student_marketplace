@@ -2,11 +2,11 @@ import 'package:student_marketplace_frontend/features/data/data_sources/contract
 import 'package:student_marketplace_frontend/features/domain/entities/auth_session_entity.dart';
 import 'package:student_marketplace_frontend/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
-import 'package:student_marketplace_frontend/features/domain/repositories/auth_repository.dart';
+import 'package:student_marketplace_frontend/features/domain/repositories/auth_session_repository.dart';
 
 import '../data_sources/contracts/auth_session_local_data_source.dart';
 
-class AuthRepositoryImpl extends AuthRepository {
+class AuthRepositoryImpl extends AuthSessionRepository {
   final AuthSessionRemoteDataSource remoteDataSource;
   final AuthSessionLocalDataSource localDataSource;
 

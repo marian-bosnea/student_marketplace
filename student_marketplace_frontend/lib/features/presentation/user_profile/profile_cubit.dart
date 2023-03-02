@@ -23,7 +23,7 @@ class ProfileCubit extends Cubit<ProfilePageState> {
       return;
     }
 
-    final result = await getUserUsecase(TokenParam(token: token));
+    final result = await getUserUsecase(IdParam(id: '15'));
 
     if (result is Right) {
       final user = result.getOrElse(() => const UserModel());

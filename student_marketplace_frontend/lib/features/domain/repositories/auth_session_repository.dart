@@ -3,7 +3,7 @@ import 'package:student_marketplace_frontend/features/domain/entities/auth_sessi
 
 import '../../../core/error/failures.dart';
 
-abstract class AuthRepository {
+abstract class AuthSessionRepository {
   Future<Either<Failure, AuthSessionEntity>> authenticate(
       {required String email, required String password});
 

@@ -1,12 +1,11 @@
-import 'dart:typed_data';
-import 'dart:ui';
-
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:student_marketplace_frontend/core/input_validators.dart';
+import 'package:student_marketplace_frontend/features/data/models/credentials_model.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/credentials/check_email_availability_usecase.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../domain/usecases/faculty/get_all_faculties_usecase.dart';
-import '../../domain/usecases/user/check_email_registration.dart';
 import '../../domain/usecases/user/sign_up_usecase.dart';
 import 'register_page_state.dart';
 import '../../data/models/user_model.dart';
@@ -14,7 +13,7 @@ import '../../data/models/user_model.dart';
 class RegisterCubit extends Cubit<RegisterPageState> {
   final SignUpUsecase signUpUsecase;
   final GetAllFacultiesUsecase getAllFacultiesUsecase;
-  final CheckEmailRegistration checkEmailRegistrationUsecase;
+  final CheckEmailAvailabilityUsecase checkEmailRegistrationUsecase;
 
   late RegisterPageState state = RegisterPageState();
 
@@ -32,16 +31,21 @@ class RegisterCubit extends Cubit<RegisterPageState> {
     emit(state);
   }
 
-  Future<void> checkEmailForAvailability(String email) async {
-    state.copyWith(emailValue: email);
-    final isEmailValid = checkEmail(email);
+  Future<void> checkEmailForAvailability(CredentialsModel credentials) async {
+    state.copyWith(emailValue: credentials.email);
+    final isEmailValid = checkEmail(credentials.email);
 
-    if (email.trim().isEmpty || !isEmailValid) {
+    if (credentials.email.trim().isEmpty || !isEmailValid) {
       state = state.copyWith(showEmailCheckmark: false);
     } else {
       final result = await checkEmailRegistrationUsecase(
-          UserParam(user: UserModel(email: email)));
-      final isEmailAlreadyRegistered = result.getOrElse(() => false);
+          CredentialsParams(credentials: credentials));
+
+      if (result is Left) {
+        state = state.copyWith(showEmailCheckmark: false);
+      }
+      final isEmailAlreadyRegistered = (result as Right).value;
+
       state = state.copyWith(showEmailCheckmark: !isEmailAlreadyRegistered);
     }
     emit(state);

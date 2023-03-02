@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart';
 import 'package:student_marketplace_frontend/core/enums.dart';
 import 'package:student_marketplace_frontend/core/usecases/usecase.dart';
 import 'package:student_marketplace_frontend/features/data/models/auth_session_model.dart';
@@ -15,21 +16,22 @@ class PostViewCubit extends Cubit<PostViewState> {
 
   PostViewCubit(
       {required this.getAllPostsUsecase, required this.getCachedSessionUsecase})
-      : super(PostViewState());
+      : super(const PostViewState());
 
   Future<void> fetchAllPosts() async {
     final result = await getCachedSessionUsecase(NoParams());
-    if (result is Right) {
-      final session = result.getOrElse(() => AuthSessionModel(token: ''));
-      final eitherPosts =
-          await getAllPostsUsecase(TokenParam(token: session.token));
-      if (eitherPosts is Right) {
-        final posts = eitherPosts.getOrElse(() => []);
-        state = state.copyWith(status: PostsViewStatus.loaded, posts: posts);
-        emit(state);
+    if (result is Left) {
+      state = state.copyWith(status: PostsViewStatus.fail);
+    } else {
+      final postsResult = await getAllPostsUsecase(NoParams());
+      if (postsResult is Left) {
+        state = state.copyWith(status: PostsViewStatus.fail);
       } else {
-        emit(state.copyWith(status: PostsViewStatus.fail));
+        final posts = (postsResult as Right).value;
+        state = state.copyWith(status: PostsViewStatus.loaded, posts: posts);
       }
-    } else {}
+    }
+
+    emit(state);
   }
 }

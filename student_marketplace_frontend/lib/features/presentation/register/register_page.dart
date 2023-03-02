@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_frontend/core/enums.dart';
+import 'package:student_marketplace_frontend/features/data/models/credentials_model.dart';
 import 'package:student_marketplace_frontend/features/presentation/register/register_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/register/register_page_state.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -234,7 +235,8 @@ class RegisterPage extends StatelessWidget {
             cupertino: (context, target) =>
                 _emailCupertinoTextFieldData(context, state),
             onChanged: (text) => BlocProvider.of<RegisterCubit>(context)
-                .checkEmailForAvailability(text),
+                .checkEmailForAvailability(
+                    CredentialsModel(email: text, password: '')),
           ),
           PlatformTextField(
             hintText: _fieldsPlaceholders[1],

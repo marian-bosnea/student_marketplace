@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:student_marketplace_frontend/features/domain/entities/auth_session_entity.dart';
+import 'package:student_marketplace_frontend/features/domain/entities/credentials_entity.dart';
 
 import '../../features/domain/entities/user_entity.dart';
 import '../error/failures.dart';
@@ -13,23 +15,31 @@ class NoParams extends Equatable {
   List<Object?> get props => [];
 }
 
-class CredentialsParams extends Equatable {
-  final String email;
-  final String password;
+class IdParam extends Equatable {
+  final String id;
 
-  const CredentialsParams({required this.email, required this.password});
+  const IdParam({required this.id});
 
   @override
-  List<Object?> get props => [email, password];
+  List<Object?> get props => [id];
 }
 
-class TokenParam extends Equatable {
-  final String token;
+class CredentialsParams extends Equatable {
+  final CredentialsEntity credentials;
 
-  const TokenParam({required this.token});
+  const CredentialsParams({required this.credentials});
 
   @override
-  List<Object?> get props => [token];
+  List<Object?> get props => [credentials];
+}
+
+class AuthSessionParam extends Equatable {
+  final AuthSessionEntity session;
+
+  const AuthSessionParam({required this.session});
+
+  @override
+  List<Object?> get props => [session];
 }
 
 class TokenIdParam extends Equatable {

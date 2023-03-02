@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:http/http.dart' as http;
 import 'package:student_marketplace_frontend/features/data/models/faculty_model.dart';

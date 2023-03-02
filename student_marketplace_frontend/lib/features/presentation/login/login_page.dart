@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:student_marketplace_frontend/features/data/models/credentials_model.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_page.dart';
 import '../../../core/on_generate_route.dart';
 import '../authentication/auth_cubit.dart';
@@ -80,8 +81,9 @@ class AuthenticationPage extends StatelessWidget {
                     .onEmailInputChanged(text),
                 onSubmitted: state.isEmailPrefixActive
                     ? (text) => BlocProvider.of<LoginCubit>(context)
-                        .checkIfEmailIsRegistered(
-                            UserModel(email: _emailTextfieldController.text))
+                        .checkIfEmailIsRegistered(CredentialsModel(
+                            email: _emailTextfieldController.text,
+                            password: ''))
                     : null,
                 cupertino: (context, target) =>
                     _emailCupertinoTextFieldData(context, state),
@@ -95,7 +97,7 @@ class AuthenticationPage extends StatelessWidget {
                   onSubmitted: state.isEmailPrefixActive
                       ? (text) =>
                           BlocProvider.of<LoginCubit>(context).signInUser(
-                            UserModel(
+                            CredentialsModel(
                                 email: _emailTextfieldController.text,
                                 password: _passwordTextfielController.text),
                           )
@@ -219,8 +221,8 @@ class AuthenticationPage extends StatelessWidget {
         ),
         onPressed: state.isEmailPrefixActive
             ? () => BlocProvider.of<LoginCubit>(context)
-                .checkIfEmailIsRegistered(
-                    UserModel(email: _emailTextfieldController.text))
+                .checkIfEmailIsRegistered(CredentialsModel(
+                    email: _emailTextfieldController.text, password: ''))
             : null,
       ),
     );
@@ -249,7 +251,7 @@ class AuthenticationPage extends StatelessWidget {
                 ),
                 onPressed: state.isPasswordPrefixActive
                     ? () => BlocProvider.of<LoginCubit>(context).signInUser(
-                          UserModel(
+                          CredentialsModel(
                               email: _emailTextfieldController.text,
                               password: _passwordTextfielController.text),
                         )

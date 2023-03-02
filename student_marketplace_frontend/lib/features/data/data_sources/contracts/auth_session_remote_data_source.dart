@@ -6,4 +6,9 @@ import '../../../domain/entities/auth_session_entity.dart';
 abstract class AuthSessionRemoteDataSource {
   Future<Either<Failure, AuthSessionEntity>> authenticate(
       {required String email, required String password});
+
+  Future<Either<Failure, bool>> getAuthenticationStatus(
+      AuthSessionEntity session);
+
+  Future<Either<Failure, bool>> deauthenticate(AuthSessionEntity session);
 }

@@ -2,10 +2,10 @@ import 'package:student_marketplace_frontend/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:student_marketplace_frontend/core/usecases/usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/entities/auth_session_entity.dart';
-import 'package:student_marketplace_frontend/features/domain/repositories/auth_repository.dart';
+import 'package:student_marketplace_frontend/features/domain/repositories/auth_session_repository.dart';
 
 class GetCachedSessionUsecase extends Usecase<AuthSessionEntity, NoParams> {
-  final AuthRepository repository;
+  final AuthSessionRepository repository;
   GetCachedSessionUsecase({required this.repository});
 
   @override

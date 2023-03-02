@@ -8,8 +8,8 @@ class UserModel extends UserEntity {
     super.facultyName,
     super.email,
     super.password,
+    super.confirmPassword,
     super.avatarImage,
-    super.posts,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +31,8 @@ class UserModel extends UserEntity {
       'firstName': firstName,
       'lastName': lastName,
       if (secondaryLastName != null) 'secondaryLastName': secondaryLastName,
+      'password': password,
+      'passwordConfirm': confirmPassword,
       'facultyName': facultyName,
       'email': email,
     };
