@@ -1,8 +1,15 @@
 import 'package:get_it/get_it.dart';
+import 'package:student_marketplace_frontend/features/data/data_sources/contracts/auth_session_local_data_source.dart';
+import 'package:student_marketplace_frontend/features/data/data_sources/contracts/auth_session_remote_data_source.dart';
 import 'package:student_marketplace_frontend/features/data/data_sources/contracts/faculty_remote_data_source.dart';
+import 'package:student_marketplace_frontend/features/data/data_sources/implementations/auth_session_local_data_source_impl.dart';
+import 'package:student_marketplace_frontend/features/data/data_sources/implementations/auth_session_remote_data_source_impl.dart';
 import 'package:student_marketplace_frontend/features/data/data_sources/implementations/faculty_remote_data_source_impl.dart';
 import 'package:student_marketplace_frontend/features/data/repositories/faculty_repository_impl.dart';
+import 'package:student_marketplace_frontend/features/domain/repositories/auth_repository.dart';
 import 'package:student_marketplace_frontend/features/domain/repositories/faculty_repository.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/authentication/authenticate_usecase.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/authentication/get_cached_session_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/faculty/get_all_faculties_usecase.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
@@ -10,12 +17,11 @@ import 'package:student_marketplace_frontend/features/presentation/register/regi
 
 import '../features/data/data_sources/contracts/sale_post_remote_data_source.dart';
 import '../features/data/data_sources/contracts/user_repository_remote_data_source.dart';
-import '../features/data/data_sources/contracts/user_services_local_data_source.dart';
 import '../features/data/data_sources/contracts/user_services_remote_data_source.dart';
 import '../features/data/data_sources/implementations/sale_post_remote_data_source_impl.dart';
 import '../features/data/data_sources/implementations/user_repository_remote_data_source_impl.dart';
-import '../features/data/data_sources/implementations/user_services_local_data_source_impl.dart';
 import '../features/data/data_sources/implementations/user_services_remote_data_source_impl.dart';
+import '../features/data/repositories/auth_repistory_impl.dart';
 import '../features/data/repositories/sale_post_repository_impl.dart';
 import '../features/data/repositories/user_repository_impl.dart';
 import '../features/data/repositories/user_services_impl.dart';
@@ -26,10 +32,8 @@ import '../features/domain/usecases/sale_post/get_all_posts_by_category_usecase.
 import '../features/domain/usecases/sale_post/get_all_posts_by_owner_usecase.dart';
 import '../features/domain/usecases/sale_post/get_all_posts_usecase.dart';
 import '../features/domain/usecases/user/check_email_registration.dart';
-import '../features/domain/usecases/user/get_auth_token_usecase.dart';
 import '../features/domain/usecases/user/get_user_usecase.dart';
 import '../features/domain/usecases/user/is_signed_in_usecase.dart';
-import '../features/domain/usecases/user/sign_in_usecase.dart';
 import '../features/domain/usecases/user/sign_out_usecase.dart';
 import '../features/domain/usecases/user/sign_up_usecase.dart';
 import '../features/presentation/authentication/auth_cubit.dart';
@@ -44,8 +48,8 @@ Future<void> init() async {
   // Cubits
 
   sl.registerFactory(() => LoginCubit(
-      signInUsecase: sl.call(),
       signUpUsecase: sl.call(),
+      authenticateUsecase: sl.call(),
       checkEmailRegistrationUsecase: sl.call()));
 
   sl.registerFactory(() => AuthCubit(
@@ -63,20 +67,22 @@ Future<void> init() async {
   sl.registerFactory(() => ProfileCubit(getUserUsecase: sl.call()));
 
   sl.registerFactory(() => PostViewCubit(
-      getAllPostsUsecase: sl.call(), getAuthTokenUsecase: sl.call()));
+      getAllPostsUsecase: sl.call(), getCachedSessionUsecase: sl.call()));
 
   // Usecases
 
   sl.registerLazySingleton(() => GetAllFacultiesUsecase(repository: sl.call()));
 
   sl.registerLazySingleton(() => CheckEmailRegistration(repository: sl.call()));
-  sl.registerLazySingleton(() => GetAuthTokenUsecase(repository: sl.call()));
-  sl.registerLazySingleton(() => SignInUsecase(repository: sl.call()));
   sl.registerLazySingleton(() => SignUpUsecase(repository: sl.call()));
   sl.registerLazySingleton(() => IsSignedInUsecase(repository: sl.call()));
   sl.registerLazySingleton(() => SignOutUsecase(repository: sl.call()));
 
   sl.registerLazySingleton(() => GetUserUsecase(repository: sl.call()));
+
+  sl.registerLazySingleton(() => AuthenticateUsecase(repository: sl.call()));
+  sl.registerLazySingleton(
+      () => GetCachedSessionUsecase(repository: sl.call()));
 
   sl.registerLazySingleton(() => GetAllPostsUsecase(repository: sl.call()));
   sl.registerLazySingleton(() => GetAllPostsByCategory(repository: sl.call()));
@@ -85,11 +91,14 @@ Future<void> init() async {
 
   // Repositories
 
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(
+      remoteDataSource: sl.call(), localDataSource: sl.call()));
+
+  sl.registerLazySingleton<UserServices>(
+      () => UserServicesImpl(remoteDataSource: sl.call()));
+
   sl.registerLazySingleton<FacultyRepository>(
       () => FacultyRepositoryImpl(remoteDataSource: sl.call()));
-
-  sl.registerLazySingleton<UserServices>(() => UserServicesImpl(
-      remoteDataSource: sl.call(), localDataSource: sl.call()));
 
   sl.registerLazySingleton<UserRepository>(
       () => UserRepositoryImpl(remoteDataSource: sl.call()));
@@ -98,11 +107,15 @@ Future<void> init() async {
       () => SalePostRepositoryImpl(remoteDataSource: sl.call()));
 
 // Remote Data Source
+
+  sl.registerLazySingleton<AuthSessionLocalDataSource>(
+      () => AuthSessionLocalDataSourceImpl());
+
+  sl.registerLazySingleton<AuthSessionRemoteDataSource>(
+      () => AuthSessionRemoteDataSourceImpl());
+
   sl.registerLazySingleton<FacultyRemoteDataSource>(
       () => FacultyRemoteDataSourceImpl());
-
-  sl.registerLazySingleton<UserServicesLocalDataSource>(
-      () => UserServicesLocalDataSourceImpl());
 
   sl.registerLazySingleton<UserServicesRemoteDataSource>(
       () => UserServicesRemoteDataSourceImpl());

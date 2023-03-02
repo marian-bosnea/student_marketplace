@@ -1,16 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:student_marketplace_frontend/features/data/models/auth_session_model.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/authentication/authenticate_usecase.dart';
 import '../../../core/input_validators.dart';
 import '../../domain/usecases/user/check_email_registration.dart';
 import '../../../core/usecases/usecase.dart';
-import '../../domain/usecases/user/sign_in_usecase.dart';
 import '../../domain/usecases/user/sign_up_usecase.dart';
 import 'login_page_state.dart';
 import '../../data/models/user_model.dart';
 
 class LoginCubit extends Cubit<LoginPageState> {
-  final SignInUsecase signInUsecase;
   final SignUpUsecase signUpUsecase;
+  final AuthenticateUsecase authenticateUsecase;
   final CheckEmailRegistration checkEmailRegistrationUsecase;
 
   late bool keepSignedIn = false;
@@ -20,7 +21,7 @@ class LoginCubit extends Cubit<LoginPageState> {
 
   LoginCubit(
       {required this.checkEmailRegistrationUsecase,
-      required this.signInUsecase,
+      required this.authenticateUsecase,
       required this.signUpUsecase})
       : super(const LoginPageState());
 
@@ -74,16 +75,18 @@ class LoginCubit extends Cubit<LoginPageState> {
     emit(state);
 
     try {
-      final result =
-          (await signInUsecase(UserParam(user: user))).getOrElse(() => '');
+      final result = await authenticateUsecase(
+          CredentialsParams(email: user.email!, password: user.password!));
 
-      if (result == '') {
+      final session = result.getOrElse(() => const AuthSessionModel(token: ''));
+
+      if (session.token == '') {
         state = state.copyWith(status: LoginPageStatus.loginFailed);
       } else {
         final sharedPrefs = await SharedPreferences.getInstance();
         final keepUserSignedIn = sharedPrefs.getBool('keepSignedIn');
         if (keepUserSignedIn != null && keepUserSignedIn) {
-          sharedPrefs.setString('authorizationToken', result);
+          sharedPrefs.setString('authorizationToken', session.token);
         }
         state = state.copyWith(status: LoginPageStatus.loginSuccesful);
       }
