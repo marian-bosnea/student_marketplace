@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:student_marketplace_frontend/features/data/models/faculty_model.dart';
 import 'package:student_marketplace_frontend/features/data/models/sale_post_model.dart';
@@ -50,25 +52,28 @@ class HttpInterface {
 
   Future<bool> registerUser(UserEntity user) async {
     final requestUrl = "$baseUrl/users/register";
+
     try {
-      final response = await http.post(Uri.parse(requestUrl),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(<String, dynamic>{
-            'email': user.email!,
-            'password': user.password!,
-            'passwordConfirm': user.password!,
-            'firstName': user.firstName!,
-            'lastName': user.lastName!,
-            'secondaryLastName': user.secondaryLastName ?? 'null',
-            'facultyId': user.facultyName!,
-            'avatarImage': user.avatarImage!,
-          }));
+      var request = http.MultipartRequest('POST', Uri.parse(requestUrl));
+
+      request.headers.addAll({"Content-type": "multipart/form-data"});
+
+      final file = http.MultipartFile.fromBytes(
+          'avatarImage', user.avatarImage!,
+          filename: 'avatar.jpg', contentType: MediaType('image', 'jpeg'));
+
+      request.fields['email'] = user.email!;
+      request.fields['firstName'] = user.firstName!;
+      request.fields['lastName'] = user.lastName!;
+      request.fields['password'] = user.password!;
+      request.fields['passwordConfirm'] = user.confirmPassword!;
+      request.fields['facultyId'] = user.facultyName!;
+
+      request.files.add(file);
+
+      var response = await request.send();
 
       if (response.statusCode != postSuccessCode) return false;
-
-      final map = json.decode(response.body) as Map<String, dynamic>;
-      final token = map['accessToken'] as String;
-
       return true;
     } catch (e) {
       rethrow;
@@ -94,6 +99,7 @@ class HttpInterface {
 
   Future<bool> logOutUser(String token) async {
     final requestUrl = "$baseUrl/users/logout";
+
     try {
       final response = await http.get(
         Uri.parse(requestUrl),
@@ -102,7 +108,6 @@ class HttpInterface {
           'authorization': 'Bearer $token'
         },
       );
-
       return response.statusCode == getSuccessCode;
     } catch (e) {
       rethrow;
@@ -118,7 +123,6 @@ class HttpInterface {
         'authorization': 'Bearer $token'
       },
     );
-    final a = response.bodyBytes;
 
     return response.bodyBytes;
   }
@@ -147,7 +151,7 @@ class HttpInterface {
     return salePosts;
   }
 
-  Future<UserModel?> fetchUserProfile(String token) async {
+  Future<UserModel?> fetchOwnUserProfile(String token) async {
     final requestUrl = "$baseUrl/user/get/profile";
 
     final response = await http.get(

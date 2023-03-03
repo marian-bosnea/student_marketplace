@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
-import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
-import 'package:student_marketplace_frontend/features/presentation/user_profile/profile_cubit.dart';
+
+import 'features/presentation/home/home_cubit.dart';
+import 'features/presentation/home/home_page.dart';
+import 'features/presentation/authentication/auth_cubit.dart';
+import 'features/presentation/authentication/auth_state.dart';
+import 'features/presentation/login/login_cubit.dart';
+import 'features/presentation/login/login_page.dart';
+import 'features/presentation/add_post/add_post_cubit.dart';
+import 'features/presentation/posts_view/posts_view.cubit.dart';
+import 'features/presentation/user_profile/profile_cubit.dart';
+import 'features/presentation/register/register_cubit.dart';
 
 import 'core/injection_container.dart' as di;
 import 'core/on_generate_route.dart';
-import 'features/presentation/authentication/auth_cubit.dart';
-import 'features/presentation/authentication/auth_state.dart';
-import 'features/presentation/home/home_page.dart';
-import 'features/presentation/login/login_cubit.dart';
-import 'features/presentation/login/login_page.dart';
-import 'features/presentation/register/register_cubit.dart';
-import 'features/presentation/user_profile/profile_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<ProfileCubit>()),
         BlocProvider(create: (_) => di.sl<HomeCubit>()),
         BlocProvider(create: (_) => di.sl<PostViewCubit>()),
+        BlocProvider(create: (_) => di.sl<AddPostCubit>())
       ],
       child: MaterialApp(
         title: 'Student Marketplace',

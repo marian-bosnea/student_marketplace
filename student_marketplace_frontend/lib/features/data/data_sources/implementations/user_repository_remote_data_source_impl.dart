@@ -11,9 +11,12 @@ class UserRepositortRemoteDataSourceImpl
   final HttpInterface http = HttpInterface();
 
   @override
-  Future<Either<Failure, UserEntity>> getUser(String token) async {
-    UserModel? result = await http.fetchUserProfile(token);
+  Future<Either<Failure, UserEntity>> getOwnUserProfile(String token) async {
+    UserModel? result = await http.fetchOwnUserProfile(token);
+
     final avatarImageBytes = await http.getUserAvatar(token);
+
+    var a = 0;
     if (result != null) {
       return Right(UserModel(
           firstName: result.firstName,
@@ -23,6 +26,7 @@ class UserRepositortRemoteDataSourceImpl
           email: result.email,
           avatarImage: avatarImageBytes));
     }
+
     return Left(NetworkFailure());
   }
 }

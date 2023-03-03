@@ -81,7 +81,8 @@ class RegisterPage extends StatelessWidget {
           color: Colors.white,
           borderRadius:
               BorderRadius.all(Radius.circular(textFieldBorderRadius)),
-          border: Border.all(color: Colors.black12)),
+          border: Border.all(
+              color: _focusNodes[0].hasFocus ? Colors.blue : Colors.black12)),
     );
   }
 
@@ -101,7 +102,8 @@ class RegisterPage extends StatelessWidget {
           color: Colors.white,
           borderRadius:
               BorderRadius.all(Radius.circular(textFieldBorderRadius)),
-          border: Border.all(color: Colors.black12)),
+          border: Border.all(
+              color: _focusNodes[1].hasFocus ? Colors.blue : Colors.black12)),
     );
   }
 
@@ -134,28 +136,69 @@ class RegisterPage extends StatelessWidget {
   Widget _personalInfoForm(BuildContext context, RegisterPageState state) {
     BlocProvider.of<RegisterCubit>(context).fetchAllFaculties();
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.3,
+      height: MediaQuery.of(context).size.height * 0.4,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-              GestureDetector(
-                onTap: () =>
-                    BlocProvider.of<RegisterCubit>(context).onSelectImage(),
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black12),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(30))),
-                  width: 50,
-                  height: 50,
-                  child: state.avatarImage != null
-                      ? Image.memory(state.avatarImage!)
-                      : Icon(Icons.photo),
-                ),
-              ),
-            ] +
-            _generatePersonalInfoTextFields(context, state),
-      ),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            GestureDetector(
+              onTap: () =>
+                  BlocProvider.of<RegisterCubit>(context).onSelectImage(),
+              child: SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: CircleAvatar(
+                    radius: 105,
+                    child: CircleAvatar(
+                      radius: 100,
+                      backgroundImage: state.hasUploadedPhoto
+                          ? Image.memory(state.avatarImage!).image
+                          : null,
+                      child: const Icon(Icons.add_a_photo),
+                    ),
+                  )),
+            ),
+            PlatformTextField(
+              focusNode: _focusNodes[3],
+              hintText: _fieldsPlaceholders[3],
+              controller: _edittingControllers[3],
+              onChanged: (text) =>
+                  BlocProvider.of<RegisterCubit>(context).setFirstName(text),
+              onSubmitted: (text) => _focusNodes[4].requestFocus(),
+              cupertino: ((context, platform) =>
+                  _personalInfoCupertinoTextDataField(
+                      context, state, 3, Icons.person_2)),
+            ),
+            PlatformTextField(
+              focusNode: _focusNodes[4],
+              hintText: _fieldsPlaceholders[4],
+              controller: _edittingControllers[4],
+              onSubmitted: (text) => _focusNodes[5].requestFocus(),
+              onChanged: (text) =>
+                  BlocProvider.of<RegisterCubit>(context).setLastName(text),
+              cupertino: ((context, platform) =>
+                  _personalInfoCupertinoTextDataField(
+                      context, state, 4, Icons.person_2)),
+            ),
+            PlatformTextField(
+              focusNode: _focusNodes[5],
+              hintText: _fieldsPlaceholders[5],
+              controller: _edittingControllers[5],
+              onSubmitted: (text) => _openDrowDownFacultiesList(state, context),
+              onChanged: (text) => BlocProvider.of<RegisterCubit>(context)
+                  .setSecondLastName(text),
+              cupertino: ((context, platform) =>
+                  _personalInfoCupertinoTextDataField(
+                      context, state, 5, Icons.person_2)),
+            ),
+            PlatformTextField(
+              hintText: _fieldsPlaceholders[6],
+              controller: _edittingControllers[6],
+              onTap: () => _openDrowDownFacultiesList(state, context),
+              cupertino: ((context, platform) =>
+                  _personalInfoCupertinoTextDataField(
+                      context, state, 3, Icons.school)),
+            ),
+          ]),
     );
   }
 
@@ -179,12 +222,13 @@ class RegisterPage extends StatelessWidget {
         ),
         data: _getListItemsData(state),
         selectedItems: (List<dynamic> selectedList) {
-          List<String> list = [];
-          for (var item in selectedList) {
-            if (item is SelectedListItem) {
-              list.add(item.name);
-            }
-          }
+          final item = selectedList.first as SelectedListItem;
+          BlocProvider.of<RegisterCubit>(context)
+              .onSelectFaculty(item.value!)
+              .then((value) {
+            _edittingControllers[_edittingControllers.length - 1].text =
+                item.name;
+          });
         },
         enableMultipleSelection: false,
       ),
@@ -194,33 +238,10 @@ class RegisterPage extends StatelessWidget {
   List<SelectedListItem> _getListItemsData(RegisterPageState state) {
     List<SelectedListItem> items = [];
     for (var f in state.faculties) {
-      items.add(SelectedListItem(name: f.name.toString()));
+      items.add(
+          SelectedListItem(name: f.name.toString(), value: f.id.toString()));
     }
     return items;
-  }
-
-  List<Widget> _generatePersonalInfoTextFields(
-      BuildContext context, RegisterPageState state) {
-    List<Widget> textFields = [];
-
-    for (int i = 3; i < _fieldsPlaceholders.length; i++) {
-      final bool isLast = i == _fieldsPlaceholders.length - 1;
-      textFields.add(
-        PlatformTextField(
-          hintText: _fieldsPlaceholders[i],
-          controller: _edittingControllers[i],
-          focusNode: _focusNodes[i],
-          readOnly: isLast,
-          onTap: () =>
-              isLast ? _openDrowDownFacultiesList(state, context) : null,
-          onSubmitted:
-              !isLast ? (value) => _focusNodes[i + 1].requestFocus() : null,
-          cupertino: (contex, target) => _personalInfoCupertinoTextDataField(
-              context, state, i, !isLast ? Icons.person : Icons.school),
-        ),
-      );
-    }
-    return textFields;
   }
 
   Widget _credentialsForm(BuildContext context, RegisterPageState state) {
@@ -231,7 +252,9 @@ class RegisterPage extends StatelessWidget {
         children: [
           PlatformTextField(
             hintText: _fieldsPlaceholders[0],
+            focusNode: _focusNodes[0],
             controller: _edittingControllers[0],
+            onSubmitted: (text) => _focusNodes[1].requestFocus(),
             cupertino: (context, target) =>
                 _emailCupertinoTextFieldData(context, state),
             onChanged: (text) => BlocProvider.of<RegisterCubit>(context)
@@ -239,21 +262,31 @@ class RegisterPage extends StatelessWidget {
                     CredentialsModel(email: text, password: '')),
           ),
           PlatformTextField(
+            focusNode: _focusNodes[1],
             hintText: _fieldsPlaceholders[1],
             controller: _edittingControllers[1],
             obscureText: true,
             cupertino: (contex, target) =>
                 _passwordCupertinoTextDataField(context, state),
+            onSubmitted: (text) => _focusNodes[2].requestFocus(),
             onChanged: (text) => BlocProvider.of<RegisterCubit>(context)
                 .checkIfPasswordIsValid(text),
           ),
           if (state.showPasswordWarning) _getWarningText('Password too short'),
           PlatformTextField(
+            focusNode: _focusNodes[2],
             hintText: _fieldsPlaceholders[2],
             controller: _edittingControllers[2],
             obscureText: true,
             cupertino: (contex, target) =>
                 _passwordCupertinoTextDataField(context, state),
+            onSubmitted: (text) {
+              if (state.status == RegisterPageStatus.validCredentials ||
+                  state.status == RegisterPageStatus.validPersonalInfo) {
+                BlocProvider.of<RegisterCubit>(context).goToNextStep();
+                _focusNodes[3].requestFocus();
+              }
+            },
             onChanged: (text) => BlocProvider.of<RegisterCubit>(context)
                 .checkIfPasswordsMatch(text),
           ),
@@ -268,6 +301,8 @@ class RegisterPage extends StatelessWidget {
     if (state.faculties.isEmpty) {
       BlocProvider.of<RegisterCubit>(context).fetchAllFaculties();
     }
+    print(state.status.toString());
+
     return Material(
       elevation: 2,
       borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -292,7 +327,6 @@ class RegisterPage extends StatelessWidget {
                 ),
                 Container(
                   height: 30,
-                  margin: const EdgeInsets.only(top: 10, bottom: 10),
                   child: ToggleSwitch(
                     minWidth: 100.0,
                     cornerRadius: 20.0,
@@ -325,22 +359,38 @@ class RegisterPage extends StatelessWidget {
                   width: 50,
                   height: 50,
                   child: PlatformIconButton(
-                    padding: EdgeInsets.zero,
-                    cupertinoIcon: const Icon(
-                      CupertinoIcons.arrow_right_circle,
-                      size: 40,
-                    ),
-                    materialIcon: const Icon(
-                      Icons.arrow_right_rounded,
-                      size: 40,
-                    ),
-                    onPressed: state.status ==
+                      padding: EdgeInsets.zero,
+                      cupertinoIcon: const Icon(
+                        CupertinoIcons.arrow_right_circle,
+                        size: 40,
+                      ),
+                      materialIcon: const Icon(
+                        Icons.arrow_right_rounded,
+                        size: 40,
+                      ),
+                      onPressed: () {
+                        if (state.status ==
                                 RegisterPageStatus.validCredentials ||
-                            state.status == RegisterPageStatus.validPersonalInfo
-                        ? () => BlocProvider.of<RegisterCubit>(context)
-                            .goToNextStep()
-                        : null,
-                  ),
+                            state.status ==
+                                RegisterPageStatus.validPersonalInfo) {
+                          BlocProvider.of<RegisterCubit>(context)
+                              .goToNextStep();
+                          _focusNodes[3].requestFocus();
+                        }
+                        print(state.status.toString());
+                        if (state.status ==
+                            RegisterPageStatus.validPersonalInfo) {
+                          BlocProvider.of<RegisterCubit>(context)
+                              .registerUser()
+                              .then((value) {
+                            Navigator.of(context).pushReplacement(
+                                platformPageRoute(
+                                    context: context,
+                                    builder: (context) =>
+                                        AuthenticationPage()));
+                          });
+                        }
+                      }),
                 ),
                 if (state.status != RegisterPageStatus.personalInfoInProgress)
                   Row(
@@ -389,15 +439,6 @@ class RegisterPage extends StatelessWidget {
       case RegisterPageStatus.submissionFailed:
         return personalInfoMessage;
     }
-  }
-
-  List<String> _getFieldInputs() {
-    List<String> inputs = [];
-    for (var a in _edittingControllers) {
-      inputs.add(a.text);
-    }
-
-    return inputs;
   }
 
   Widget _getCurrentForm(BuildContext context, RegisterPageState state) {

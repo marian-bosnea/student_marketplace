@@ -5,12 +5,12 @@ import '../../operations/user_operations.dart';
 import '../../../../core/error/failures.dart';
 
 class SignUpUsecase implements Usecase<bool, UserParam> {
-  final UserOperations repository;
+  final UserOperations operations;
 
-  SignUpUsecase({required this.repository});
+  SignUpUsecase({required this.operations});
 
   @override
-  Future<Either<Failure, bool>> call(UserParam param) {
-    return repository.signUpUser(param.user);
+  Future<Either<Failure, bool>> call(UserParam param) async {
+    return await operations.signUpUser(param.user);
   }
 }

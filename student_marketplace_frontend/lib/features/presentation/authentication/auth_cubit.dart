@@ -62,7 +62,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> signOutUser() async {
     try {
-      await deauthenticateUsecase(NoParams());
+      final result = await deauthenticateUsecase(NoParams());
       emit(Unauthenticated());
     } catch (_) {
       emit(Unauthenticated());

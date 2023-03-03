@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:student_marketplace_frontend/core/input_validators.dart';
 import 'package:student_marketplace_frontend/features/data/models/credentials_model.dart';
+import 'package:student_marketplace_frontend/features/domain/entities/faculty_entity.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/credentials/check_email_availability_usecase.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../domain/usecases/faculty/get_all_faculties_usecase.dart';
@@ -32,7 +33,7 @@ class RegisterCubit extends Cubit<RegisterPageState> {
   }
 
   Future<void> checkEmailForAvailability(CredentialsModel credentials) async {
-    state.copyWith(emailValue: credentials.email);
+    state = state.copyWith(emailValue: credentials.email);
     final isEmailValid = checkEmail(credentials.email);
 
     if (credentials.email.trim().isEmpty || !isEmailValid) {
@@ -83,6 +84,18 @@ class RegisterCubit extends Cubit<RegisterPageState> {
     emit(state);
   }
 
+  Future<void> setFirstName(String value) async {
+    state = state.copyWith(firstNameValue: value);
+  }
+
+  Future<void> setLastName(String value) async {
+    state = state.copyWith(lastNameValue: value);
+  }
+
+  Future<void> setSecondLastName(String value) async {
+    state = state.copyWith(secondLastNameValue: value);
+  }
+
   Future<void> goToNextStep() async {
     if (state.status == RegisterPageStatus.validCredentials) {
       state = state.copyWith(status: RegisterPageStatus.personalInfoInProgress);
@@ -102,12 +115,30 @@ class RegisterCubit extends Cubit<RegisterPageState> {
     emit(state);
   }
 
+  checkPersonalInfo() {
+    if (state.firstNameValue.isNotEmpty &&
+        state.lastNameValue.isNotEmpty &&
+        state.selectedFacultyId != '') {
+      state = state.copyWith(status: RegisterPageStatus.validPersonalInfo);
+    }
+  }
+
   Future<void> onSelectImage() async {
     final ImagePicker picker = ImagePicker();
     // Pick an image
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    final result = await image!.readAsBytes();
-    state = state.copyWith(avatarImage: result);
+
+    if (image != null) {
+      final result = await image.readAsBytes();
+      state = state.copyWith(hasUploadedPhoto: true, avatarImage: result);
+      emit(state);
+    }
+  }
+
+  Future<void> onSelectFaculty(String id) async {
+    state = state.copyWith(selectedFacultyId: id);
+    checkPersonalInfo();
+    emit(state);
   }
 
   _checkIfCredentialsFormIsValid() {
@@ -119,15 +150,18 @@ class RegisterCubit extends Cubit<RegisterPageState> {
     }
   }
 
-  Future<void> _registerUser(List<String> input) async {
-    final result = await signUpUsecase(UserParam(
-        user: UserModel(
-            email: input[0],
-            password: input[1],
-            firstName: input[3],
-            lastName: input[4],
-            secondaryLastName: input[5],
-            facultyName: input[6])));
+  Future<void> registerUser() async {
+    UserModel m = UserModel(
+        email: state.emailValue,
+        password: state.passwordValue,
+        confirmPassword: state.confirmPasswordValue,
+        firstName: state.firstNameValue,
+        lastName: state.lastNameValue,
+        secondaryLastName: state.secondLastNameValue,
+        facultyName: state.selectedFacultyId,
+        avatarImage: state.avatarImage);
+    print(m.toJson().toString());
+    final result = await signUpUsecase(UserParam(user: m));
 
     final success = result.getOrElse(() => false);
     state = state.copyWith(

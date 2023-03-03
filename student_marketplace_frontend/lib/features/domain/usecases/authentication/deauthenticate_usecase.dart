@@ -14,14 +14,13 @@ class DeauthenticateUsecase extends Usecase<bool, NoParams> {
 
   @override
   Future<Either<Failure, bool>> call(NoParams params) async {
-    final session = await authSessionRepository.getCachedSession();
-    if (session is Left) return Left(UnauthenticatedFailure());
+    final resultSession = await authSessionRepository.getCachedSession();
+    if (resultSession is Left) return Left(UnauthenticatedFailure());
 
-    final token = (session as Right).value;
-    final result = await authSessionOperations.deauthenticate(token);
+    final session = (resultSession as Right).value;
+    final result = await authSessionOperations.deauthenticate(session.token);
 
     if (result is Left) return Left(NetworkFailure());
-
     return result;
   }
 }

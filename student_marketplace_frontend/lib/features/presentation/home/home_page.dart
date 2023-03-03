@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_frontend/core/enums.dart';
+import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_page.dart';
 import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view_page.dart';
 import 'package:student_marketplace_frontend/features/presentation/user_profile/profile_page.dart';
@@ -72,9 +73,7 @@ class HomePage extends StatelessWidget {
           child: Text("Search Page"),
         );
       case HomePageStatus.addPost:
-        return const Center(
-          child: Text("Add Post Page"),
-        );
+        return const AddPostPage();
       case HomePageStatus.profile:
         return ProfilePage();
       case HomePageStatus.settings:

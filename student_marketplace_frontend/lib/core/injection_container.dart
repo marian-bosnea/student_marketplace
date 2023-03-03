@@ -7,8 +7,8 @@ import 'package:student_marketplace_frontend/features/data/data_sources/implemen
 import 'package:student_marketplace_frontend/features/data/data_sources/implementations/auth_session_remote_data_source_impl.dart';
 import 'package:student_marketplace_frontend/features/data/data_sources/implementations/credentials_remote_data_source_impl.dart';
 import 'package:student_marketplace_frontend/features/data/data_sources/implementations/faculty_remote_data_source_impl.dart';
-import 'package:student_marketplace_frontend/features/data/data_sources/operations/auth_session_operations_impl.dart';
-import 'package:student_marketplace_frontend/features/data/data_sources/operations/credentials_operations_impl.dart';
+import 'package:student_marketplace_frontend/features/data/operations/auth_session_operations_impl.dart';
+import 'package:student_marketplace_frontend/features/data/operations/credentials_operations_impl.dart';
 import 'package:student_marketplace_frontend/features/data/repositories/faculty_repository_impl.dart';
 import 'package:student_marketplace_frontend/features/domain/operations/auth_session_operations.dart';
 import 'package:student_marketplace_frontend/features/domain/operations/credentials_operations.dart';
@@ -20,6 +20,8 @@ import 'package:student_marketplace_frontend/features/domain/usecases/authentica
 import 'package:student_marketplace_frontend/features/domain/usecases/authentication/get_cached_session_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/credentials/check_email_availability_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/faculty/get_all_faculties_usecase.dart';
+import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_page_state.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/register/register_cubit.dart';
@@ -33,14 +35,14 @@ import '../features/data/data_sources/implementations/user_operations_remote_dat
 import '../features/data/repositories/auth_repository_impl.dart';
 import '../features/data/repositories/sale_post_repository_impl.dart';
 import '../features/data/repositories/user_repository_impl.dart';
-import '../features/data/data_sources/operations/user_operations_impl.dart';
+import '../features/data/operations/user_operations_impl.dart';
 import '../features/domain/repositories/sale_post_repository.dart';
 import '../features/domain/repositories/user_repository.dart';
 import '../features/domain/operations/user_operations.dart';
 import '../features/domain/usecases/sale_post/get_all_posts_by_category_usecase.dart';
 import '../features/domain/usecases/sale_post/get_all_posts_by_owner_usecase.dart';
 import '../features/domain/usecases/sale_post/get_all_posts_usecase.dart';
-import '../features/domain/usecases/user/get_user_usecase.dart';
+import '../features/domain/usecases/user/get_own_user_usecase.dart';
 import '../features/domain/usecases/user/sign_up_usecase.dart';
 import '../features/presentation/authentication/auth_cubit.dart';
 import '../features/presentation/login/login_cubit.dart';
@@ -76,6 +78,7 @@ Future<void> init() async {
   sl.registerFactory(() => PostViewCubit(
       getAllPostsUsecase: sl.call(), getCachedSessionUsecase: sl.call()));
 
+  sl.registerFactory(() => AddPostCubit());
   // Usecases
 
   sl.registerLazySingleton(() => AuthenticateUsecase(repository: sl.call()));
@@ -94,9 +97,9 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => GetAllFacultiesUsecase(repository: sl.call()));
 
-  sl.registerLazySingleton(() => SignUpUsecase(repository: sl.call()));
+  sl.registerLazySingleton(() => SignUpUsecase(operations: sl.call()));
   sl.registerLazySingleton(() =>
-      GetUserUsecase(userRepository: sl.call(), authRepository: sl.call()));
+      GetOwnUserProfile(userRepository: sl.call(), authRepository: sl.call()));
 
   sl.registerLazySingleton(() =>
       GetAllPostsUsecase(postRepository: sl.call(), authRepository: sl.call()));

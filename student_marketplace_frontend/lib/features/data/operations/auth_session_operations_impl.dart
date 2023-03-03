@@ -5,7 +5,7 @@ import 'package:student_marketplace_frontend/core/error/failures.dart';
 
 import 'package:dartz/dartz.dart';
 
-import '../../../domain/operations/auth_session_operations.dart';
+import '../../domain/operations/auth_session_operations.dart';
 
 class AuthSessionOperationsImpl extends AuthSessionOperations {
   final AuthSessionRemoteDataSource authRemoteDataSource;
@@ -13,11 +13,12 @@ class AuthSessionOperationsImpl extends AuthSessionOperations {
 
   @override
   Future<Either<Failure, bool>> deauthenticate(
-          AuthSessionEntity session) async =>
-      authRemoteDataSource.deauthenticate(session);
+      AuthSessionEntity session) async {
+    return await authRemoteDataSource.deauthenticate(session);
+  }
 
   @override
   Future<Either<Failure, bool>> getAuthenticationStatus(
           AuthSessionEntity session) async =>
-      authRemoteDataSource.getAuthenticationStatus(session);
+      await authRemoteDataSource.getAuthenticationStatus(session);
 }
