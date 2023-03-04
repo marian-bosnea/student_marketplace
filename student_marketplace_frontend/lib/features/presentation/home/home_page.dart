@@ -73,7 +73,7 @@ class HomePage extends StatelessWidget {
           child: Text("Search Page"),
         );
       case HomePageStatus.addPost:
-        return const AddPostPage();
+        return AddPostPage();
       case HomePageStatus.profile:
         return ProfilePage();
       case HomePageStatus.settings:

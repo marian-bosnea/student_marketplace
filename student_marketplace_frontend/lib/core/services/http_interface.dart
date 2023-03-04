@@ -4,7 +4,9 @@ import 'dart:typed_data';
 
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
+import 'package:student_marketplace_frontend/features/data/data_sources/implementations/product_category_remote_data_source_impl.dart';
 import 'package:student_marketplace_frontend/features/data/models/faculty_model.dart';
+import 'package:student_marketplace_frontend/features/data/models/product_category_model.dart';
 import 'package:student_marketplace_frontend/features/data/models/sale_post_model.dart';
 
 import '../../features/data/models/user_model.dart';
@@ -166,6 +168,29 @@ class HttpInterface {
     final resultJson = json.decode(response.body) as Map<String, dynamic>;
 
     return UserModel.fromJson(resultJson);
+  }
+
+  Future<List<ProductCategoryModel>> fetchAllCategories(String token) async {
+    final requestUrl = "$baseUrl/product-categories/get/all";
+
+    final response = await http.get(
+      Uri.parse(requestUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token'
+      },
+    );
+
+    final bodyJson = json.decode(response.body) as Map<String, dynamic>;
+    final resultJson = bodyJson['object_categories'];
+
+    List<ProductCategoryModel> categories = [];
+
+    for (var json in resultJson) {
+      final map = json as Map<String, dynamic>;
+      categories.add(ProductCategoryModel.fromJson(json)!);
+    }
+    return categories;
   }
 
   Future<List<FacultyModel>> fetchAllFaculties() async {

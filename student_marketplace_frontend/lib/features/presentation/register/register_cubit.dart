@@ -160,7 +160,6 @@ class RegisterCubit extends Cubit<RegisterPageState> {
         secondaryLastName: state.secondLastNameValue,
         facultyName: state.selectedFacultyId,
         avatarImage: state.avatarImage);
-    print(m.toJson().toString());
     final result = await signUpUsecase(UserParam(user: m));
 
     final success = result.getOrElse(() => false);
