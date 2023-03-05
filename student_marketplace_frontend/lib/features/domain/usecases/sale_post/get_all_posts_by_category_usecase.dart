@@ -21,8 +21,8 @@ class GetAllPostsByCategory
     if (session is Left) return Left(UnauthenticatedFailure());
 
     final token = (session as Right).value;
-    final result =
-        await postRepository.getAllPostsByCategory(token, params.categoryId);
+    final result = await postRepository.getAllPostsByCategory(
+        token.token, params.categoryId);
 
     if (result is Left) return Left(NetworkFailure());
     final posts = (result as Right).value;

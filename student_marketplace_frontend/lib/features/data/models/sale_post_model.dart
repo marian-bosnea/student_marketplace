@@ -4,17 +4,24 @@ class SalePostModel extends SalePostEntity {
   SalePostModel(
       {required super.title,
       required super.description,
-      required super.ownerName,
+      required super.ownerId,
       required super.postingDate,
-      required super.images});
+      required super.categoryId,
+      required super.price,
+      required super.images,
+      super.postId,
+      super.ownerName,
+      super.categoryName});
 
   factory SalePostModel.fromJson(Map<String, dynamic> json) {
     return SalePostModel(
       title: json['title'],
       description: json['description'],
-      ownerName: json['owner_name'],
+      ownerId: json['owner_id'].toString(),
       postingDate: json['date'],
-      images: [],
+      price: json['price'].toString(),
+      categoryId: json['category_id'].toString(),
+      images: const [],
     );
   }
 
@@ -22,7 +29,7 @@ class SalePostModel extends SalePostEntity {
     return {
       'title': title,
       'description': description,
-      'ownerName': ownerName,
+      'ownerName': ownerId,
       'postingDate': postingDate,
       'images': ''
     };

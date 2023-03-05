@@ -1,18 +1,20 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:student_marketplace_frontend/core/usecases/usecase.dart';
+import 'package:student_marketplace_frontend/features/data/models/sale_post_model.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/product_category/get_all_categories_usecase.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_page_state.dart';
 
 class AddPostCubit extends Cubit<AddPostPageState> {
   final GetAllCategoriesUsecase getAllCategoriesUsecase;
+  final UploadPostUsecase uploadPostUsecase;
 
-  AddPostCubit({required this.getAllCategoriesUsecase})
+  AddPostCubit(
+      {required this.uploadPostUsecase, required this.getAllCategoriesUsecase})
       : super(const AddPostPageState());
   AddPostPageState state = AddPostPageState();
 
@@ -47,7 +49,21 @@ class AddPostCubit extends Cubit<AddPostPageState> {
     emit(state);
   }
 
-  Future<void> uploadPost() async {}
+  Future<void> uploadPost() async {
+    DateTime today = new DateTime.now();
+    String dateSlug =
+        "${today.year.toString()}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
+
+    uploadPostUsecase(PostParam(
+        post: SalePostModel(
+            categoryId: state.categoryId,
+            description: state.descriptionValue,
+            images: state.images,
+            ownerId: '0',
+            price: state.price,
+            postingDate: dateSlug,
+            title: state.titleValue)));
+  }
 
   Future<void> setCategoryValue(String categoryId) async {
     state = state.copyWith(categoryId: categoryId);

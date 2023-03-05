@@ -24,15 +24,41 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
 
   @override
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
-      String token, String categoryId) {
-    // TODO: implement getAllPostsByCategory
-    throw UnimplementedError();
+      String token, String categoryId) async {
+    final result = await httpInterface.fetchAllSalePostsOfCategory(
+        token: token, categoryId: categoryId);
+    if (result == null) {
+      return Left(NetworkFailure());
+    } else {
+      return Right(result);
+    }
   }
 
   @override
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
-      String token, String ownerId) {
-    // TODO: implement getAllPostsByOwner
+      String token, String ownerId) async {
+    final result = await httpInterface.fetchAllSalePosts(token);
+    if (result == null) {
+      return Left(NetworkFailure());
+    } else {
+      return Right(result);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> update(SalePostEntity post, String token) {
+    // TODO: implement update
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, bool>> upload(
+      SalePostEntity post, String token) async {
+    try {
+      final result = await httpInterface.uploadPost(post, token);
+      return Right(result);
+    } catch (e) {
+      return Left(NetworkFailure());
+    }
   }
 }

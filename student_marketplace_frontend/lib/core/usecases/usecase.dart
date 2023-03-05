@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:student_marketplace_frontend/features/domain/entities/auth_session_entity.dart';
 import 'package:student_marketplace_frontend/features/domain/entities/credentials_entity.dart';
+import 'package:student_marketplace_frontend/features/domain/entities/sale_post_entity.dart';
 
 import '../../features/domain/entities/user_entity.dart';
 import '../error/failures.dart';
@@ -22,6 +23,14 @@ class IdParam extends Equatable {
 
   @override
   List<Object?> get props => [id];
+}
+
+class PostParam extends Equatable {
+  final SalePostEntity post;
+  const PostParam({required this.post});
+
+  @override
+  List<Object?> get props => [post];
 }
 
 class CredentialsParams extends Equatable {
@@ -53,13 +62,12 @@ class TokenIdParam extends Equatable {
 }
 
 class CategoryParam extends Equatable {
-  final String token;
   final String categoryId;
 
-  const CategoryParam({required this.token, required this.categoryId});
+  const CategoryParam({required this.categoryId});
 
   @override
-  List<Object?> get props => [token, categoryId];
+  List<Object?> get props => [categoryId];
 }
 
 class UserParam extends Equatable {

@@ -112,6 +112,11 @@ class AddPostPage extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+                  PlatformElevatedButton(
+                    onPressed: () =>
+                        BlocProvider.of<AddPostCubit>(context).uploadPost(),
+                    child: const Text("List item"),
                   )
                 ]),
           ),

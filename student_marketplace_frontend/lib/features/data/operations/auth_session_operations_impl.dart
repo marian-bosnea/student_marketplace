@@ -14,6 +14,7 @@ class AuthSessionOperationsImpl extends AuthSessionOperations {
   @override
   Future<Either<Failure, bool>> deauthenticate(
       AuthSessionEntity session) async {
+    print('da');
     return await authRemoteDataSource.deauthenticate(session);
   }
 

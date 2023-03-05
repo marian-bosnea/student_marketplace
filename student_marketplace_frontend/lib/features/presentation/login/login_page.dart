@@ -199,7 +199,7 @@ class AuthenticationPage extends StatelessWidget {
 
   Widget _getEmailTextFieldPrefix(BuildContext context, LoginPageState state) {
     if (state.status == LoginPageStatus.emailSubmitting) {
-      return SizedBox(height: 40, child: const CupertinoActivityIndicator());
+      return const SizedBox(height: 40, child: CupertinoActivityIndicator());
     }
     if (state.status == LoginPageStatus.emailSucces) {
       return const SizedBox(

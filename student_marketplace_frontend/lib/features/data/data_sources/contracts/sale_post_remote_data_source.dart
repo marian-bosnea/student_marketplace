@@ -9,4 +9,7 @@ abstract class SalePostRemoteDataSource {
       String token, String categoryId);
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
       String token, String ownerId);
+
+  Future<Either<Failure, bool>> upload(SalePostEntity post, String token);
+  Future<Either<Failure, bool>> update(SalePostEntity post, String token);
 }

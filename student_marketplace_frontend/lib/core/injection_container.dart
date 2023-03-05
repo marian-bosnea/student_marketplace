@@ -10,9 +10,11 @@ import 'package:student_marketplace_frontend/features/data/data_sources/implemen
 import 'package:student_marketplace_frontend/features/data/data_sources/implementations/faculty_remote_data_source_impl.dart';
 import 'package:student_marketplace_frontend/features/data/operations/auth_session_operations_impl.dart';
 import 'package:student_marketplace_frontend/features/data/operations/credentials_operations_impl.dart';
+import 'package:student_marketplace_frontend/features/data/operations/sale_post_operations_impl.dart';
 import 'package:student_marketplace_frontend/features/data/repositories/faculty_repository_impl.dart';
 import 'package:student_marketplace_frontend/features/domain/operations/auth_session_operations.dart';
 import 'package:student_marketplace_frontend/features/domain/operations/credentials_operations.dart';
+import 'package:student_marketplace_frontend/features/domain/operations/sale_post_operations.dart';
 import 'package:student_marketplace_frontend/features/domain/repositories/auth_session_repository.dart';
 import 'package:student_marketplace_frontend/features/domain/repositories/faculty_repository.dart';
 import 'package:student_marketplace_frontend/features/domain/repositories/product_category_repository.dart';
@@ -23,6 +25,7 @@ import 'package:student_marketplace_frontend/features/domain/usecases/authentica
 import 'package:student_marketplace_frontend/features/domain/usecases/credentials/check_email_availability_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/faculty/get_all_faculties_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/product_category/get_all_categories_usecase.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_page_state.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
@@ -81,9 +84,13 @@ Future<void> init() async {
   sl.registerFactory(() => ProfileCubit(getUserUsecase: sl.call()));
 
   sl.registerFactory(() => PostViewCubit(
-      getAllPostsUsecase: sl.call(), getCachedSessionUsecase: sl.call()));
+      getAllPostsUsecase: sl.call(),
+      getCachedSessionUsecase: sl.call(),
+      getAllPostsByCategoryUsecase: sl.call(),
+      getAllCategoriesUsecase: sl.call()));
 
-  sl.registerFactory(() => AddPostCubit(getAllCategoriesUsecase: sl.call()));
+  sl.registerFactory(() => AddPostCubit(
+      getAllCategoriesUsecase: sl.call(), uploadPostUsecase: sl.call()));
   // Usecases
 
   sl.registerLazySingleton(() => AuthenticateUsecase(repository: sl.call()));
@@ -115,6 +122,10 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => GetAllCategoriesUsecase(
       categoryRepository: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => UploadPostUsecase(
+      salePostOperations: sl.call(), authRepository: sl.call()));
+
   // Repositories
 
   sl.registerLazySingleton<AuthSessionOperations>(
@@ -137,6 +148,9 @@ Future<void> init() async {
 
   sl.registerLazySingleton<SalePostRepository>(
       () => SalePostRepositoryImpl(remoteDataSource: sl.call()));
+
+  sl.registerLazySingleton<SalePostOperations>(
+      () => SalePostOperationsImpl(remoteDataSource: sl.call()));
 
   sl.registerLazySingleton<ProductCategoryRepository>(
       () => ProductCategoryRepositoryImpl(remoteDataSource: sl.call()));
