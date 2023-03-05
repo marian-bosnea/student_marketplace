@@ -39,10 +39,6 @@ const upload = multer({
    fileFilter: fileFilter
 });
 
-authRouter.post('/users/register', upload.single('avatarImage'), async (req, res) => {
-    authController.registerUser(req, res);
- });
-
  authRouter.post('/users/login/local-strategy',
  (req, res) => {
     authController.loginUser(req, res);
@@ -60,7 +56,7 @@ authRouter.post('/users/register', upload.single('avatarImage'), async (req, res
  });
 
  
- authRouter.post('/users/register', async (req, res) => {
+ authRouter.post('/users/register',upload.single('avatarImage'), async (req, res) => {
     authController.registerUser(req, res);
  });
 

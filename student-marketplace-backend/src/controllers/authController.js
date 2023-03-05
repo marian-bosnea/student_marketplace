@@ -10,6 +10,12 @@ const authorization = require('../authorization');
 
 registerUser = async (req, res) => {
    let { email, password, passwordConfirm, firstName, lastName, secondaryLastName, avatarImage, facultyId } = req.body;
+   if (!req.file)  {
+   console.log('Please upload a file')
+  } else {
+   console.log(req.file.path);
+
+   }
 
    console.log(`Registerin user with ${email} : ${password}`)
    let error_message = '';
@@ -25,6 +31,8 @@ registerUser = async (req, res) => {
    if (error_message.length != 0) {
       res.send({ body: { message: error_message, status_code: codes.INVALID_INPUT_CODE } });
    } else {
+      //console.log(req.file.path);
+
       const client = await pool.connect()
       try {
          await client.query('BEGIN')
@@ -45,10 +53,8 @@ registerUser = async (req, res) => {
             ///TODO here should query for partial insertion
             secondaryLastName = "null";
          }
-
          avatarImage = req.file.path;
-         //console.log(req.file);
-
+   
          const userProfileInsertRes = await client.query(sql.USER_PROFILE_INSERT_FULL, [firstName, lastName, secondaryLastName, avatarImage]);
          const profileId = userProfileInsertRes.rows[0].id;
 
@@ -77,6 +83,8 @@ registerUser = async (req, res) => {
 }
 
 uploadProfileAvatar = async (req, res)  => {
+   if (!req.file) return res.send('Please upload a file')
+
 const userId = res.locals.decryptedId;
 const results = await pool.query(sql.GET_PROFILE_ID, [userId]);
 const profileId = results.rows[0].profile_id;
@@ -168,6 +176,8 @@ logoutUser = (req, res) => {
    const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')[1];
 
+   console.log(`Requested logout for token ${token}`);
+   
   pool.query(sql.READ_TOKEN, [token], async (err, result) => {
    if(err){
       throw err;

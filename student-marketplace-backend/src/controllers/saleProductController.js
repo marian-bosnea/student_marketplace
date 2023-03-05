@@ -2,6 +2,7 @@ const { pool } = require("../db/dbConfig");
 const sql = require('../db/sqlQuerries');
 
 const codes = require('../constants/statusCodes');
+var path = require('path');
 
 getCategories = (req, res) => {
    pool.query(sql.CATEGORY_READ_ALL, [], (err, result) => {
@@ -27,8 +28,8 @@ insert = async (req, res) => {
    const title = req.body.title;
    const description = req.body.description;
    const price = req.body.price;
-   const ownerID = req.body.ownerID;
-   const categoryID = req.body.categoryID;
+   const ownerID = res.locals.decryptedId;
+   const categoryID = req.body.categoryId;
    const date = req.body.date;
 
    const client = await pool.connect()
@@ -40,8 +41,12 @@ insert = async (req, res) => {
       const descriptionID = descriptionRes.rows[0].id;
       const objectRes = await client.query(sql.SALE_OBJECT_INSERT, [descriptionID, categoryID, ownerID, date, true]);
 
-      //INSERT IMAGES with descriptionID
-      //const photoRes = await client.query(sql.OBJECT_IMAGE_INSERT);
+      var paths = req.files.map(file => file.path)
+
+      for (var p in paths) {
+         console.log(paths[p]);
+         const photoRes = await client.query(sql.OBJECT_IMAGE_INSERT, [paths[p], descriptionID]);
+      }
 
       await client.query('COMMIT')
 
@@ -49,8 +54,10 @@ insert = async (req, res) => {
       res.send({ id: objectRes.rows[0].id });
 
    } catch (e) {
+      console.log(e);
+
       await client.query('ROLLBACK');
-      res.status(code.INVALID_INPUT_CODE);
+      res.status(codes.INVALID_INPUT_CODE);
       res.send({ message: "Invalid input" });
 
    } finally {
@@ -69,10 +76,12 @@ getAll = async (req, res) => {
    
       for (i = 0; i < results.rowCount; i++) {
          saleObjectsJson.push({
+            id: results.rows[i].id,
             title: results.rows[i].title,
             description: results.rows[i].description,
             price: results.rows[i].price,
             date: results.rows[i].date,
+            category_id : 1,
             owner_id: results.rows[i].owner_id,
             owner_name: results.rows[i].owner_name
          });
@@ -86,6 +95,7 @@ getAll = async (req, res) => {
       throw e
    } finally {
       client.release()
+
    }
 
 
@@ -96,16 +106,20 @@ getAllFromCategory = async (req, res) => {
    const client = await pool.connect()
 
    try {
-      const result = await client.query(sql.SALE_OBJECT_READ_CATEGORY, [categoryId]);
+      const results = await client.query(sql.SALE_OBJECT_READ_CATEGORY, [categoryId]);
 
       let saleObjectsJson = [];
 
-      for (i = 0; i < result.rowCount; i++) {
+      for (i = 0; i < results.rowCount; i++) {
          saleObjectsJson.push({
-            title: result.rows[i].title,
-            description: result.rows[i].description,
-            price: result.rows[i].price,
-            ownerId: result.rows[i].owner_id
+                id: results.rows[i].id,
+            title: results.rows[i].title,
+            description: results.rows[i].description,
+            price: results.rows[i].price,
+            date: results.rows[i].date,
+            category_id : 1,
+            owner_id: results.rows[i].owner_id,
+            owner_name: results.rows[i].owner_name
          });
       }
  
@@ -133,6 +147,7 @@ getAllByOwnerId = async (req, res) => {
 
       for (i = 0; i < result.rowCount; i++) {
          saleObjectsJson.push({
+            id: result.rows[i].id,
             title: result.rows[0].title,
             description: result.rows[0].description,
             price: result.rows[0].price,
@@ -153,10 +168,41 @@ getAllByOwnerId = async (req, res) => {
    }
 }
 
+getImage = async (req, res) => {
+
+  const userId = res.locals.decryptedId;
+  const index = req.body.index;
+  const postId = req.body.postId;
+
+  console.log(`Requested image with index ${index} of post with id ${postId}`);
+
+   const client = await pool.connect()
+
+   try {
+      const results = await client.query(sql.OBJECT_IMAGE_READ, [postId]);
+      const fileSrc = results.rows[index].data;
+
+      const filePath = path.resolve(__dirname + '../../../' +  fileSrc);
+      console.log(filePath);
+      res.sendFile(filePath);
+      res.status(codes.GET_SUCCESS_CODE);
+
+   } catch (e) {
+      res.status(codes.INVALID_INPUT_CODE);
+      console.log('error');
+      res.send({ message: "Invalid input"});
+      throw e
+   } finally {
+      client.release()
+   }
+
+}
+
 module.exports = {
    getCategories,
    insert,
    getAllFromCategory,
    getAllByOwnerId,
-   getAll
+   getAll,
+   getImage
 }

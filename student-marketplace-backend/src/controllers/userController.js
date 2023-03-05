@@ -59,7 +59,6 @@ getUserProfile = async (req, res) => {
 
   
 getUserAvatar = async (req, res) => {
-   //const userId = req.userId;
   const userId = res.locals.decryptedId;
 
    const client = await pool.connect()

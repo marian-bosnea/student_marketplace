@@ -21,10 +21,11 @@ const userRouter = require('./routes/user')
 
 // Middleware
 app.use(bodyParser.urlencoded({
-   extended: true
+   extended: true,
+   limit: '200mb'
 }));
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '200mb'}));
 
 app.use(session({
    secret: 'secret',
