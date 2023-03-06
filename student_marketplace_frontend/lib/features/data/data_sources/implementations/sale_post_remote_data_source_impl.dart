@@ -1,3 +1,4 @@
+import 'package:http/http.dart';
 import 'package:student_marketplace_frontend/core/services/http_interface.dart';
 
 import '../../../domain/entities/sale_post_entity.dart';
@@ -59,6 +60,18 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
       return Right(result);
     } catch (e) {
       return Left(NetworkFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, SalePostEntity>> getDetailedPost(
+      String token, String postId) async {
+    final result =
+        await httpInterface.fetchDetailedSalePost(token: token, postId: postId);
+    if (result == null) {
+      return Left(NetworkFailure());
+    } else {
+      return Right(result);
     }
   }
 }

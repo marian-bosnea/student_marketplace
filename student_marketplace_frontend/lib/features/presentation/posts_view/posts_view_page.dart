@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_frontend/core/enums.dart';
@@ -67,7 +67,13 @@ class PostViewPage extends StatelessWidget {
                       itemCount: state.posts.length,
                       itemBuilder: (BuildContext ctx, index) {
                         final post = state.posts.elementAt(index);
-                        return PostItem(post: post);
+                        return PostItem(
+                          post: post,
+                          onTap: () {
+                            BlocProvider.of<PostViewCubit>(context)
+                                .goToDetailedPostPage(post.postId!, context);
+                          },
+                        );
                       }),
                 ),
               ],
