@@ -3,23 +3,25 @@ import 'package:flutter/foundation.dart';
 
 class SalePostEntity extends Equatable {
   String title;
-  String description;
-  String ownerId;
-  String postingDate;
+  String? description;
+  String? ownerId;
+  String? postingDate;
   String price;
-  String categoryId;
+  String? categoryId;
   List<Uint8List> images;
 
+  int? viewsCount;
   String? postId;
   String? ownerName;
   String? categoryName;
 
   SalePostEntity(
       {required this.title,
-      required this.description,
-      required this.ownerId,
-      required this.categoryId,
-      required this.postingDate,
+      this.description,
+      this.ownerId,
+      this.categoryId,
+      this.postingDate,
+      this.viewsCount,
       required this.price,
       required this.images,
       this.postId,
@@ -30,13 +32,14 @@ class SalePostEntity extends Equatable {
   List<Object?> get props => [
         title,
         description,
+        categoryName,
         ownerId,
         postingDate,
         images,
         price,
         categoryId,
         postId,
-        ownerId,
-        ownerName
+        ownerName,
+        viewsCount
       ];
 }

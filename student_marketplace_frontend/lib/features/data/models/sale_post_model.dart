@@ -3,12 +3,13 @@ import 'package:student_marketplace_frontend/features/domain/entities/sale_post_
 class SalePostModel extends SalePostEntity {
   SalePostModel(
       {required super.title,
-      required super.description,
-      required super.ownerId,
-      required super.postingDate,
-      required super.categoryId,
+      super.description,
+      super.ownerId,
+      super.postingDate,
+      super.categoryId,
       required super.price,
       required super.images,
+      super.viewsCount,
       super.postId,
       super.ownerName,
       super.categoryName});

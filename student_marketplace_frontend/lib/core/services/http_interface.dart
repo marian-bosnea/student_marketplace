@@ -1,11 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'dart:typed_data';
 
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:student_marketplace_frontend/features/data/data_sources/implementations/product_category_remote_data_source_impl.dart';
 import 'package:student_marketplace_frontend/features/data/models/faculty_model.dart';
 import 'package:student_marketplace_frontend/features/data/models/product_category_model.dart';
 import 'package:student_marketplace_frontend/features/data/models/sale_post_model.dart';
@@ -19,6 +17,7 @@ class HttpInterface {
   final port = "3000";
 
   final baseUrl = "http://192.168.0.106:3000";
+  //final baseUrl = ' https://7776-212-93-144-202.eu.ngrok.io';
   final int getSuccessCode = 200;
   final int postSuccessCode = 201;
 
@@ -31,6 +30,8 @@ class HttpInterface {
     final response = await http.post(Uri.parse(requestUrl),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(<String, String>{'email': email}));
+
+    print(response.statusCode);
 
     return response.statusCode == postSuccessCode;
   }
@@ -163,16 +164,57 @@ class HttpInterface {
       salePosts.add(SalePostModel(
           postId: map['id'].toString(),
           title: map['title'],
-          description: map['description'],
           price: map['price'].toString(),
-          postingDate: map['date'],
-          categoryId: map['category_id'].toString(),
-          ownerId: map['owner_id'].toString(),
-          ownerName: map['owner_name'],
           images: [imageResponse.bodyBytes]));
     }
 
     return salePosts;
+  }
+
+  Future<SalePostModel?> fetchDetailedSalePost(
+      {required String token, required String postId}) async {
+    final requestUrl = "$baseUrl/sale-object/get/detailed";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, String>{'postId': postId}));
+
+    if (response.statusCode != getSuccessCode) return null;
+    final bodyJson = json.decode(response.body) as Map<String, dynamic>;
+    final results = bodyJson['results'];
+    final resultJson = results.first;
+
+    final imgCountStr = resultJson['images_count'] as String;
+    final imagesCount = int.parse(imgCountStr);
+    List<Uint8List> images = [];
+
+    for (int i = 0; i < imagesCount; i++) {
+      final imageRequestUrl = "$baseUrl/sale-object/get/image";
+      final imageResponse = await http.post(Uri.parse(imageRequestUrl),
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer $token'
+          },
+          body: jsonEncode(<String, String>{
+            'postId': resultJson['id'].toString(),
+            'index': '$i'
+          }));
+      images.add(imageResponse.bodyBytes);
+    }
+
+    return SalePostModel(
+        postId: resultJson['id'].toString(),
+        title: resultJson['title'],
+        description: resultJson['description'],
+        price: resultJson['price'].toString(),
+        postingDate: resultJson['date'],
+        categoryName: resultJson['category_name'],
+        viewsCount: resultJson['views_count'],
+        ownerId: resultJson['owner_id'].toString(),
+        ownerName: resultJson['owner_name'],
+        images: images);
   }
 
   Future<List<SalePostModel>?> fetchAllSalePostsOfCategory(
@@ -207,12 +249,7 @@ class HttpInterface {
       salePosts.add(SalePostModel(
           postId: map['id'].toString(),
           title: map['title'],
-          description: map['description'],
           price: map['price'].toString(),
-          postingDate: map['date'],
-          categoryId: map['category_id'].toString(),
-          ownerId: map['owner_id'].toString(),
-          ownerName: map['owner_name'],
           images: [imageResponse.bodyBytes]));
     }
 
@@ -298,11 +335,11 @@ class HttpInterface {
       }
 
       request.fields['title'] = post.title;
-      request.fields['description'] = post.description;
+      request.fields['description'] = post.description!;
       request.fields['price'] = post.price;
-      request.fields['ownerId'] = post.ownerId;
-      request.fields['categoryId'] = post.categoryId;
-      request.fields['date'] = post.postingDate;
+      request.fields['ownerId'] = post.ownerId!;
+      request.fields['categoryId'] = post.categoryId!;
+      request.fields['date'] = post.postingDate!;
 
       var response = await request.send();
 

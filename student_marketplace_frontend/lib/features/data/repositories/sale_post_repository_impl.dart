@@ -23,4 +23,9 @@ class SalePostRepositoryImpl implements SalePostRepository {
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
           String token, String ownerId) async =>
       remoteDataSource.getAllPostsByOwner(token, ownerId);
+
+  @override
+  Future<Either<Failure, SalePostEntity>> getDetailedPost(
+          String token, String postId) async =>
+      remoteDataSource.getDetailedPost(token, postId);
 }

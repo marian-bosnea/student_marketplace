@@ -25,9 +25,11 @@ import 'package:student_marketplace_frontend/features/domain/usecases/authentica
 import 'package:student_marketplace_frontend/features/domain/usecases/credentials/check_email_availability_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/faculty/get_all_faculties_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/product_category/get_all_categories_usecase.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_page_state.dart';
+import 'package:student_marketplace_frontend/features/presentation/detailed_post/detailed_post_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/register/register_cubit.dart';
@@ -86,14 +88,18 @@ Future<void> init() async {
   sl.registerFactory(() => PostViewCubit(
       getAllPostsUsecase: sl.call(),
       getCachedSessionUsecase: sl.call(),
+      getDetailedPostUsecase: sl.call(),
       getAllPostsByCategoryUsecase: sl.call(),
       getAllCategoriesUsecase: sl.call()));
+
+  sl.registerFactory(() => DetailedPostCubit());
 
   sl.registerFactory(() => AddPostCubit(
       getAllCategoriesUsecase: sl.call(), uploadPostUsecase: sl.call()));
   // Usecases
 
   sl.registerLazySingleton(() => AuthenticateUsecase(repository: sl.call()));
+
   sl.registerLazySingleton(() => DeauthenticateUsecase(
         authSessionOperations: sl.call(),
         authSessionRepository: sl.call(),
@@ -110,13 +116,19 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetAllFacultiesUsecase(repository: sl.call()));
 
   sl.registerLazySingleton(() => SignUpUsecase(operations: sl.call()));
+
   sl.registerLazySingleton(() =>
       GetOwnUserProfile(userRepository: sl.call(), authRepository: sl.call()));
 
   sl.registerLazySingleton(() =>
       GetAllPostsUsecase(postRepository: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => GetDetailedPostUsecase(
+      postRepository: sl.call(), authRepository: sl.call()));
+
   sl.registerLazySingleton(() => GetAllPostsByOwnerUsecase(
       postRepository: sl.call(), authRepository: sl.call()));
+
   sl.registerLazySingleton(() => GetAllPostsByCategory(
       postRepository: sl.call(), authRepository: sl.call()));
 

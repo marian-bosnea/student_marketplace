@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_marketplace_frontend/features/presentation/detailed_post/detailed_post_cubit.dart';
 
 import 'features/presentation/home/home_cubit.dart';
 import 'features/presentation/home/home_page.dart';
@@ -35,7 +36,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<ProfileCubit>()),
         BlocProvider(create: (_) => di.sl<HomeCubit>()),
         BlocProvider(create: (_) => di.sl<PostViewCubit>()),
-        BlocProvider(create: (_) => di.sl<AddPostCubit>())
+        BlocProvider(create: (_) => di.sl<AddPostCubit>()),
+        BlocProvider(create: (_) => di.sl<DetailedPostCubit>())
       ],
       child: MaterialApp(
         title: 'Student Marketplace',

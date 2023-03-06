@@ -1,9 +1,13 @@
 import 'package:dartz/dartz.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../domain/entities/sale_post_entity.dart';
 
 abstract class SalePostRemoteDataSource {
+  Future<Either<Failure, SalePostEntity>> getDetailedPost(
+      String token, String postId);
+
   Future<Either<Failure, List<SalePostEntity>>> getAllPosts(String token);
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
       String token, String categoryId);

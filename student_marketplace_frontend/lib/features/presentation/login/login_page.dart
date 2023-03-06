@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:student_marketplace_frontend/core/theme/colors.dart';
 import 'package:student_marketplace_frontend/features/data/models/credentials_model.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_page.dart';
 import '../../../core/on_generate_route.dart';
@@ -24,7 +25,6 @@ class AuthenticationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-      backgroundColor: Colors.blue,
       body: BlocConsumer<LoginCubit, LoginPageState>(
         listener: _onStateChangedListener,
         builder: (context, state) {
@@ -59,9 +59,9 @@ class AuthenticationPage extends StatelessWidget {
               ? MediaQuery.of(context).size.height * 0.35
               : MediaQuery.of(context).size.height * 0.3,
           padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.5),
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
+          decoration: const BoxDecoration(
+            color: secondaryColor,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           child: Center(
             child:
@@ -123,7 +123,7 @@ class AuthenticationPage extends StatelessWidget {
                                 ? Icons.check_box
                                 : Icons.check_box_outline_blank,
                             color: state.keepSignedIn
-                                ? Colors.blueAccent
+                                ? accentColor
                                 : Colors.black12,
                           )),
                     ),
@@ -142,8 +142,8 @@ class AuthenticationPage extends StatelessWidget {
                   PlatformTextButton(
                     onPressed: () =>
                         Navigator.of(context).pushNamed(PageNames.registerPage),
-                    child:
-                        const Text("Register", style: TextStyle(fontSize: 16)),
+                    child: const Text("Register",
+                        style: TextStyle(fontSize: 16, color: accentColor)),
                   )
                 ],
               ),
@@ -217,6 +217,7 @@ class AuthenticationPage extends StatelessWidget {
         padding: EdgeInsets.zero,
         icon: const Icon(
           CupertinoIcons.arrow_right_circle,
+          color: accentColor,
           size: 30,
         ),
         onPressed: state.isEmailPrefixActive
@@ -238,7 +239,7 @@ class AuthenticationPage extends StatelessWidget {
                 bottomRight: Radius.circular(10)),
             border: Border.all(
                 color: state.status == LoginPageStatus.emailSucces
-                    ? Colors.blueAccent
+                    ? accentColor
                     : Colors.black12)),
         obscureText: true,
         suffix: SizedBox(
