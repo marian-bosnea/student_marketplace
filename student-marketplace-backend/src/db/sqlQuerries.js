@@ -25,13 +25,14 @@ module.exports.CATEGORY_READ_ALL = 'SELECT * FROM object_category';
 
 
 
-module.exports.SALE_OBJECT_READ_ALL = 'SELECT o.id, d.title, d.description, d.price, o.date, o.owner_id, p.last_name as owner_name FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id INNER JOIN user_centralized c ON o.owner_id = c.id INNER JOIN user_profile p ON p.id = c.profile_id';
-
+module.exports.SALE_OBJECT_READ_ALL = 'SELECT o.id, d.title, d.price FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id';
+module.exports.SALE_OBJECT_READ_DETAILED = 'SELECT o.id, d.title, d.description, d.price, o.date, oc.name as category_name, o.views_count, o.owner_id, p.last_name as owner_name, d.id as description_id  FROM object_description d  INNER JOIN sale_object o ON o.description_id = d.id INNER JOIN user_centralized c ON o.owner_id = c.id INNER JOIN user_profile p ON p.id = c.profile_id INNER JOIN object_category oc ON o.category_id = oc.id WHERE o.id = $1';
+module.exports.SALE_OBJECT_IMAGE_COUNT = 'SELECT COUNT(data) FROM object_image o WHERE o.description_id = $1';
 module.exports.SALE_OBJECT_DESCRIPTION_INSERT = 'INSERT INTO object_description (title, description, price) VALUES ($1, $2, $3) RETURNING id';
 module.exports.OBJECT_IMAGE_INSERT = 'INSERT INTO object_image (data, description_id) VALUES ($1, $2)';
-module.exports.OBJECT_IMAGE_READ = 'SELECT i.data FROM object_image i INNER JOIN object_description d ON d.id = i.description_id INNER JOIN sale_object s ON s.description_id = d.id WHERE s.id =$1'
-;module.exports.SALE_OBJECT_INSERT = 'INSERT INTO sale_object (description_id, category_id, owner_id, date, is_active) VALUES ($1, $2, $3, $4, $5) RETURNING id';
-module.exports.SALE_OBJECT_READ_CATEGORY = 'SELECT o.id, d.title, d.description, d.price, o.date, o.owner_id, p.last_name as owner_name FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id INNER JOIN user_centralized c ON o.owner_id = c.id INNER JOIN user_profile p ON p.id = c.profile_id WHERE o.category_id = $1';
+module.exports.OBJECT_IMAGE_READ = 'SELECT i.data FROM object_image i INNER JOIN object_description d ON d.id = i.description_id INNER JOIN sale_object s ON s.description_id = d.id WHERE s.id =$1';
+module.exports.SALE_OBJECT_INSERT = 'INSERT INTO sale_object (description_id, category_id, owner_id, date, is_active) VALUES ($1, $2, $3, $4, $5) RETURNING id';
+module.exports.SALE_OBJECT_READ_CATEGORY = 'SELECT o.id, d.title, d.price FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id WHERE o.category_id = $1';
 
 module.exports.SALE_OBJECT_READ_OWNER = 'SELECT d.title, d.description, d.price, o.category_id FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id WHERE o.owner_id = $1';
 // Order of inseration must be: description -> images -> sale_object

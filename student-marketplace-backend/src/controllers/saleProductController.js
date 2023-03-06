@@ -66,6 +66,47 @@ insert = async (req, res) => {
    }
 }
 
+getDetailedSalePost = async (req, res) => {
+   const postId = req.body.postId;
+
+   console.log(`Requeste detailed post with  id ${postId}`);
+   const client = await pool.connect()
+
+   try {
+      const results = await client.query(sql.SALE_OBJECT_READ_DETAILED, [postId]);
+      let saleObjectsJson = [];
+
+   
+      for (i = 0; i < results.rowCount; i++) {
+         const countResult = await client.query(sql.SALE_OBJECT_IMAGE_COUNT, [results.rows[i].description_id]);
+
+         saleObjectsJson.push({
+            id: results.rows[i].id,
+            title: results.rows[i].title,
+            description: results.rows[i].description,
+            price: results.rows[i].price,
+            date: results.rows[i].date,
+            category_name: results.rows[i].category_name,
+            views_count : results.rows[i].views_count,
+            owner_id: results.rows[i].owner_id,
+            owner_name: results.rows[i].owner_name,
+            images_count: countResult.rows[0].count
+         });
+      }
+      res.status(codes.GET_SUCCESS_CODE);
+      res.send({results: saleObjectsJson});
+   } catch (e) {
+      res.status(codes.INVALID_INPUT_CODE);
+      res.send({message: "Invalid input"});
+      throw e
+   } finally {
+      client.release()
+
+   }
+
+
+}
+
 getAll = async (req, res) => {
    console.log("Requested all sale posts");
    const client = await pool.connect()
@@ -78,12 +119,7 @@ getAll = async (req, res) => {
          saleObjectsJson.push({
             id: results.rows[i].id,
             title: results.rows[i].title,
-            description: results.rows[i].description,
             price: results.rows[i].price,
-            date: results.rows[i].date,
-            category_id : 1,
-            owner_id: results.rows[i].owner_id,
-            owner_name: results.rows[i].owner_name
          });
       }
       
@@ -112,14 +148,9 @@ getAllFromCategory = async (req, res) => {
 
       for (i = 0; i < results.rowCount; i++) {
          saleObjectsJson.push({
-                id: results.rows[i].id,
+            id: results.rows[i].id,
             title: results.rows[i].title,
-            description: results.rows[i].description,
             price: results.rows[i].price,
-            date: results.rows[i].date,
-            category_id : 1,
-            owner_id: results.rows[i].owner_id,
-            owner_name: results.rows[i].owner_name
          });
       }
  
@@ -147,11 +178,9 @@ getAllByOwnerId = async (req, res) => {
 
       for (i = 0; i < result.rowCount; i++) {
          saleObjectsJson.push({
-            id: result.rows[i].id,
-            title: result.rows[0].title,
-            description: result.rows[0].description,
-            price: result.rows[0].price,
-            categoryId: result.rows[0].category_id
+            id: results.rows[i].id,
+            title: results.rows[i].title,
+            price: results.rows[i].price,
          });
       }
 
@@ -204,5 +233,6 @@ module.exports = {
    getAllFromCategory,
    getAllByOwnerId,
    getAll,
-   getImage
+   getImage,
+   getDetailedSalePost
 }

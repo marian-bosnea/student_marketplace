@@ -62,6 +62,12 @@ productRouter.get('/sale-object/get/all',
         productController.getAll(req, res);
     });
 
+    productRouter.post('/sale-object/get/detailed',
+    authorization.authenticateToken,
+    (req, res) => {
+        productController.getDetailedSalePost(req, res);
+    });
+
 productRouter.get('/product-categories/get/all',
     authorization.authenticateToken,
     (req, res) => {
