@@ -4,9 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_frontend/core/enums.dart';
 import 'package:student_marketplace_frontend/core/theme/colors.dart';
+import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view_cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/posts_view/widgets/featured_item.dart';
 import 'package:student_marketplace_frontend/features/presentation/posts_view/widgets/post_item.dart';
 import 'package:student_marketplace_frontend/features/presentation/posts_view/post_view_state.dart';
-import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
 
 import 'widgets/category_item.dart';
 
@@ -26,56 +27,69 @@ class PostViewPage extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            child: Column(
-              children: [
-                Container(
-                  height: 70,
-                  padding: const EdgeInsets.only(top: 10, bottom: 10),
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: state.categories.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index > 0) {
-                          final category =
-                              state.categories.elementAt(index - 1);
+            child: CustomScrollView(
+              slivers: [
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    Container(
+                      height: 70,
+                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: state.categories.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index > 0) {
+                              final category =
+                                  state.categories.elementAt(index - 1);
 
-                          return CategoryItem(
-                              label: category.name,
-                              isSelected: index == state.selectedCategoryIndex,
-                              onTap: () =>
-                                  BlocProvider.of<PostViewCubit>(context)
-                                      .selectCategory(index));
-                        } else {
-                          return CategoryItem(
-                              label: '  All  ',
-                              onTap: () =>
-                                  BlocProvider.of<PostViewCubit>(context)
-                                      .selectCategory(-1),
-                              isSelected: state.selectedCategoryIndex == -1);
-                        }
-                      }),
+                              return CategoryItem(
+                                  label: category.name,
+                                  isSelected:
+                                      index == state.selectedCategoryIndex,
+                                  onTap: () =>
+                                      BlocProvider.of<PostViewCubit>(context)
+                                          .selectCategory(index));
+                            } else {
+                              return CategoryItem(
+                                  label: '  All  ',
+                                  onTap: () =>
+                                      BlocProvider.of<PostViewCubit>(context)
+                                          .selectCategory(-1),
+                                  isSelected:
+                                      state.selectedCategoryIndex == -1);
+                            }
+                          }),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      child: FeaturedItem(
+                        post: state.featuredPost!,
+                        onTap: () => BlocProvider.of<PostViewCubit>(context)
+                            .goToDetailedPostPage(
+                                state.featuredPost!.postId!, context),
+                      ),
+                    ),
+                  ]),
                 ),
-                Expanded(
-                  child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 200,
-                              childAspectRatio: 2 / 3,
-                              crossAxisSpacing: 20,
-                              mainAxisSpacing: 20),
-                      itemCount: state.posts.length,
-                      itemBuilder: (BuildContext ctx, index) {
-                        final post = state.posts.elementAt(index);
-                        return PostItem(
-                          post: post,
-                          onTap: () {
-                            BlocProvider.of<PostViewCubit>(context)
-                                .goToDetailedPostPage(post.postId!, context);
-                          },
-                        );
-                      }),
-                ),
+                SliverGrid.builder(
+                  itemCount: state.posts.length,
+                  itemBuilder: (context, index) {
+                    final post = state.posts.elementAt(index);
+                    return PostItem(
+                      post: post,
+                      onTap: () {
+                        BlocProvider.of<PostViewCubit>(context)
+                            .goToDetailedPostPage(post.postId!, context);
+                      },
+                    );
+                  },
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200,
+                      childAspectRatio: 2 / 3,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20),
+                )
               ],
             ),
           );

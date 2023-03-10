@@ -51,6 +51,15 @@ class AuthSessionParam extends Equatable {
   List<Object?> get props => [session];
 }
 
+class QueryParam extends Equatable {
+  final String query;
+
+  const QueryParam({required this.query});
+
+  @override
+  List<Object?> get props => [query];
+}
+
 class TokenIdParam extends Equatable {
   final String token;
   final String id;

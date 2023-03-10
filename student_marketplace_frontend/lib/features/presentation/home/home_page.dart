@@ -1,17 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_frontend/core/enums.dart';
+import 'package:student_marketplace_frontend/core/theme/colors.dart';
 import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_page.dart';
-import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
-import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view_page.dart';
 import 'package:student_marketplace_frontend/features/presentation/user_profile/profile_page.dart';
 
+import '../posts_view/posts_view_page.dart';
+import '../search/search_view_page.dart';
 import 'home_cubit.dart';
 import 'home_state.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +21,73 @@ class HomePage extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return PlatformScaffold(
-          appBar: PlatformAppBar(
-            automaticallyImplyLeading: false,
-            title: PlatformText(
-              state.title,
-              style: const TextStyle(color: Colors.white),
-            ),
-            backgroundColor: Colors.black,
-          ),
-          body: _getCurrentPage(context, state),
+          appBar: isMaterial(context)
+              ? PlatformAppBar(
+                  automaticallyImplyLeading: false,
+                  title: PlatformText(
+                    state.title,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.black,
+                )
+              : null,
+          body: isCupertino(context)
+              ? NestedScrollView(
+                  headerSliverBuilder: (context, innerBoxIsScroller) {
+                    return <Widget>[
+                      CupertinoSliverNavigationBar(
+                        largeTitle: Text(
+                          state.title,
+                          style: const TextStyle(color: accentColor),
+                        ),
+                      )
+                    ];
+                  },
+                  body: _getCurrentPage(context, state))
+              : _getCurrentPage(context, state),
           bottomNavBar: PlatformNavBar(
-            backgroundColor: Colors.black,
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home)),
-              BottomNavigationBarItem(icon: Icon(Icons.search)),
-              BottomNavigationBarItem(icon: Icon(Icons.add)),
-              BottomNavigationBarItem(icon: Icon(Icons.supervised_user_circle)),
-              BottomNavigationBarItem(icon: Icon(Icons.settings))
+            backgroundColor: Colors.white,
+            items: [
+              BottomNavigationBarItem(
+                  label: 'Discover',
+                  icon: Icon(
+                    Icons.explore,
+                    color: state.status == HomePageStatus.home
+                        ? accentColor
+                        : Colors.black38,
+                  )),
+              BottomNavigationBarItem(
+                  label: 'Search',
+                  icon: Icon(
+                    Icons.search,
+                    color: state.status == HomePageStatus.search
+                        ? accentColor
+                        : Colors.black38,
+                  )),
+              BottomNavigationBarItem(
+                  label: 'Post',
+                  icon: Icon(
+                    Icons.add,
+                    color: state.status == HomePageStatus.addPost
+                        ? accentColor
+                        : Colors.black38,
+                  )),
+              BottomNavigationBarItem(
+                  label: 'Profile',
+                  icon: Icon(
+                    Icons.supervised_user_circle,
+                    color: state.status == HomePageStatus.profile
+                        ? accentColor
+                        : Colors.black38,
+                  )),
+              BottomNavigationBarItem(
+                  label: 'Settings',
+                  icon: Icon(
+                    Icons.settings,
+                    color: state.status == HomePageStatus.settings
+                        ? accentColor
+                        : Colors.black38,
+                  ))
             ],
             itemChanged: (index) => onBottomNavbarItemTap(context, index),
           ),
@@ -69,9 +121,7 @@ class HomePage extends StatelessWidget {
       case HomePageStatus.home:
         return const PostViewPage();
       case HomePageStatus.search:
-        return const Center(
-          child: Text("Search Page"),
-        );
+        return SearchPage();
       case HomePageStatus.addPost:
         return AddPostPage();
       case HomePageStatus.profile:

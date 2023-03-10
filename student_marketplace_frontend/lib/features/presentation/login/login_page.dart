@@ -11,8 +11,6 @@ import '../authentication/auth_state.dart';
 import 'login_cubit.dart';
 import 'login_page_state.dart';
 
-import '../../data/models/user_model.dart';
-
 class AuthenticationPage extends StatelessWidget {
   final TextEditingController _emailTextfieldController =
       TextEditingController();

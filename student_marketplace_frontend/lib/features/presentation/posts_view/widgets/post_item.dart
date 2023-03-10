@@ -32,7 +32,9 @@ class PostItem extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(5.0),
-              child: Image.memory(post.images.first),
+              child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  child: Image.memory(post.images.first)),
             ),
             Text(
               post.title,

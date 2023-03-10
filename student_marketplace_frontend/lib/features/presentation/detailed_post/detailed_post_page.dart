@@ -222,18 +222,6 @@ class DetailedPostPage extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                Row(
-                                  children: [
-                                    const Text(
-                                      'Views: ',
-                                      style: TextStyle(color: Colors.black38),
-                                    ),
-                                    Text(
-                                      post.viewsCount!.toString(),
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  ],
-                                ),
                               ]),
                         ),
                         const Divider(

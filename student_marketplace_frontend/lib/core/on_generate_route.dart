@@ -7,8 +7,7 @@ import '../features/presentation/user_profile/profile_page.dart';
 
 class OnGenerateRoute {
   static Route<dynamic> route(RouteSettings settings) {
-    final args = settings.arguments;
-
+    //final args = settings.arguments;
     switch (settings.name) {
       case PageNames.authenticationPage:
         return routeBuilder(AuthenticationPage());
@@ -29,6 +28,8 @@ class PageNames {
 }
 
 class NoPage extends StatelessWidget {
+  const NoPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(

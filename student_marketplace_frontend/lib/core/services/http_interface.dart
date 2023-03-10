@@ -165,6 +165,7 @@ class HttpInterface {
           postId: map['id'].toString(),
           title: map['title'],
           price: map['price'].toString(),
+          viewsCount: map['views_count'] as int,
           images: [imageResponse.bodyBytes]));
     }
 
@@ -250,9 +251,47 @@ class HttpInterface {
           postId: map['id'].toString(),
           title: map['title'],
           price: map['price'].toString(),
+          viewsCount: map['views_count'] as int,
           images: [imageResponse.bodyBytes]));
     }
 
+    return salePosts;
+  }
+
+  Future<List<SalePostModel>?> fetchAllPostsByQuery(
+      {required String token, required String query}) async {
+    final requestUrl = "$baseUrl/sale-object/get/query";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, String>{'query': query}));
+
+    if (response.statusCode != getSuccessCode) return null;
+    final bodyJson = json.decode(response.body) as Map<String, dynamic>;
+    final resultJson = bodyJson['results'];
+    List<SalePostModel> salePosts = [];
+
+    for (var json in resultJson) {
+      final map = json as Map<String, dynamic>;
+
+      final imageRequestUrl = "$baseUrl/sale-object/get/image";
+      final imageResponse = await http.post(Uri.parse(imageRequestUrl),
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer $token'
+          },
+          body: jsonEncode(
+              <String, String>{'postId': map['id'].toString(), 'index': '0'}));
+
+      salePosts.add(SalePostModel(
+          postId: map['id'].toString(),
+          title: map['title'],
+          price: map['price'].toString(),
+          viewsCount: map['views_count'] as int,
+          images: [imageResponse.bodyBytes]));
+    }
     return salePosts;
   }
 

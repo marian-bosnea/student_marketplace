@@ -25,14 +25,15 @@ import 'package:student_marketplace_frontend/features/domain/usecases/authentica
 import 'package:student_marketplace_frontend/features/domain/usecases/credentials/check_email_availability_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/faculty/get_all_faculties_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/product_category/get_all_categories_usecase.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/get_all_posts_by_query_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_cubit.dart';
-import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_page_state.dart';
 import 'package:student_marketplace_frontend/features/presentation/detailed_post/detailed_post_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
-import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view.cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/register/register_cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/search/search_view_bloc.dart';
 
 import '../features/data/data_sources/contracts/sale_post_remote_data_source.dart';
 import '../features/data/data_sources/contracts/user_repository_remote_data_source.dart';
@@ -94,6 +95,9 @@ Future<void> init() async {
 
   sl.registerFactory(() => DetailedPostCubit());
 
+  sl.registerFactory(() => SearchBloc(
+      getAllPostsByQueryUsecase: sl.call(), getDetailedPostUsecase: sl.call()));
+
   sl.registerFactory(() => AddPostCubit(
       getAllCategoriesUsecase: sl.call(), uploadPostUsecase: sl.call()));
   // Usecases
@@ -130,6 +134,9 @@ Future<void> init() async {
       postRepository: sl.call(), authRepository: sl.call()));
 
   sl.registerLazySingleton(() => GetAllPostsByCategory(
+      postRepository: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => GetAllPostsByQueryUsecase(
       postRepository: sl.call(), authRepository: sl.call()));
 
   sl.registerLazySingleton(() => GetAllCategoriesUsecase(

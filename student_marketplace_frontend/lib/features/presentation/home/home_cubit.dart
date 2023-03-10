@@ -9,8 +9,7 @@ class HomeCubit extends Cubit<HomePageState> {
   HomeCubit() : super(const HomePageState());
 
   void goToHome() {
-    emit(state.copyWith(
-        status: HomePageStatus.home, title: "UnitBvMarketplace"));
+    emit(state.copyWith(status: HomePageStatus.home, title: "Discover"));
   }
 
   void goToSearch() {

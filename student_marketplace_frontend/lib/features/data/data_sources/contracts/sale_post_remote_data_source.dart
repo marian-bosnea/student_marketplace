@@ -9,6 +9,8 @@ abstract class SalePostRemoteDataSource {
       String token, String postId);
 
   Future<Either<Failure, List<SalePostEntity>>> getAllPosts(String token);
+  Future<Either<Failure, List<SalePostEntity>>> getAllPostsByQuery(
+      String token, String query);
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
       String token, String categoryId);
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
