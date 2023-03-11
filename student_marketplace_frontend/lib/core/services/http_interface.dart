@@ -30,9 +30,6 @@ class HttpInterface {
     final response = await http.post(Uri.parse(requestUrl),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(<String, String>{'email': email}));
-
-    print(response.statusCode);
-
     return response.statusCode == postSuccessCode;
   }
 
@@ -295,6 +292,46 @@ class HttpInterface {
     return salePosts;
   }
 
+  Future<List<SalePostModel>?> fetchFavoritePosts(String token) async {
+    final requestUrl = "$baseUrl/sale-object/favorites/read-all";
+    final response = await http.post(
+      Uri.parse(requestUrl),
+      headers: {
+        'Content-Type': 'application/json',
+        'authorization': 'Bearer $token'
+      },
+    );
+
+    if (response.statusCode != getSuccessCode) return null;
+
+    final bodyJson = json.decode(response.body) as Map<String, dynamic>;
+    final resultJson = bodyJson['results'];
+    List<SalePostModel> salePosts = [];
+
+    for (var json in resultJson) {
+      final map = json as Map<String, dynamic>;
+
+      final imageRequestUrl = "$baseUrl/sale-object/get/image";
+      final imageResponse = await http.post(Uri.parse(imageRequestUrl),
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer $token'
+          },
+          body: jsonEncode(
+              <String, String>{'postId': map['id'].toString(), 'index': '0'}));
+
+      // print(imageResponse.statusCode);
+
+      salePosts.add(SalePostModel(
+          postId: map['id'].toString(),
+          title: map['title'],
+          price: map['price'].toString(),
+          viewsCount: map['views_count'] as int,
+          images: [imageResponse.bodyBytes]));
+    }
+    return salePosts;
+  }
+
   Future<UserModel?> fetchOwnUserProfile(String token) async {
     final requestUrl = "$baseUrl/user/get/profile";
 
@@ -387,5 +424,47 @@ class HttpInterface {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<bool> addToFavorites(
+      {required String token, required String postId}) async {
+    final requestUrl = "$baseUrl/sale-object/favorites/add";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, String>{'postId': postId}));
+
+    return response.statusCode == postSuccessCode;
+  }
+
+  Future<bool> checkIfFavorite(
+      {required String token, required String postId}) async {
+    final requestUrl = "$baseUrl/sale-object/favorites/check";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, String>{'postId': postId}));
+
+    final bodyJson = json.decode(response.body) as Map<String, dynamic>;
+    final result = bodyJson['result'] as bool;
+
+    return result;
+  }
+
+  Future<bool> removeFromFavorites(
+      {required String token, required String postId}) async {
+    final requestUrl = "$baseUrl/sale-object/favorites/remove";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, String>{'postId': postId}));
+
+    return response.statusCode == postSuccessCode;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,8 @@ import 'package:student_marketplace_frontend/core/theme/colors.dart';
 import 'package:student_marketplace_frontend/features/presentation/posts_view/widgets/post_item.dart';
 import 'package:student_marketplace_frontend/features/presentation/search/search_page_state.dart';
 import 'package:student_marketplace_frontend/features/presentation/search/search_view_bloc.dart';
+
+import '../shared/animation_options.dart';
 
 class SearchPage extends StatelessWidget {
   const SearchPage({super.key});
@@ -35,20 +38,33 @@ class SearchPage extends StatelessWidget {
               child: Container(
                 margin: EdgeInsets.zero,
                 padding: const EdgeInsets.only(left: 10, right: 10),
-                child: GridView.builder(
+                child: LiveGrid.options(
+                    itemCount: state.posts.length,
+                    controller: ScrollController(),
+                    options: salePostAnimationOptions,
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 200,
                             childAspectRatio: 2 / 3,
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20),
-                    itemCount: state.posts.length,
-                    itemBuilder: (context, index) {
+                    itemBuilder: (context, index, anim) {
                       final post = state.posts.elementAt(index);
-                      return PostItem(
-                          post: post,
-                          onTap: () => BlocProvider.of<SearchBloc>(context)
-                              .goToDetailedPostPage(post.postId!, context));
+                      return AnimateIfVisible(
+                          key: ValueKey(post.postId),
+                          duration: const Duration(milliseconds: 200),
+                          builder: (context, animation) => FadeTransition(
+                                opacity: Tween<double>(begin: 0, end: 1)
+                                    .animate(animation),
+                                child: PostItem(
+                                  post: post,
+                                  onTap: () {
+                                    BlocProvider.of<SearchBloc>(context)
+                                        .goToDetailedPostPage(
+                                            post.postId!, context);
+                                  },
+                                ),
+                              ));
                     }),
               ),
             ))

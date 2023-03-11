@@ -33,4 +33,9 @@ class SalePostRepositoryImpl implements SalePostRepository {
   Future<Either<Failure, List<SalePostEntity>>> getPostsByQuery(
           String token, String query) async =>
       remoteDataSource.getAllPostsByQuery(token, query);
+
+  @override
+  Future<Either<Failure, List<SalePostEntity>>> getFavoritePosts(
+          String token) async =>
+      remoteDataSource.getFavoritesPosts(token);
 }

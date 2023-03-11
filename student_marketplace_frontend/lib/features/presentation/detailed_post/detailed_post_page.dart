@@ -1,32 +1,41 @@
-import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:student_marketplace_frontend/core/enums.dart';
 import 'package:student_marketplace_frontend/core/theme/colors.dart';
-import 'package:student_marketplace_frontend/features/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_frontend/features/presentation/detailed_post/detailed_post_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/detailed_post/detailed_post_state.dart';
 
 class DetailedPostPage extends StatelessWidget {
-  final SalePostEntity post;
-  const DetailedPostPage({super.key, required this.post});
+  final String postId;
+  const DetailedPostPage({super.key, required this.postId});
+
+  _init(BuildContext context) async {
+    BlocProvider.of<DetailedPostCubit>(context).fetchDetailedPost(postId);
+    BlocProvider.of<DetailedPostCubit>(context).checkIfFavorite(postId);
+  }
 
   @override
   Widget build(BuildContext context) {
+    _init(context);
     return BlocBuilder<DetailedPostCubit, DetailedPostPageState>(
       builder: (context, state) {
+        if (state.status == PostsViewStatus.fail) {
+          return const Center(child: Text('Error while loading post ...'));
+        }
+        if (state.status == PostsViewStatus.loading) {
+          return Center(
+            child: isCupertino(context)
+                ? const CupertinoActivityIndicator()
+                : const CircularProgressIndicator(),
+          );
+        }
         return PlatformScaffold(
           appBar: PlatformAppBar(
-              automaticallyImplyLeading: false,
-              leading: PlatformIconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                padding: const EdgeInsets.all(5),
-                icon: const Icon(
-                  Icons.arrow_back_sharp,
-                  color: accentColor,
-                  size: 30,
-                ),
-              ),
+              cupertino: (context, platform) =>
+                  CupertinoNavigationBarData(previousPageTitle: 'Posts'),
+              automaticallyImplyLeading: true,
               backgroundColor: Colors.white),
           body: Material(
             child: Container(
@@ -39,7 +48,7 @@ class DetailedPostPage extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: post.images.length,
+                          itemCount: state.post!.images.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () =>
@@ -60,7 +69,7 @@ class DetailedPostPage extends StatelessWidget {
                                 padding: const EdgeInsets.all(5),
                                 child: Center(
                                     child: Image.memory(
-                                  post.images[index],
+                                  state.post!.images[index],
                                   width: 40,
                                   height: 40,
                                 )),
@@ -73,7 +82,7 @@ class DetailedPostPage extends StatelessWidget {
                     padding: const EdgeInsets.all(20),
                     height: MediaQuery.of(context).size.height * 0.5,
                     child: Image.memory(
-                      post.images[state.selectedImageIndex!],
+                      state.post!.images[state.selectedImageIndex!],
                       fit: BoxFit.scaleDown,
                     ),
                   ),
@@ -100,36 +109,35 @@ class DetailedPostPage extends StatelessWidget {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          post.categoryName!,
+                                          state.post!.categoryName!,
                                           style: const TextStyle(
                                               color: accentColor),
                                         ),
                                         Text(
-                                          post.title,
+                                          state.post!.title,
                                           style: const TextStyle(
                                               fontSize: 24,
                                               fontWeight: FontWeight.w600),
                                         ),
                                         Text(
-                                          '${post.price} RON',
+                                          '${state.post!.price} RON',
                                           style: const TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w500),
                                         ),
                                       ]),
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      color: accentColor,
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: PlatformIconButton(
-                                    onPressed: () {},
-                                    padding: const EdgeInsets.all(5),
-                                    icon: const Icon(
-                                      Icons.favorite,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
+                                PlatformIconButton(
+                                  onPressed: () => BlocProvider.of<
+                                          DetailedPostCubit>(context)
+                                      .onFavoritePressed(state.post!.postId!),
+                                  padding: const EdgeInsets.all(5),
+                                  icon: Icon(
+                                    state.isFavorite
+                                        ? Icons.favorite
+                                        : Icons.favorite_border_outlined,
+                                    color: Colors.red,
+                                    size: 20,
                                   ),
                                 ),
                               ]),
@@ -164,7 +172,7 @@ class DetailedPostPage extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  post.description!,
+                                  state.post!.description!,
                                   textAlign: TextAlign.start,
                                 )
                               ]),
@@ -205,7 +213,7 @@ class DetailedPostPage extends StatelessWidget {
                                       style: TextStyle(color: Colors.black38),
                                     ),
                                     Text(
-                                      post.ownerName!,
+                                      state.post!.ownerName!,
                                       textAlign: TextAlign.start,
                                     ),
                                   ],
@@ -217,7 +225,7 @@ class DetailedPostPage extends StatelessWidget {
                                       style: TextStyle(color: Colors.black38),
                                     ),
                                     Text(
-                                      post.postingDate!,
+                                      state.post!.postingDate!,
                                       textAlign: TextAlign.start,
                                     ),
                                   ],
@@ -260,7 +268,7 @@ class DetailedPostPage extends StatelessWidget {
                                       style: TextStyle(color: Colors.black38),
                                     ),
                                     Text(
-                                      post.viewsCount!.toString(),
+                                      state.post!.viewsCount!.toString(),
                                       textAlign: TextAlign.start,
                                     ),
                                   ],

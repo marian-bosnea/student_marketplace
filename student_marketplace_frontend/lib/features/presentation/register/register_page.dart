@@ -301,8 +301,6 @@ class RegisterPage extends StatelessWidget {
     if (state.faculties.isEmpty) {
       BlocProvider.of<RegisterCubit>(context).fetchAllFaculties();
     }
-    print(state.status.toString());
-
     return Material(
       elevation: 2,
       borderRadius: const BorderRadius.all(Radius.circular(10)),
@@ -377,7 +375,6 @@ class RegisterPage extends StatelessWidget {
                               .goToNextStep();
                           _focusNodes[3].requestFocus();
                         }
-                        print(state.status.toString());
                         if (state.status ==
                             RegisterPageStatus.validPersonalInfo) {
                           BlocProvider.of<RegisterCubit>(context)

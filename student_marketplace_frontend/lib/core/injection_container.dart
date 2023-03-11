@@ -25,11 +25,15 @@ import 'package:student_marketplace_frontend/features/domain/usecases/authentica
 import 'package:student_marketplace_frontend/features/domain/usecases/credentials/check_email_availability_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/faculty/get_all_faculties_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/product_category/get_all_categories_usecase.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/add_to_favorites_usecase.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/check_if_favorite_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/get_all_posts_by_query_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/get_detailed_post_usecase.dart';
+import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/get_favorite_posts_usecase.dart';
 import 'package:student_marketplace_frontend/features/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/detailed_post/detailed_post_cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_frontend/features/presentation/home/home_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/posts_view/posts_view_cubit.dart';
 import 'package:student_marketplace_frontend/features/presentation/register/register_cubit.dart';
@@ -53,6 +57,7 @@ import '../features/domain/operations/user_operations.dart';
 import '../features/domain/usecases/sale_post/get_all_posts_by_category_usecase.dart';
 import '../features/domain/usecases/sale_post/get_all_posts_by_owner_usecase.dart';
 import '../features/domain/usecases/sale_post/get_all_posts_usecase.dart';
+import '../features/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
 import '../features/domain/usecases/user/get_own_user_usecase.dart';
 import '../features/domain/usecases/user/sign_up_usecase.dart';
 import '../features/presentation/authentication/auth_cubit.dart';
@@ -93,13 +98,20 @@ Future<void> init() async {
       getAllPostsByCategoryUsecase: sl.call(),
       getAllCategoriesUsecase: sl.call()));
 
-  sl.registerFactory(() => DetailedPostCubit());
+  sl.registerFactory(() => DetailedPostCubit(
+      addToFavoritesUsecase: sl.call(),
+      checkIfFavoriteUsecase: sl.call(),
+      getDetailedPostUsecase: sl.call(),
+      removeFromFavoritesUsecase: sl.call()));
 
-  sl.registerFactory(() => SearchBloc(
-      getAllPostsByQueryUsecase: sl.call(), getDetailedPostUsecase: sl.call()));
+  sl.registerFactory(() => SearchBloc(getAllPostsByQueryUsecase: sl.call()));
 
   sl.registerFactory(() => AddPostCubit(
       getAllCategoriesUsecase: sl.call(), uploadPostUsecase: sl.call()));
+
+  sl.registerFactory(() => FavoritesViewBloc(
+        getFavoritePostsUsecase: sl.call(),
+      ));
   // Usecases
 
   sl.registerLazySingleton(() => AuthenticateUsecase(repository: sl.call()));
@@ -138,6 +150,18 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => GetAllPostsByQueryUsecase(
       postRepository: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => GetFavoritePostsUsecase(
+      postRepository: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => AddToFavoritesUsecase(
+      salePostOperations: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => CheckIfFavoriteUsecase(
+      salePostOperations: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => RemoveFromFavoritesUsecase(
+      salePostOperations: sl.call(), authRepository: sl.call()));
 
   sl.registerLazySingleton(() => GetAllCategoriesUsecase(
       categoryRepository: sl.call(), authRepository: sl.call()));

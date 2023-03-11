@@ -26,8 +26,9 @@ class HomeCubit extends Cubit<HomePageState> {
   }
 
   void goToProfile() {
-    if (state.status != HomePageStatus.profile) {
-      emit(state.copyWith(status: HomePageStatus.profile, title: "Profile"));
+    if (state.status != HomePageStatus.favorites) {
+      emit(
+          state.copyWith(status: HomePageStatus.favorites, title: "Favorites"));
     }
   }
 

@@ -21,4 +21,22 @@ class SalePostOperationsImpl extends SalePostOperations {
       SalePostEntity post, String token) async {
     return await remoteDataSource.upload(post, token);
   }
+
+  @override
+  Future<Either<Failure, bool>> addToFavorites(
+      String postId, String token) async {
+    return await remoteDataSource.addToFavorites(postId, token);
+  }
+
+  @override
+  Future<Either<Failure, bool>> checkIfFavorite(
+      String postId, String token) async {
+    return await remoteDataSource.checkIfFavorite(postId, token);
+  }
+
+  @override
+  Future<Either<Failure, bool>> removeFromFavorites(
+      String postId, String token) async {
+    return await remoteDataSource.removeFromFavorites(postId, token);
+  }
 }

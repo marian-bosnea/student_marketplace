@@ -8,6 +8,8 @@ abstract class SalePostRepository {
       String token, String postId);
 
   Future<Either<Failure, List<SalePostEntity>>> getAllPosts(String token);
+  Future<Either<Failure, List<SalePostEntity>>> getFavoritePosts(String token);
+
   Future<Either<Failure, List<SalePostEntity>>> getPostsByQuery(
       String token, String query);
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(

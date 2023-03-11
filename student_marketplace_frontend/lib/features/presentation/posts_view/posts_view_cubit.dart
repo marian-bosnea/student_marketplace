@@ -76,16 +76,9 @@ class PostViewCubit extends Cubit<PostViewState> {
   }
 
   Future<void> goToDetailedPostPage(String id, BuildContext context) async {
-    final result = await getDetailedPostUsecase(IdParam(id: id));
-
-    if (result is Left) return;
-
-    final post = (result as Right).value;
-
     BlocProvider.of<DetailedPostCubit>(context).setSelectedImage(0);
 
-    Navigator.of(context).push(platformPageRoute(
-        context: context, builder: (context) => DetailedPostPage(post: post)));
+    Navigator.of(context).pushNamed('/detailed_post', arguments: id);
   }
 
   Future<void> fetchAllPosts() async {
@@ -114,8 +107,6 @@ class PostViewCubit extends Cubit<PostViewState> {
       if (maxViewCount == element.viewsCount) {
         item = element;
       }
-
-      print(element.viewsCount);
     });
 
     state = state.copyWith(featuredPost: item);

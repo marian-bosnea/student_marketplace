@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_marketplace_frontend/core/theme/colors.dart';
 import 'package:student_marketplace_frontend/features/presentation/detailed_post/detailed_post_cubit.dart';
+import 'package:student_marketplace_frontend/features/presentation/detailed_post/detailed_post_page.dart';
+import 'package:student_marketplace_frontend/features/presentation/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_frontend/features/presentation/search/search_view_bloc.dart';
 
 import 'features/presentation/home/home_cubit.dart';
@@ -40,7 +42,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<PostViewCubit>()),
         BlocProvider(create: (_) => di.sl<AddPostCubit>()),
         BlocProvider(create: (_) => di.sl<DetailedPostCubit>()),
-        BlocProvider(create: (_) => di.sl<SearchBloc>())
+        BlocProvider(create: (_) => di.sl<SearchBloc>()),
+        BlocProvider(create: (_) => di.sl<FavoritesViewBloc>())
       ],
       child: MaterialApp(
         title: 'Student Marketplace',
@@ -58,7 +61,9 @@ class MyApp extends StatelessWidget {
                 } else {
                   return AuthenticationPage();
                 }
-              })
+              }),
+          '/detailed_post': (context) => DetailedPostPage(
+              postId: ModalRoute.of(context)!.settings.arguments as String)
         },
       ),
     );

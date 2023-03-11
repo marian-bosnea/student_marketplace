@@ -5,6 +5,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_frontend/core/enums.dart';
 import 'package:student_marketplace_frontend/core/theme/colors.dart';
 import 'package:student_marketplace_frontend/features/presentation/add_post/add_post_page.dart';
+import 'package:student_marketplace_frontend/features/presentation/favorites/favorites_view_page.dart';
 import 'package:student_marketplace_frontend/features/presentation/user_profile/profile_page.dart';
 
 import '../posts_view/posts_view_page.dart';
@@ -73,10 +74,10 @@ class HomePage extends StatelessWidget {
                         : Colors.black38,
                   )),
               BottomNavigationBarItem(
-                  label: 'Profile',
+                  label: 'Favorites',
                   icon: Icon(
-                    Icons.supervised_user_circle,
-                    color: state.status == HomePageStatus.profile
+                    Icons.favorite_sharp,
+                    color: state.status == HomePageStatus.favorites
                         ? accentColor
                         : Colors.black38,
                   )),
@@ -119,13 +120,13 @@ class HomePage extends StatelessWidget {
   Widget _getCurrentPage(BuildContext context, HomePageState state) {
     switch (state.status) {
       case HomePageStatus.home:
-        return const PostViewPage();
+        return PostViewPage();
       case HomePageStatus.search:
-        return SearchPage();
+        return const SearchPage();
       case HomePageStatus.addPost:
         return AddPostPage();
-      case HomePageStatus.profile:
-        return ProfilePage();
+      case HomePageStatus.favorites:
+        return FavoritesViewPage();
       case HomePageStatus.settings:
         return const Center(
           child: Text("Settings Page"),

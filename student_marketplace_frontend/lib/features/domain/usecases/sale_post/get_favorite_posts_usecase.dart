@@ -1,14 +1,17 @@
-import '../../../../core/error/failures.dart';
+import 'package:student_marketplace_frontend/core/error/failures.dart';
+
 import 'package:dartz/dartz.dart';
+
 import '../../../../core/usecases/usecase.dart';
 import '../../entities/sale_post_entity.dart';
 import '../../repositories/auth_session_repository.dart';
 import '../../repositories/sale_post_repository.dart';
 
-class GetAllPostsUsecase extends Usecase<List<SalePostEntity>, NoParams> {
+class GetFavoritePostsUsecase extends Usecase<List<SalePostEntity>, NoParams> {
   final SalePostRepository postRepository;
   final AuthSessionRepository authRepository;
-  GetAllPostsUsecase(
+
+  GetFavoritePostsUsecase(
       {required this.postRepository, required this.authRepository});
 
   @override
@@ -17,7 +20,7 @@ class GetAllPostsUsecase extends Usecase<List<SalePostEntity>, NoParams> {
     if (result is Left) return Left(UnauthenticatedFailure());
 
     final session = (result as Right).value;
-    final postsResult = await postRepository.getAllPosts(session.token);
+    final postsResult = await postRepository.getFavoritePosts(session.token);
 
     if (postsResult is Left) return Left(NetworkFailure());
     final posts = (postsResult as Right).value;

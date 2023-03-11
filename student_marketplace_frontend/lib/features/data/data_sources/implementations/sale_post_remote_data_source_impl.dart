@@ -86,4 +86,51 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
       return Right(result);
     }
   }
+
+  @override
+  Future<Either<Failure, List<SalePostEntity>>> getFavoritesPosts(
+      String token) async {
+    final result = await httpInterface.fetchFavoritePosts(token);
+    if (result == null) {
+      return Left(NetworkFailure());
+    } else {
+      return Right(result);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> addToFavorites(
+      String postId, String token) async {
+    final result =
+        await httpInterface.addToFavorites(token: token, postId: postId);
+    if (result == null) {
+      return Left(NetworkFailure());
+    } else {
+      return Right(result);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> checkIfFavorite(
+      String postId, String token) async {
+    final result =
+        await httpInterface.checkIfFavorite(token: token, postId: postId);
+    if (result == null) {
+      return Left(NetworkFailure());
+    } else {
+      return Right(result);
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> removeFromFavorites(
+      String postId, String token) async {
+    final result =
+        await httpInterface.removeFromFavorites(token: token, postId: postId);
+    if (result == null) {
+      return Left(NetworkFailure());
+    } else {
+      return Right(result);
+    }
+  }
 }
