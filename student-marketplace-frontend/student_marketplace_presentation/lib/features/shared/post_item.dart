@@ -14,42 +14,46 @@ class PostItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-            color: secondaryColor,
-            borderRadius: const BorderRadius.all(Radius.circular(30))),
-        padding:
-            const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [LikeButton()],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(20)),
-                  child: Image.memory(post.images.first)),
-            ),
-            Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Text(
-                post.title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    color: Colors.black38,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600),
+      child: Material(
+        elevation: 0,
+        borderRadius: const BorderRadius.all(Radius.circular(30)),
+        child: Container(
+          decoration: BoxDecoration(
+              color: secondaryColor,
+              borderRadius: const BorderRadius.all(Radius.circular(30))),
+          padding:
+              const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [LikeButton()],
               ),
-              Text('${post.price} RON',
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    child: Image.memory(post.images.first)),
+              ),
+              Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Text(
+                  post.title,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                      color: accentColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700)),
-            ])
-          ],
+                      color: Colors.black38,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600),
+                ),
+                Text('${post.price} RON',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        color: accentColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700)),
+              ])
+            ],
+          ),
         ),
       ),
     );

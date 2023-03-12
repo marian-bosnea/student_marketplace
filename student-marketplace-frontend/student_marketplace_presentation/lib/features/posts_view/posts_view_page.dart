@@ -29,7 +29,7 @@ class PostViewPage extends StatelessWidget {
           BlocBuilder<PostViewCubit, PostViewState>(builder: (context, state) {
         if (state.status == PostsViewStatus.loaded) {
           return Container(
-            padding: const EdgeInsets.all(10),
+            //  padding: const EdgeInsets.all(10),
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: CustomScrollView(
@@ -38,7 +38,8 @@ class PostViewPage extends StatelessWidget {
                   delegate: SliverChildListDelegate([
                     Container(
                       height: 70,
-                      padding: const EdgeInsets.only(top: 10),
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -77,40 +78,44 @@ class PostViewPage extends StatelessWidget {
                     ),
                   ]),
                 ),
-                LiveSliverGrid.options(
-                  options: salePostAnimationOptions,
-                  controller: _scrollController,
-                  itemCount: state.posts.length,
-                  itemBuilder: (context, index, anim) {
-                    final post = state.posts.elementAt(index);
-                    return AnimateIfVisible(
-                        key: ValueKey(post.postId),
-                        duration: const Duration(milliseconds: 200),
-                        builder: (context, animation) => FadeTransition(
-                              opacity: Tween<double>(begin: 0, end: 1)
-                                  .animate(animation),
-                              child: PostItem(
-                                post: post,
-                                onTap: () {
-                                  BlocProvider.of<PostViewCubit>(context)
-                                      .goToDetailedPostPage(
-                                          post.postId!, context);
-                                },
-                              ),
-                            ));
-                    // return PostItem(
-                    //   post: post,
-                    //   onTap: () {
-                    //     BlocProvider.of<PostViewCubit>(context)
-                    //         .goToDetailedPostPage(post.postId!, context);
-                    //   },
-                    // );
-                  },
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 2 / 3,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20),
+                SliverPadding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  sliver: LiveSliverGrid.options(
+                    options: salePostAnimationOptions,
+                    controller: _scrollController,
+                    itemCount: state.posts.length,
+                    itemBuilder: (context, index, anim) {
+                      final post = state.posts.elementAt(index);
+                      return AnimateIfVisible(
+                          key: ValueKey(post.postId),
+                          duration: const Duration(milliseconds: 200),
+                          builder: (context, animation) => FadeTransition(
+                                opacity: Tween<double>(begin: 0, end: 1)
+                                    .animate(animation),
+                                child: PostItem(
+                                  post: post,
+                                  onTap: () {
+                                    BlocProvider.of<PostViewCubit>(context)
+                                        .goToDetailedPostPage(
+                                            post.postId!, context);
+                                  },
+                                ),
+                              ));
+                      // return PostItem(
+                      //   post: post,
+                      //   onTap: () {
+                      //     BlocProvider.of<PostViewCubit>(context)
+                      //         .goToDetailedPostPage(post.postId!, context);
+                      //   },
+                      // );
+                    },
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 200,
+                            childAspectRatio: 2 / 3,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                  ),
                 )
               ],
             ),

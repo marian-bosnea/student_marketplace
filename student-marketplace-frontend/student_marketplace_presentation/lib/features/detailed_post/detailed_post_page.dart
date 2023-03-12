@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:like_button/like_button.dart';
-import 'package:student_marketplace_presentation/features/shared/circle_button.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 import '../../core/constants/enums.dart';
 import '../../core/theme/colors.dart';
@@ -44,6 +45,7 @@ class DetailedPostPage extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
+                  margin: const EdgeInsets.only(bottom: 80),
                   color: secondaryColor,
                   child: ListView(
                     children: [
@@ -86,21 +88,28 @@ class DetailedPostPage extends StatelessWidget {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.all(20),
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        child: Image.memory(
-                          state.post!.images[state.selectedImageIndex!],
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
+                          padding: const EdgeInsets.all(20),
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: PhotoView(
+                            imageProvider: MemoryImage(
+                                state.post!.images[state.selectedImageIndex!]),
+                          )
+                          // child: Image.memory(
+                          //   state.post!.images[state.selectedImageIndex!],
+                          //   fit: BoxFit.scaleDown,
+                          // ),
+                          ),
                       Container(
-                        margin: const EdgeInsets.only(left: 20, right: 20),
+                        // margin: const EdgeInsets.only(left: 20, right: 20),
                         padding: const EdgeInsets.only(
                             left: 15, right: 15, bottom: 10, top: 10),
-                        decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20))),
+                        decoration: const BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(40),
+                              topLeft: Radius.circular(40)),
+                        ),
+                        //  BorderRadius.all(Radius.circular(20)),
                         child: Column(
                           children: [
                             Container(
@@ -127,12 +136,6 @@ class DetailedPostPage extends StatelessWidget {
                                               style: const TextStyle(
                                                   fontSize: 24,
                                                   fontWeight: FontWeight.w600),
-                                            ),
-                                            Text(
-                                              '${state.post!.price} RON',
-                                              style: const TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w500),
                                             ),
                                           ]),
                                     ),
@@ -293,13 +296,41 @@ class DetailedPostPage extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                    right: 20,
-                    bottom: 20,
-                    child: CircleButton(
-                      onTap: () {},
-                      icon: const Icon(
-                        Icons.sms,
-                        color: Colors.white,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      width: MediaQuery.of(context).size.width,
+                      height: 100,
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${state.post!.price} RON',
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w700),
+                          ),
+                          Container(
+                            width: 150,
+                            height: 40,
+                            decoration: const BoxDecoration(
+                                color: primaryColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            child: const Center(
+                              child: Text(
+                                '✉️ Message',
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: accentColor,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ))
               ],
