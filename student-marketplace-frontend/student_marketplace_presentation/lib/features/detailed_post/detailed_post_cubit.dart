@@ -55,15 +55,18 @@ class DetailedPostCubit extends Cubit<DetailedPostPageState> {
     emit(_state);
   }
 
-  Future<void> onFavoritePressed(String id) async {
+  Future<bool> onFavoritePressed(String id) async {
+    bool result = false;
     if (_state.isFavorite) {
       await removeFromFavoritesUsecase(IdParam(id: id));
     } else {
       await addToFavoritesUsecase(IdParam(id: id));
+      result = true;
     }
-
     _state = _state.copyWith(isFavorite: !_state.isFavorite);
     emit(_state);
+
+    return result;
   }
 
   resetContext() {

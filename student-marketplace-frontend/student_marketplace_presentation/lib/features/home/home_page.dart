@@ -9,17 +9,23 @@ import '../add_post/add_post_page.dart';
 import '../favorites/favorites_view_page.dart';
 import '../posts_view/posts_view_page.dart';
 import '../search/search_view_page.dart';
-import 'home_cubit.dart';
+import 'home_page_bloc.dart';
 import 'home_state.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  _init(BuildContext context) async {
+    BlocProvider.of<HomePageBloc>(context).fetchProfilePhoto();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomePageState>(
+    return BlocConsumer<HomePageBloc, HomePageState>(
       listener: (context, state) {},
       builder: (context, state) {
+        _init(context);
+
         return PlatformScaffold(
           appBar: isMaterial(context)
               ? PlatformAppBar(
@@ -36,6 +42,17 @@ class HomePage extends StatelessWidget {
                   headerSliverBuilder: (context, innerBoxIsScroller) {
                     return <Widget>[
                       CupertinoSliverNavigationBar(
+                        trailing: state.profileIcon != null
+                            ? GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<HomePageBloc>(context)
+                                        .goToProfile(context),
+                                child: CircleAvatar(
+                                  foregroundImage:
+                                      Image.memory(state.profileIcon!).image,
+                                ),
+                              )
+                            : null,
                         largeTitle: Text(
                           state.title,
                           style: const TextStyle(color: accentColor),
@@ -99,19 +116,19 @@ class HomePage extends StatelessWidget {
   onBottomNavbarItemTap(BuildContext context, int index) {
     switch (index) {
       case 0:
-        BlocProvider.of<HomeCubit>(context).goToHome();
+        BlocProvider.of<HomePageBloc>(context).goToHome();
         break;
       case 1:
-        BlocProvider.of<HomeCubit>(context).goToSearch();
+        BlocProvider.of<HomePageBloc>(context).goToSearch();
         break;
       case 2:
-        BlocProvider.of<HomeCubit>(context).goToAddPost();
+        BlocProvider.of<HomePageBloc>(context).goToAddPost();
         break;
       case 3:
-        BlocProvider.of<HomeCubit>(context).goToProfile();
+        BlocProvider.of<HomePageBloc>(context).goToFavorites();
         break;
       case 4:
-        BlocProvider.of<HomeCubit>(context).goToSettings();
+        BlocProvider.of<HomePageBloc>(context).goToSettings();
         break;
     }
   }

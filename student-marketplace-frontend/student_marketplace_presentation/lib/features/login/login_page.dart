@@ -58,7 +58,7 @@ class AuthenticationPage extends StatelessWidget {
               ? MediaQuery.of(context).size.height * 0.35
               : MediaQuery.of(context).size.height * 0.3,
           padding: const EdgeInsets.all(10),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: secondaryColor,
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),

@@ -28,6 +28,9 @@ dependencies:
 
   student_marketplace_business_logic:
     path: ../student_marketplace_business_logic
+  flutter_slidable: ^2.0.0
+  settings_ui: ^2.0.2
+  like_button: ^2.0.5
 
 dev_dependencies:
   flutter_test:

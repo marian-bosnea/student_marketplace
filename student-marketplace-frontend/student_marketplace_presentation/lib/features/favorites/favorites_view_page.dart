@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import 'favorites_view_bloc.dart';
 import 'favorites_view_state.dart';
@@ -14,16 +16,42 @@ class FavoritesViewPage extends StatelessWidget {
     return BlocBuilder<FavoritesViewBloc, FavoritesViewState>(
       builder: (context, state) {
         return Material(
-          color: Colors.white,
-          child: ListView.builder(
-              itemCount: state.posts.length,
-              itemBuilder: (context, index) {
-                final post = state.posts.elementAt(index);
-                return ListPostItem(
-                    post: post,
-                    onTap: () => BlocProvider.of<FavoritesViewBloc>(context)
-                        .goToDetailedPostPage(post, context));
-              }),
+          child: Container(
+            color: Colors.white,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: ListView.builder(
+                itemCount: state.posts.length,
+                itemBuilder: (context, index) {
+                  final post = state.posts.elementAt(index);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Slidable(
+                      key: ValueKey(post.postId),
+                      startActionPane:
+                          ActionPane(motion: const ScrollMotion(), children: [
+                        SlidableAction(
+                          onPressed: (context) =>
+                              BlocProvider.of<FavoritesViewBloc>(context)
+                                  .removeFromFavorites(post.postId!),
+                          autoClose: true,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
+                          backgroundColor: const Color(0xFFFE4A49),
+                          foregroundColor: Colors.white,
+                          icon: CupertinoIcons.trash,
+                          label: 'Remove',
+                        ),
+                      ]),
+                      child: ListPostItem(
+                          post: post,
+                          onTap: () =>
+                              BlocProvider.of<FavoritesViewBloc>(context)
+                                  .goToDetailedPostPage(post, context)),
+                    ),
+                  );
+                }),
+          ),
         );
       },
     );

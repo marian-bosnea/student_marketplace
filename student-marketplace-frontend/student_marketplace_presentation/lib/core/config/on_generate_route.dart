@@ -21,6 +21,10 @@ class OnGenerateRoute {
   }
 }
 
+dynamic routeBuilder(Widget page) {
+  return MaterialPageRoute(builder: (context) => page);
+}
+
 class PageNames {
   static const authenticationPage = 'authenticationPage';
   static const registerPage = 'registerPage';
@@ -38,8 +42,4 @@ class NoPage extends StatelessWidget {
       ),
     );
   }
-}
-
-dynamic routeBuilder(Widget page) {
-  return MaterialPageRoute(builder: (context) => page);
 }

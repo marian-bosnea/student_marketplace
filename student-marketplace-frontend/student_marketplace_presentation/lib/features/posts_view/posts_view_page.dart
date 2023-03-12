@@ -6,7 +6,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_presentation/features/posts_view/post_view_state.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_cubit.dart';
 import 'package:student_marketplace_presentation/features/posts_view/widgets/featured_item.dart';
-import 'package:student_marketplace_presentation/features/posts_view/widgets/post_item.dart';
+import 'package:student_marketplace_presentation/features/shared/post_item.dart';
 
 import '../../core/constants/enums.dart';
 import '../../core/theme/colors.dart';
@@ -38,7 +38,7 @@ class PostViewPage extends StatelessWidget {
                   delegate: SliverChildListDelegate([
                     Container(
                       height: 70,
-                      padding: const EdgeInsets.only(top: 10, bottom: 10),
+                      padding: const EdgeInsets.only(top: 10),
                       width: MediaQuery.of(context).size.width,
                       child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -57,7 +57,7 @@ class PostViewPage extends StatelessWidget {
                                           .selectCategory(index));
                             } else {
                               return CategoryItem(
-                                  label: '  All  ',
+                                  label: '🏷️All  ',
                                   onTap: () =>
                                       BlocProvider.of<PostViewCubit>(context)
                                           .selectCategory(-1),

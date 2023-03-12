@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_marketplace_presentation/features/user_profile/profile_page.dart';
 
 import '../../features/authentication/auth_cubit.dart';
 import '../../features/authentication/auth_state.dart';
@@ -17,5 +18,6 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
         }
       }),
   '/detailed_post': (context) => DetailedPostPage(
-      postId: ModalRoute.of(context)!.settings.arguments as String)
+      postId: ModalRoute.of(context)!.settings.arguments as String),
+  '/user_profile': (context) => const ProfilePage()
 };

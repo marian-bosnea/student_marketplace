@@ -14,9 +14,9 @@ class FeaturedItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       margin: const EdgeInsets.only(top: 10, bottom: 10),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
           color: secondaryColor,
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: const BorderRadius.all(Radius.circular(30))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -166,6 +166,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.7"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      sha256: "6c68e1fad129b4b807b2218ef4cf7f7f6f61c5ec8861c990dc2278d9d03cb09f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -248,6 +256,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
+  like_button:
+    dependency: "direct main"
+    description:
+      name: like_button
+      sha256: "08e6a45b78888412df5d351786c550205ad3a677e72a0820d5bbc0b063c8a463"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   lints:
     dependency: transitive
     description:
@@ -352,6 +368,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.5"
+  settings_ui:
+    dependency: "direct main"
+    description:
+      name: settings_ui
+      sha256: d9838037cb554b24b4218b2d07666fbada3478882edefae375ee892b6c820ef3
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   shared_preferences:
     dependency: "direct main"
     description:

@@ -15,22 +15,22 @@ class ListPostItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.only(top: 10, bottom: 10),
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
             color: secondaryColor,
-            borderRadius: BorderRadius.all(Radius.circular(20))),
-        height: 100,
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
+        height: 70,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
               child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.3,
+                  width: MediaQuery.of(context).size.width * 0.15,
                   child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                       child: Image.memory(post.images.first))),
             ),
-            SizedBox(
+            Container(
+              margin: const EdgeInsets.only(left: 10),
               width: MediaQuery.of(context).size.width / 2,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,11 +38,11 @@ class ListPostItem extends StatelessWidget {
                     Text(
                       post.title,
                       style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.w600),
+                          fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       '${post.price} RON',
-                      style: const TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 16),
                     ),
                   ]),
             ),
