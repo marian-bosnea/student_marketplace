@@ -23,17 +23,23 @@ module.exports.DELETE_TOKEN = 'DELETE FROM authorization_token WHERE token = $1'
 //#region Sale
 module.exports.CATEGORY_READ_ALL = 'SELECT * FROM object_category';
 
-
-
-module.exports.SALE_OBJECT_READ_ALL = 'SELECT o.id, d.title, d.price FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id';
+module.exports.SALE_OBJECT_READ_ALL = 'SELECT o.id, d.title, d.price, o.views_count, o.owner_id FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id';
 module.exports.SALE_OBJECT_READ_DETAILED = 'SELECT o.id, d.title, d.description, d.price, o.date, oc.name as category_name, o.views_count, o.owner_id, p.last_name as owner_name, d.id as description_id  FROM object_description d  INNER JOIN sale_object o ON o.description_id = d.id INNER JOIN user_centralized c ON o.owner_id = c.id INNER JOIN user_profile p ON p.id = c.profile_id INNER JOIN object_category oc ON o.category_id = oc.id WHERE o.id = $1';
 module.exports.SALE_OBJECT_IMAGE_COUNT = 'SELECT COUNT(data) FROM object_image o WHERE o.description_id = $1';
+module.exports.SALE_OBJECT_INCREMENT_VIEWS_COUNT = 'UPDATE sale_object SET views_count = views_count + 1 WHERE id = $1';
 module.exports.SALE_OBJECT_DESCRIPTION_INSERT = 'INSERT INTO object_description (title, description, price) VALUES ($1, $2, $3) RETURNING id';
 module.exports.OBJECT_IMAGE_INSERT = 'INSERT INTO object_image (data, description_id) VALUES ($1, $2)';
 module.exports.OBJECT_IMAGE_READ = 'SELECT i.data FROM object_image i INNER JOIN object_description d ON d.id = i.description_id INNER JOIN sale_object s ON s.description_id = d.id WHERE s.id =$1';
 module.exports.SALE_OBJECT_INSERT = 'INSERT INTO sale_object (description_id, category_id, owner_id, date, is_active) VALUES ($1, $2, $3, $4, $5) RETURNING id';
-module.exports.SALE_OBJECT_READ_CATEGORY = 'SELECT o.id, d.title, d.price FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id WHERE o.category_id = $1';
+module.exports.SALE_OBJECT_READ_CATEGORY = 'SELECT o.id, d.title, d.price , o.views_count FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id WHERE o.category_id = $1';
 
-module.exports.SALE_OBJECT_READ_OWNER = 'SELECT d.title, d.description, d.price, o.category_id FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id WHERE o.owner_id = $1';
+module.exports.SALE_OBJECT_READ_OWNER = 'SELECT d.title, d.description, d.price, o.category_id, o.views_count FROM object_description d INNER JOIN sale_object o ON o.description_id = d.id WHERE o.owner_id = $1';
 // Order of inseration must be: description -> images -> sale_object
 //#endregion
+
+// Favorites
+
+module.exports.SALE_OBJECT_ADD_TO_FAVORITE = 'INSERT INTO favorite_post (user_id, post_id) VALUES ($1, $2)';
+module.exports.SALE_OBJECT_REMOVE_FROM_FAVORITES = 'DELETE FROM favorite_post WHERE user_id = $1 AND post_id = $2';
+module.exports.SALE_OBJECT_READ_ALL_FAVORITES = 'SELECT s.id, d.title, d.price, s.views_count FROM sale_object s INNER JOIN favorite_post f ON f.post_id = s.id INNER JOIN object_description d ON s.description_id = d.id WHERE f.user_id = $1';
+module.exports.SALE_OBJECT_CHECK_IF_FAVORITE = 'SELECT post_id FROM favorite_post WHERE user_id = $1 AND post_id = $2';

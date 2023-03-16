@@ -65,6 +65,7 @@ const upload = multer({
 });
  
  authRouter.post('/users/check-email', async (req, res) => {
+    console.log('tried email');
     authController.checkIfEmailExists(req, res);
  });
 

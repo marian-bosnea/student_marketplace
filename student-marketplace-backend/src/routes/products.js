@@ -62,10 +62,40 @@ productRouter.get('/sale-object/get/all',
         productController.getAll(req, res);
     });
 
-    productRouter.post('/sale-object/get/detailed',
+productRouter.post('/sale-object/get/query',
+    authorization.authenticateToken,
+    (req, res) => {
+        productController.searchWithTextQuery(req, res);
+    });
+
+productRouter.post('/sale-object/get/detailed',
     authorization.authenticateToken,
     (req, res) => {
         productController.getDetailedSalePost(req, res);
+    });
+
+productRouter.post('/sale-object/favorites/add',
+    authorization.authenticateToken,
+    (req, res) => {
+        productController.addToFavorites(req, res);
+    });
+
+productRouter.post('/sale-object/favorites/read-all',
+    authorization.authenticateToken,
+    (req, res) => {
+        productController.readAllFavorites(req, res);
+    });
+
+productRouter.post('/sale-object/favorites/remove',
+    authorization.authenticateToken,
+    (req, res) => {
+        productController.removeFromFavorites(req, res);
+    });
+
+productRouter.post('/sale-object/favorites/check',
+    authorization.authenticateToken,
+    (req, res) => {
+        productController.checkIfFavorite(req, res);
     });
 
 productRouter.get('/product-categories/get/all',
@@ -74,10 +104,11 @@ productRouter.get('/product-categories/get/all',
         productController.getCategories(req, res);
     });
 
-    
+
 productRouter.post('/sale-object/get/image',
-//authorization.authenticateToken,
-(req, res) => {
-    productController.getImage(req, res);
-});
+    authorization.authenticateToken,
+    (req, res) => {
+        productController.getImage(req, res);
+    });
+
 module.exports = productRouter;
