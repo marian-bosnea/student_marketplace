@@ -7,7 +7,7 @@ import 'package:student_marketplace_presentation/features/search/search_page_sta
 import 'package:student_marketplace_presentation/features/search/search_view_bloc.dart';
 
 import '../../core/theme/colors.dart';
-import '../posts_view/widgets/post_item.dart';
+import '../shared/post_item.dart';
 import '../shared/animation_options.dart';
 
 class SearchPage extends StatelessWidget {

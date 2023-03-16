@@ -57,7 +57,7 @@ import '../../features/add_post/add_post_cubit.dart';
 import '../../features/authentication/auth_cubit.dart';
 import '../../features/detailed_post/detailed_post_cubit.dart';
 import '../../features/favorites/favorites_view_bloc.dart';
-import '../../features/home/home_cubit.dart';
+import '../../features/home/home_page_bloc.dart';
 import '../../features/login/login_cubit.dart';
 import '../../features/posts_view/posts_view_cubit.dart';
 import '../../features/register/register_cubit.dart';
@@ -87,7 +87,7 @@ Future<void> init() async {
       getAllFacultiesUsecase: sl.call(),
       checkEmailRegistrationUsecase: sl.call()));
 
-  sl.registerFactory(() => HomeCubit());
+  sl.registerFactory(() => HomePageBloc(getOwnUserProfileUsecase: sl.call()));
 
   sl.registerFactory(() => ProfileCubit(getUserUsecase: sl.call()));
 
@@ -110,8 +110,8 @@ Future<void> init() async {
       getAllCategoriesUsecase: sl.call(), uploadPostUsecase: sl.call()));
 
   sl.registerFactory(() => FavoritesViewBloc(
-        getFavoritePostsUsecase: sl.call(),
-      ));
+      getFavoritePostsUsecase: sl.call(),
+      removeFromFavoritesUsecase: sl.call()));
   // Usecases
 
   sl.registerLazySingleton(() => AuthenticateUsecase(repository: sl.call()));

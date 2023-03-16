@@ -5,7 +5,7 @@ import 'core/config/routes.dart';
 import 'core/theme/colors.dart';
 import 'features/detailed_post/detailed_post_cubit.dart';
 import 'features/favorites/favorites_view_bloc.dart';
-import 'features/home/home_cubit.dart';
+import 'features/home/home_page_bloc.dart';
 import 'features/authentication/auth_cubit.dart';
 import 'features/login/login_cubit.dart';
 import 'features/add_post/add_post_cubit.dart';
@@ -35,7 +35,7 @@ class StudentMarketPlace extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<LoginCubit>()),
         BlocProvider(create: (_) => di.sl<RegisterCubit>()),
         BlocProvider(create: (_) => di.sl<ProfileCubit>()),
-        BlocProvider(create: (_) => di.sl<HomeCubit>()),
+        BlocProvider(create: (_) => di.sl<HomePageBloc>()),
         BlocProvider(create: (_) => di.sl<PostViewCubit>()),
         BlocProvider(create: (_) => di.sl<AddPostCubit>()),
         BlocProvider(create: (_) => di.sl<DetailedPostCubit>()),
