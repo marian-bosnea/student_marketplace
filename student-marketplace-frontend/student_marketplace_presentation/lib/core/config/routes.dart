@@ -1,23 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:student_marketplace_presentation/features/user_profile/profile_page.dart';
+import 'package:student_marketplace_presentation/features/user_profile/profile_view_page.dart';
 
-import '../../features/authentication/auth_cubit.dart';
+import '../../features/authentication/auth_bloc.dart';
 import '../../features/authentication/auth_state.dart';
-import '../../features/detailed_post/detailed_post_page.dart';
-import '../../features/home/home_page.dart';
-import '../../features/login/login_page.dart';
+import '../../features/detailed_post/detailed_post_view_page.dart';
+import '../../features/home/home_view_page.dart';
+import '../../features/login/login_view_page.dart';
 
 Map<String, Widget Function(BuildContext)> appRoutes = {
   '/': (context) =>
-      BlocBuilder<AuthCubit, AuthState>(builder: (context, authState) {
-        if (authState is Authenticated) {
-          return const HomePage();
+      BlocBuilder<AuthBloc, AuthState>(builder: (context, authState) {
+        if (authState.status == AuthStatus.authenticated) {
+          return const HomeViewPage();
         } else {
-          return AuthenticationPage();
+          return LoginViewPage();
         }
       }),
-  '/detailed_post': (context) => DetailedPostPage(
-      postId: ModalRoute.of(context)!.settings.arguments as String),
-  '/user_profile': (context) => const ProfilePage()
+  '/detailed_post': (context) => DetailedPostViewPage(
+      postId: ModalRoute.of(context)!.settings.arguments as int),
+  '/user_profile': (context) => const ProfileViewPage()
 };

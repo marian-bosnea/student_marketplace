@@ -23,20 +23,19 @@ class SalePostOperationsImpl extends SalePostOperations {
   }
 
   @override
-  Future<Either<Failure, bool>> addToFavorites(
-      String postId, String token) async {
+  Future<Either<Failure, bool>> addToFavorites(int postId, String token) async {
     return await remoteDataSource.addToFavorites(postId, token);
   }
 
   @override
   Future<Either<Failure, bool>> checkIfFavorite(
-      String postId, String token) async {
+      int postId, String token) async {
     return await remoteDataSource.checkIfFavorite(postId, token);
   }
 
   @override
   Future<Either<Failure, bool>> removeFromFavorites(
-      String postId, String token) async {
+      int postId, String token) async {
     return await remoteDataSource.removeFromFavorites(postId, token);
   }
 }

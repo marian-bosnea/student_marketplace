@@ -3,27 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:settings_ui/settings_ui.dart';
-import 'package:student_marketplace_presentation/features/home/home_page_bloc.dart';
+import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/user_profile/profile_view_state.dart';
 import '../../core/theme/colors.dart';
-import 'profile_page_state.dart';
 
-import '../authentication/auth_cubit.dart';
-import 'profile_cubit.dart';
+import '../authentication/auth_bloc.dart';
+import 'profile_view_bloc.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+class ProfileViewPage extends StatelessWidget {
+  const ProfileViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<ProfileCubit>(context).fetchUserProfile();
+    BlocProvider.of<ProfileViewBloc>(context).fetchUserProfile();
     return PlatformScaffold(
-      body: BlocBuilder<ProfileCubit, ProfilePageState>(
+      body: BlocBuilder<ProfileViewBloc, ProfileViewState>(
         builder: (context, state) => _getBodyWidget(context, state),
       ),
     );
   }
 
-  Widget _getBodyWidget(BuildContext context, ProfilePageState state) {
+  Widget _getBodyWidget(BuildContext context, ProfileViewState state) {
     return PlatformScaffold(
       body: isCupertino(context)
           ? NestedScrollView(
@@ -43,7 +43,7 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _getBodyWidet(BuildContext context, ProfilePageState state) {
+  Widget _getBodyWidet(BuildContext context, ProfileViewState state) {
     return Center(
       child: Material(
         color: Colors.white,
@@ -109,7 +109,7 @@ class ProfilePage extends StatelessWidget {
                             color: Colors.red,
                           ),
                           onPressed: (context) {
-                            BlocProvider.of<HomePageBloc>(context)
+                            BlocProvider.of<HomeViewBloc>(context)
                                 .goToFavorites();
                             Navigator.of(context).pop();
                           },
@@ -127,7 +127,7 @@ class ProfilePage extends StatelessWidget {
                             color: Colors.red,
                           ),
                           onPressed: (context) =>
-                              BlocProvider.of<AuthCubit>(context).signOutUser(),
+                              BlocProvider.of<AuthBloc>(context).signOutUser(),
                           title: const Text('Sign Out'),
                         ),
                       ],

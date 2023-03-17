@@ -7,22 +7,22 @@ import 'package:student_marketplace_business_logic/data/models/user_model.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/credentials/check_email_availability_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/faculty/get_all_faculties_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/sign_up_usecase.dart';
-import 'package:student_marketplace_presentation/features/register/register_page_state.dart';
 
 import '../../core/utils/input_validators.dart';
+import 'register_view_state.dart';
 
-class RegisterCubit extends Cubit<RegisterPageState> {
+class RegisterViewBloc extends Cubit<RegisterViewState> {
   final SignUpUsecase signUpUsecase;
   final GetAllFacultiesUsecase getAllFacultiesUsecase;
   final CheckEmailAvailabilityUsecase checkEmailRegistrationUsecase;
 
-  late RegisterPageState state = const RegisterPageState();
+  late RegisterViewState state = const RegisterViewState();
 
-  RegisterCubit(
+  RegisterViewBloc(
       {required this.signUpUsecase,
       required this.getAllFacultiesUsecase,
       required this.checkEmailRegistrationUsecase})
-      : super(const RegisterPageState());
+      : super(const RegisterViewState());
 
   Future<void> fetchAllFaculties() async {
     final result = await getAllFacultiesUsecase(NoParams());

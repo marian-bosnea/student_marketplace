@@ -3,24 +3,24 @@ import 'package:student_marketplace_business_logic/domain/entities/sale_post_ent
 
 import '../../core/constants/enums.dart';
 
-class DetailedPostPageState extends Equatable {
+class DetailedPostViewState extends Equatable {
   final SalePostEntity? post;
   final int? selectedImageIndex;
   final bool isFavorite;
   final PostsViewStatus status;
 
-  const DetailedPostPageState(
+  const DetailedPostViewState(
       {this.selectedImageIndex = 0,
       this.isFavorite = false,
       this.post,
       this.status = PostsViewStatus.initial});
 
-  DetailedPostPageState copyWith(
+  DetailedPostViewState copyWith(
       {int? selectedImageIndex,
       SalePostEntity? post,
       bool? isFavorite,
       PostsViewStatus? status}) {
-    return DetailedPostPageState(
+    return DetailedPostViewState(
         selectedImageIndex: selectedImageIndex ?? this.selectedImageIndex,
         isFavorite: isFavorite ?? this.isFavorite,
         post: post ?? this.post,

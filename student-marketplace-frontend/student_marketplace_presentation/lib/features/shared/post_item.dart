@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:like_button/like_button.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
+import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/posts_view/posts_view_cubit.dart';
+import 'package:student_marketplace_presentation/features/posts_view/posts_view_page.dart';
 
 import '../../core/theme/colors.dart';
 
@@ -28,7 +32,17 @@ class PostItem extends StatelessWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                children: [LikeButton()],
+                children: [
+                  LikeButton(
+                    isLiked: post.isFavorite,
+                    onTap: (isLiked) {
+                      final result =
+                          BlocProvider.of<DetailedPostViewBloc>(context)
+                              .onFavoritePressed(post.postId!);
+                      return result;
+                    },
+                  )
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.all(5.0),

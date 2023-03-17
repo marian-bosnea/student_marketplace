@@ -8,27 +8,26 @@ import 'package:student_marketplace_business_logic/data/models/sale_post_model.d
 import 'package:student_marketplace_business_logic/domain/usecases/product_category/get_all_categories_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upload_post_usecase.dart';
 
-import 'add_post_page_state.dart';
+import 'add_post_view_state.dart';
 
-class AddPostCubit extends Cubit<AddPostPageState> {
+class AddPostViewBloc extends Cubit<AddPostState> {
   final GetAllCategoriesUsecase getAllCategoriesUsecase;
   final UploadPostUsecase uploadPostUsecase;
 
-  AddPostCubit(
+  AddPostViewBloc(
       {required this.uploadPostUsecase, required this.getAllCategoriesUsecase})
-      : super(const AddPostPageState());
-  AddPostPageState state = const AddPostPageState();
+      : super(const AddPostState());
 
   Future<void> setTitleValue(String value) async {
-    state = state.copyWith(titleValue: value);
+    emit(state.copyWith(titleValue: value));
   }
 
   Future<void> setDescriptionValue(String value) async {
-    state = state.copyWith(descriptionValue: value);
+    emit(state.copyWith(descriptionValue: value));
   }
 
   Future<void> setPriceValue(String value) async {
-    state = state.copyWith(price: value);
+    emit(state.copyWith(price: value));
   }
 
   Future<void> setPhotos() async {
@@ -46,8 +45,7 @@ class AddPostCubit extends Cubit<AddPostPageState> {
     previousImages.addAll(state.images);
     previousImages.addAll(imageFileList);
 
-    state = state.copyWith(images: previousImages);
-    emit(state);
+    emit(state.copyWith(images: previousImages));
   }
 
   Future<void> uploadPost() async {
@@ -60,14 +58,14 @@ class AddPostCubit extends Cubit<AddPostPageState> {
             categoryId: state.categoryId,
             description: state.descriptionValue,
             images: state.images,
-            ownerId: '0',
+            ownerId: 0,
             price: state.price,
             postingDate: dateSlug,
             title: state.titleValue)));
   }
 
-  Future<void> setCategoryValue(String categoryId) async {
-    state = state.copyWith(categoryId: categoryId);
+  Future<void> setCategoryValue(int categoryId) async {
+    emit(state.copyWith(categoryId: categoryId));
   }
 
   Future<void> fetchAllCategories() async {
@@ -76,7 +74,6 @@ class AddPostCubit extends Cubit<AddPostPageState> {
 
     final categories = (result as Right).value;
 
-    state = state.copyWith(categories: categories);
-    emit(state);
+    emit(state.copyWith(categories: categories));
   }
 }

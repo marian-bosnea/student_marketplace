@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../features/login/login_page.dart';
-import '../../features/register/register_page.dart';
-import '../../features/user_profile/profile_page.dart';
+import '../../features/login/login_view_page.dart';
+import '../../features/register/register_view_page.dart';
+import '../../features/user_profile/profile_view_page.dart';
 
 class OnGenerateRoute {
   static Route<dynamic> route(RouteSettings settings) {
     //final args = settings.arguments;
     switch (settings.name) {
       case PageNames.authenticationPage:
-        return routeBuilder(AuthenticationPage());
+        return routeBuilder(LoginViewPage());
       case PageNames.registerPage:
-        return routeBuilder(RegisterPage());
+        return routeBuilder(RegisterViewPage());
       case PageNames.userProfilePage:
-        return routeBuilder(const ProfilePage());
+        return routeBuilder(const ProfileViewPage());
       default:
         return routeBuilder(const NoPage());
     }

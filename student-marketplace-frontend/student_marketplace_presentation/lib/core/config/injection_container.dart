@@ -53,16 +53,16 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upl
 import 'package:student_marketplace_business_logic/domain/usecases/user/get_own_user_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/sign_up_usecase.dart';
 
-import '../../features/add_post/add_post_cubit.dart';
-import '../../features/authentication/auth_cubit.dart';
-import '../../features/detailed_post/detailed_post_cubit.dart';
+import '../../features/add_post/add_post_view_bloc.dart';
+import '../../features/authentication/auth_bloc.dart';
+import '../../features/detailed_post/detailed_post_view_bloc.dart';
 import '../../features/favorites/favorites_view_bloc.dart';
-import '../../features/home/home_page_bloc.dart';
-import '../../features/login/login_cubit.dart';
+import '../../features/home/home_view_bloc.dart';
+import '../../features/login/login_view_bloc.dart';
 import '../../features/posts_view/posts_view_cubit.dart';
-import '../../features/register/register_cubit.dart';
+import '../../features/register/register_view_bloc.dart';
 import '../../features/search/search_view_bloc.dart';
-import '../../features/user_profile/profile_cubit.dart';
+import '../../features/user_profile/profile_view_bloc.dart';
 
 /// Service locator
 ///
@@ -71,25 +71,25 @@ final sl = GetIt.instance;
 Future<void> init() async {
   // Cubits
 
-  sl.registerFactory(() => LoginCubit(
+  sl.registerFactory(() => LoginViewBloc(
         signUpUsecase: sl.call(),
         authenticateUsecase: sl.call(),
         checkEmailAvailabilityUsecase: sl.call(),
       ));
 
-  sl.registerFactory(() => AuthCubit(
+  sl.registerFactory(() => AuthBloc(
       authenticationStatusUsecase: sl.call(),
       deauthenticateUsecase: sl.call(),
       getCachedSessionUsecase: sl.call()));
 
-  sl.registerFactory(() => RegisterCubit(
+  sl.registerFactory(() => RegisterViewBloc(
       signUpUsecase: sl.call(),
       getAllFacultiesUsecase: sl.call(),
       checkEmailRegistrationUsecase: sl.call()));
 
-  sl.registerFactory(() => HomePageBloc(getOwnUserProfileUsecase: sl.call()));
+  sl.registerFactory(() => HomeViewBloc(getOwnUserProfileUsecase: sl.call()));
 
-  sl.registerFactory(() => ProfileCubit(getUserUsecase: sl.call()));
+  sl.registerFactory(() => ProfileViewBloc(getUserUsecase: sl.call()));
 
   sl.registerFactory(() => PostViewCubit(
       getAllPostsUsecase: sl.call(),
@@ -98,15 +98,16 @@ Future<void> init() async {
       getAllPostsByCategoryUsecase: sl.call(),
       getAllCategoriesUsecase: sl.call()));
 
-  sl.registerFactory(() => DetailedPostCubit(
+  sl.registerFactory(() => DetailedPostViewBloc(
       addToFavoritesUsecase: sl.call(),
       checkIfFavoriteUsecase: sl.call(),
       getDetailedPostUsecase: sl.call(),
       removeFromFavoritesUsecase: sl.call()));
 
-  sl.registerFactory(() => SearchBloc(getAllPostsByQueryUsecase: sl.call()));
+  sl.registerFactory(
+      () => SearchViewBloc(getAllPostsByQueryUsecase: sl.call()));
 
-  sl.registerFactory(() => AddPostCubit(
+  sl.registerFactory(() => AddPostViewBloc(
       getAllCategoriesUsecase: sl.call(), uploadPostUsecase: sl.call()));
 
   sl.registerFactory(() => FavoritesViewBloc(

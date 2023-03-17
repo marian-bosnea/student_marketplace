@@ -8,9 +8,9 @@ import 'package:student_marketplace_business_logic/domain/usecases/credentials/c
 import 'package:student_marketplace_business_logic/domain/usecases/user/sign_up_usecase.dart';
 
 import '../../core/utils/input_validators.dart';
-import 'login_page_state.dart';
+import 'login_view_state.dart';
 
-class LoginCubit extends Cubit<LoginPageState> {
+class LoginViewBloc extends Cubit<LoginViewState> {
   final SignUpUsecase signUpUsecase;
   final AuthenticateUsecase authenticateUsecase;
   final CheckEmailAvailabilityUsecase checkEmailAvailabilityUsecase;
@@ -18,13 +18,13 @@ class LoginCubit extends Cubit<LoginPageState> {
   late bool keepSignedIn = false;
   late bool isEmailCorrect = false;
 
-  late LoginPageState state = const LoginPageState();
+  late LoginViewState state = const LoginViewState();
 
-  LoginCubit(
+  LoginViewBloc(
       {required this.checkEmailAvailabilityUsecase,
       required this.authenticateUsecase,
       required this.signUpUsecase})
-      : super(const LoginPageState());
+      : super(const LoginViewState());
 
   Future<void> checkIfEmailIsRegistered(CredentialsModel credentials) async {
     state = state.copyWith(status: LoginPageStatus.emailSubmitting);

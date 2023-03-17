@@ -3,16 +3,16 @@ import 'package:student_marketplace_business_logic/domain/entities/sale_post_ent
 
 enum SearchPageStatus { initial, loading, loaded, fail }
 
-class SearchPageState extends Equatable {
+class SearchViewState extends Equatable {
   final List<SalePostEntity> posts;
   final SearchPageStatus status;
 
-  const SearchPageState(
+  const SearchViewState(
       {this.status = SearchPageStatus.initial, this.posts = const []});
 
-  SearchPageState copyWith(
+  SearchViewState copyWith(
           {SearchPageStatus? status, List<SalePostEntity>? posts}) =>
-      SearchPageState(
+      SearchViewState(
           status: status ?? this.status, posts: posts ?? this.posts);
 
   @override

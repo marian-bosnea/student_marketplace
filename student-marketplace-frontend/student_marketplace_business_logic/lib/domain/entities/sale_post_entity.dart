@@ -3,44 +3,52 @@ import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 
 class SalePostEntity extends Equatable {
-  String title;
-  String? description;
-  String? ownerId;
-  String? postingDate;
   String price;
-  String? categoryId;
+  String title;
   final List<Uint8List> images;
 
-  int? viewsCount;
-  String? postId;
+  int? postId;
+  int? ownerId;
+  int? categoryId;
+  String? description;
+  String? postingDate;
   String? ownerName;
   String? categoryName;
 
+  bool? isFavorite;
+  bool? isOwn;
+
+  int? viewsCount;
+
   SalePostEntity(
       {required this.title,
+      required this.images,
+      required this.price,
       this.description,
       this.ownerId,
       this.categoryId,
-      this.postingDate,
       this.viewsCount,
-      required this.price,
-      required this.images,
       this.postId,
       this.ownerName,
-      this.categoryName});
+      this.categoryName,
+      this.isFavorite,
+      this.isOwn,
+      this.postingDate});
 
   @override
   List<Object?> get props => [
-        title,
-        description,
-        categoryName,
-        ownerId,
-        postingDate,
-        images,
         price,
-        categoryId,
+        title,
+        images,
         postId,
+        ownerId,
+        categoryId,
+        description,
+        postingDate,
         ownerName,
-        viewsCount
+        categoryName,
+        viewsCount,
+        isFavorite,
+        isOwn
       ];
 }

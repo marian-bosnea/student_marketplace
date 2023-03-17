@@ -12,8 +12,8 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 
 import '../../core/constants/enums.dart';
-import '../detailed_post/detailed_post_cubit.dart';
-import 'post_view_state.dart';
+import '../detailed_post/detailed_post_view_bloc.dart';
+import 'posts_state.dart';
 
 class PostViewCubit extends Cubit<PostViewState> {
   final GetAllPostsUsecase getAllPostsUsecase;
@@ -21,8 +21,6 @@ class PostViewCubit extends Cubit<PostViewState> {
   final GetAllCategoriesUsecase getAllCategoriesUsecase;
   final GetCachedSessionUsecase getCachedSessionUsecase;
   final GetDetailedPostUsecase getDetailedPostUsecase;
-
-  late PostViewState state = const PostViewState();
 
   PostViewCubit(
       {required this.getAllPostsUsecase,
@@ -37,14 +35,14 @@ class PostViewCubit extends Cubit<PostViewState> {
     if (categoriesResult is Left) {
     } else {
       final categories = (categoriesResult as Right).value;
-      state = state.copyWith(categories: categories);
+      emit(state.copyWith(categories: categories));
     }
 
     emit(state);
   }
 
   Future<void> selectCategory(int index) async {
-    state = state.copyWith(selectedCategoryIndex: index);
+    emit(state.copyWith(selectedCategoryIndex: index));
     emit(state);
 
     if (index != -1) {
@@ -55,40 +53,37 @@ class PostViewCubit extends Cubit<PostViewState> {
   }
 
   Future<void> fetchAllPostsOfSelectedCategory() async {
-    state = state.copyWith(status: PostsViewStatus.loading);
-    emit(state);
+    emit(state.copyWith(status: PostsViewStatus.loading));
 
     final postsResult = await getAllPostsByCategoryUsecase(CategoryParam(
-        categoryId:
-            state.categories[state.selectedCategoryIndex - 1].id.toString()));
+        categoryId: state.categories[state.selectedCategoryIndex - 1].id));
 
     if (postsResult is Left) {
-      state = state.copyWith(status: PostsViewStatus.fail);
+      emit(state.copyWith(status: PostsViewStatus.fail));
     } else {
       final posts = (postsResult as Right).value;
-      state = state.copyWith(status: PostsViewStatus.loaded, posts: posts);
+      emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
     }
     _getFeaturedItem();
 
     emit(state);
   }
 
-  Future<void> goToDetailedPostPage(String id, BuildContext context) async {
-    BlocProvider.of<DetailedPostCubit>(context).setSelectedImage(0);
+  Future<void> goToDetailedPostPage(int id, BuildContext context) async {
+    BlocProvider.of<DetailedPostViewBloc>(context).setSelectedImage(0);
 
     Navigator.of(context).pushNamed('/detailed_post', arguments: id);
   }
 
   Future<void> fetchAllPosts() async {
-    state = state.copyWith(status: PostsViewStatus.loading);
-    emit(state);
+    emit(state.copyWith(status: PostsViewStatus.loading));
 
     final postsResult = await getAllPostsUsecase(NoParams());
     if (postsResult is Left) {
-      state = state.copyWith(status: PostsViewStatus.fail);
+      emit(state.copyWith(status: PostsViewStatus.fail));
     } else {
       final posts = (postsResult as Right).value;
-      state = state.copyWith(status: PostsViewStatus.loaded, posts: posts);
+      emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
     }
 
     _getFeaturedItem();
@@ -107,6 +102,6 @@ class PostViewCubit extends Cubit<PostViewState> {
       }
     }
 
-    state = state.copyWith(featuredPost: item);
+    emit(state.copyWith(featuredPost: item));
   }
 }

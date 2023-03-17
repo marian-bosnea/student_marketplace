@@ -7,28 +7,28 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
 
 import '../../core/constants/enums.dart';
-import 'detailed_post_state.dart';
+import 'detailed_post_view_state.dart';
 
-class DetailedPostCubit extends Cubit<DetailedPostPageState> {
+class DetailedPostViewBloc extends Cubit<DetailedPostViewState> {
   final AddToFavoritesUsecase addToFavoritesUsecase;
   final CheckIfFavoriteUsecase checkIfFavoriteUsecase;
   final GetDetailedPostUsecase getDetailedPostUsecase;
   final RemoveFromFavoritesUsecase removeFromFavoritesUsecase;
-  DetailedPostPageState _state = const DetailedPostPageState();
+  DetailedPostViewState _state = const DetailedPostViewState();
 
-  DetailedPostCubit(
+  DetailedPostViewBloc(
       {required this.addToFavoritesUsecase,
       required this.checkIfFavoriteUsecase,
       required this.getDetailedPostUsecase,
       required this.removeFromFavoritesUsecase})
-      : super(const DetailedPostPageState());
+      : super(const DetailedPostViewState());
 
   setSelectedImage(int index) {
     _state = _state.copyWith(selectedImageIndex: index);
     emit(_state);
   }
 
-  Future<void> checkIfFavorite(String id) async {
+  Future<void> checkIfFavorite(int id) async {
     final result = await checkIfFavoriteUsecase(IdParam(id: id));
 
     if (result is Left) {
@@ -40,7 +40,7 @@ class DetailedPostCubit extends Cubit<DetailedPostPageState> {
     emit(state);
   }
 
-  Future<void> fetchDetailedPost(String id) async {
+  Future<void> fetchDetailedPost(int id) async {
     _state = _state.copyWith(status: PostsViewStatus.loading);
     emit(_state);
 
@@ -55,7 +55,7 @@ class DetailedPostCubit extends Cubit<DetailedPostPageState> {
     emit(_state);
   }
 
-  Future<bool> onFavoritePressed(String id) async {
+  Future<bool> onFavoritePressed(int id) async {
     bool result = false;
     if (_state.isFavorite) {
       await removeFromFavoritesUsecase(IdParam(id: id));
@@ -70,6 +70,6 @@ class DetailedPostCubit extends Cubit<DetailedPostPageState> {
   }
 
   resetContext() {
-    _state = const DetailedPostPageState();
+    _state = const DetailedPostViewState();
   }
 }

@@ -8,22 +8,22 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 import '../../core/constants/enums.dart';
 import '../../core/theme/colors.dart';
-import 'detailed_post_cubit.dart';
-import 'detailed_post_state.dart';
+import 'detailed_post_view_bloc.dart';
+import 'detailed_post_view_state.dart';
 
-class DetailedPostPage extends StatelessWidget {
-  final String postId;
-  const DetailedPostPage({super.key, required this.postId});
+class DetailedPostViewPage extends StatelessWidget {
+  final int postId;
+  const DetailedPostViewPage({super.key, required this.postId});
 
   _init(BuildContext context) async {
-    BlocProvider.of<DetailedPostCubit>(context).fetchDetailedPost(postId);
-    BlocProvider.of<DetailedPostCubit>(context).checkIfFavorite(postId);
+    BlocProvider.of<DetailedPostViewBloc>(context).fetchDetailedPost(postId);
+    BlocProvider.of<DetailedPostViewBloc>(context).checkIfFavorite(postId);
   }
 
   @override
   Widget build(BuildContext context) {
     _init(context);
-    return BlocBuilder<DetailedPostCubit, DetailedPostPageState>(
+    return BlocBuilder<DetailedPostViewBloc, DetailedPostViewState>(
       builder: (context, state) {
         if (state.status == PostsViewStatus.fail) {
           return const Center(child: Text('Error while loading post ...'));
@@ -59,7 +59,7 @@ class DetailedPostPage extends StatelessWidget {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () =>
-                                      BlocProvider.of<DetailedPostCubit>(
+                                      BlocProvider.of<DetailedPostViewBloc>(
                                               context)
                                           .setSelectedImage(index),
                                   child: Container(
@@ -143,7 +143,7 @@ class DetailedPostPage extends StatelessWidget {
                                       size: 40,
                                       isLiked: state.isFavorite,
                                       onTap: (liked) async =>
-                                          BlocProvider.of<DetailedPostCubit>(
+                                          BlocProvider.of<DetailedPostViewBloc>(
                                                   context)
                                               .onFavoritePressed(
                                                   state.post!.postId!),

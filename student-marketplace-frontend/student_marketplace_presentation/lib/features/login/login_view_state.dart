@@ -10,20 +10,20 @@ enum LoginPageStatus {
   loginFailed
 }
 
-class LoginPageState extends Equatable {
+class LoginViewState extends Equatable {
   final bool keepSignedIn;
   final bool isEmailPrefixActive;
   final bool isPasswordPrefixActive;
   final LoginPageStatus status;
 
-  const LoginPageState({
+  const LoginViewState({
     this.keepSignedIn = false,
     this.isEmailPrefixActive = false,
     this.isPasswordPrefixActive = false,
     this.status = LoginPageStatus.intial,
   });
 
-  LoginPageState copyWith(
+  LoginViewState copyWith(
       {bool? isEmailCorrect,
       bool? keepSignedIn,
       bool? isEmailPrefixActive,
@@ -31,7 +31,7 @@ class LoginPageState extends Equatable {
       String? email,
       String? password,
       LoginPageStatus? status}) {
-    return LoginPageState(
+    return LoginViewState(
         isEmailPrefixActive: isEmailPrefixActive ?? this.isEmailPrefixActive,
         isPasswordPrefixActive:
             isPasswordPrefixActive ?? this.isPasswordPrefixActive,

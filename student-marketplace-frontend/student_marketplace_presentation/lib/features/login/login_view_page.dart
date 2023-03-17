@@ -4,35 +4,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import '../../core/config/on_generate_route.dart';
 import '../../core/theme/colors.dart';
-import '../authentication/auth_cubit.dart';
+import '../authentication/auth_bloc.dart';
 import '../authentication/auth_state.dart';
-import '../home/home_page.dart';
-import 'login_cubit.dart';
-import 'login_page_state.dart';
+import '../home/home_view_page.dart';
+import 'login_view_bloc.dart';
+import 'login_view_state.dart';
 
 import 'package:student_marketplace_business_logic/data/models/credentials_model.dart';
 
-class AuthenticationPage extends StatelessWidget {
+class LoginViewPage extends StatelessWidget {
   final TextEditingController _emailTextfieldController =
       TextEditingController();
   final TextEditingController _passwordTextfielController =
       TextEditingController();
   final FocusNode _passwordFieldFocusNode = FocusNode();
 
-  AuthenticationPage({super.key});
+  LoginViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
-      body: BlocConsumer<LoginCubit, LoginPageState>(
+      body: BlocConsumer<LoginViewBloc, LoginViewState>(
         listener: _onStateChangedListener,
         builder: (context, state) {
           if (state.status == LoginPageStatus.loginSuccesful) {
-            return BlocBuilder<AuthCubit, AuthState>(
+            return BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, authState) {
-              if (authState is Authenticated) {
+              if (authState.status == AuthStatus.authenticated) {
                 // Form submitted succesful and authentication was succcesful
-                return const HomePage();
+                return const HomeViewPage();
               } else {
                 // Form submitted succesful and authentication was not succcesful
                 return _bodyWidget(context, state);
@@ -46,7 +46,7 @@ class AuthenticationPage extends StatelessWidget {
     );
   }
 
-  Widget _bodyWidget(BuildContext context, LoginPageState state) {
+  Widget _bodyWidget(BuildContext context, LoginViewState state) {
     return Center(
       child: Material(
         elevation: 5,
@@ -76,10 +76,10 @@ class AuthenticationPage extends StatelessWidget {
               PlatformTextField(
                 hintText: "E-mail",
                 controller: _emailTextfieldController,
-                onChanged: (text) => BlocProvider.of<LoginCubit>(context)
+                onChanged: (text) => BlocProvider.of<LoginViewBloc>(context)
                     .onEmailInputChanged(text),
                 onSubmitted: state.isEmailPrefixActive
-                    ? (text) => BlocProvider.of<LoginCubit>(context)
+                    ? (text) => BlocProvider.of<LoginViewBloc>(context)
                         .checkIfEmailIsRegistered(CredentialsModel(
                             email: _emailTextfieldController.text,
                             password: ''))
@@ -91,11 +91,11 @@ class AuthenticationPage extends StatelessWidget {
                 PlatformTextField(
                   focusNode: _passwordFieldFocusNode,
                   hintText: "Password",
-                  onChanged: (text) => BlocProvider.of<LoginCubit>(context)
+                  onChanged: (text) => BlocProvider.of<LoginViewBloc>(context)
                       .onPasswordInputChanged(text),
                   onSubmitted: state.isEmailPrefixActive
                       ? (text) =>
-                          BlocProvider.of<LoginCubit>(context).signInUser(
+                          BlocProvider.of<LoginViewBloc>(context).signInUser(
                             CredentialsModel(
                                 email: _emailTextfieldController.text,
                                 password: _passwordTextfielController.text),
@@ -115,8 +115,9 @@ class AuthenticationPage extends StatelessWidget {
                       width: 25,
                       child: PlatformIconButton(
                           padding: EdgeInsets.zero,
-                          onPressed: () => BlocProvider.of<LoginCubit>(context)
-                              .changeKeepSignedIn(),
+                          onPressed: () =>
+                              BlocProvider.of<LoginViewBloc>(context)
+                                  .changeKeepSignedIn(),
                           icon: Icon(
                             state.keepSignedIn
                                 ? Icons.check_box
@@ -153,9 +154,9 @@ class AuthenticationPage extends StatelessWidget {
     );
   }
 
-  _onStateChangedListener(BuildContext context, LoginPageState state) {
+  _onStateChangedListener(BuildContext context, LoginViewState state) {
     if (state.status == LoginPageStatus.loginSuccesful) {
-      BlocProvider.of<AuthCubit>(context).onSignIn();
+      BlocProvider.of<AuthBloc>(context).onSignIn();
     } else if (state.status == LoginPageStatus.emailSucces) {
       _passwordFieldFocusNode.requestFocus();
     } else if (state.status == LoginPageStatus.loginFailed) {
@@ -183,7 +184,7 @@ class AuthenticationPage extends StatelessWidget {
 
   @pragma("Platform specific")
   CupertinoTextFieldData _emailCupertinoTextFieldData(
-      BuildContext context, LoginPageState state) {
+      BuildContext context, LoginViewState state) {
     return CupertinoTextFieldData(
       suffix: _getEmailTextFieldPrefix(context, state),
       padding: const EdgeInsets.only(left: 10),
@@ -196,7 +197,7 @@ class AuthenticationPage extends StatelessWidget {
     );
   }
 
-  Widget _getEmailTextFieldPrefix(BuildContext context, LoginPageState state) {
+  Widget _getEmailTextFieldPrefix(BuildContext context, LoginViewState state) {
     if (state.status == LoginPageStatus.emailSubmitting) {
       return const SizedBox(height: 40, child: CupertinoActivityIndicator());
     }
@@ -220,7 +221,7 @@ class AuthenticationPage extends StatelessWidget {
           size: 30,
         ),
         onPressed: state.isEmailPrefixActive
-            ? () => BlocProvider.of<LoginCubit>(context)
+            ? () => BlocProvider.of<LoginViewBloc>(context)
                 .checkIfEmailIsRegistered(CredentialsModel(
                     email: _emailTextfieldController.text, password: ''))
             : null,
@@ -229,7 +230,7 @@ class AuthenticationPage extends StatelessWidget {
   }
 
   CupertinoTextFieldData _passwordCupertinoTextFieldData(
-      BuildContext context, LoginPageState state) {
+      BuildContext context, LoginViewState state) {
     return CupertinoTextFieldData(
         padding: const EdgeInsets.only(left: 10),
         decoration: BoxDecoration(
@@ -250,7 +251,7 @@ class AuthenticationPage extends StatelessWidget {
                   size: 30,
                 ),
                 onPressed: state.isPasswordPrefixActive
-                    ? () => BlocProvider.of<LoginCubit>(context).signInUser(
+                    ? () => BlocProvider.of<LoginViewBloc>(context).signInUser(
                           CredentialsModel(
                               email: _emailTextfieldController.text,
                               password: _passwordTextfielController.text),

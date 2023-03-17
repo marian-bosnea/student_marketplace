@@ -16,17 +16,17 @@ class SalePostRepositoryImpl implements SalePostRepository {
 
   @override
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
-          String token, String categoryId) async =>
+          String token, int categoryId) async =>
       remoteDataSource.getAllPostsByCategory(token, categoryId);
 
   @override
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
-          String token, String ownerId) async =>
+          String token, int ownerId) async =>
       remoteDataSource.getAllPostsByOwner(token, ownerId);
 
   @override
   Future<Either<Failure, SalePostEntity>> getDetailedPost(
-          String token, String postId) async =>
+          String token, int postId) async =>
       remoteDataSource.getDetailedPost(token, postId);
 
   @override

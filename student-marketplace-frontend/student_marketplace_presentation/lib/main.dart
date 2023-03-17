@@ -3,16 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/config/routes.dart';
 import 'core/theme/colors.dart';
-import 'features/detailed_post/detailed_post_cubit.dart';
+import 'features/detailed_post/detailed_post_view_bloc.dart';
 import 'features/favorites/favorites_view_bloc.dart';
-import 'features/home/home_page_bloc.dart';
-import 'features/authentication/auth_cubit.dart';
-import 'features/login/login_cubit.dart';
-import 'features/add_post/add_post_cubit.dart';
+import 'features/home/home_view_bloc.dart';
+import 'features/authentication/auth_bloc.dart';
+import 'features/login/login_view_bloc.dart';
+import 'features/add_post/add_post_view_bloc.dart';
 import 'features/posts_view/posts_view_cubit.dart';
 import 'features/search/search_view_bloc.dart';
-import 'features/user_profile/profile_cubit.dart';
-import 'features/register/register_cubit.dart';
+import 'features/user_profile/profile_view_bloc.dart';
+import 'features/register/register_view_bloc.dart';
 
 import 'core/config/injection_container.dart' as di;
 import 'core/config/on_generate_route.dart';
@@ -31,15 +31,15 @@ class StudentMarketPlace extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => di.sl<AuthCubit>()..onAppStarted(context)),
-        BlocProvider(create: (_) => di.sl<LoginCubit>()),
-        BlocProvider(create: (_) => di.sl<RegisterCubit>()),
-        BlocProvider(create: (_) => di.sl<ProfileCubit>()),
-        BlocProvider(create: (_) => di.sl<HomePageBloc>()),
+        BlocProvider(create: (_) => di.sl<AuthBloc>()..onAppStarted(context)),
+        BlocProvider(create: (_) => di.sl<LoginViewBloc>()),
+        BlocProvider(create: (_) => di.sl<RegisterViewBloc>()),
+        BlocProvider(create: (_) => di.sl<ProfileViewBloc>()),
+        BlocProvider(create: (_) => di.sl<HomeViewBloc>()),
         BlocProvider(create: (_) => di.sl<PostViewCubit>()),
-        BlocProvider(create: (_) => di.sl<AddPostCubit>()),
-        BlocProvider(create: (_) => di.sl<DetailedPostCubit>()),
-        BlocProvider(create: (_) => di.sl<SearchBloc>()),
+        BlocProvider(create: (_) => di.sl<AddPostViewBloc>()),
+        BlocProvider(create: (_) => di.sl<DetailedPostViewBloc>()),
+        BlocProvider(create: (_) => di.sl<SearchViewBloc>()),
         BlocProvider(create: (_) => di.sl<FavoritesViewBloc>())
       ],
       child: MaterialApp(

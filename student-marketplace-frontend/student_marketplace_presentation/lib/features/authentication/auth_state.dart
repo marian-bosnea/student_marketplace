@@ -1,22 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-abstract class AuthState extends Equatable {}
+enum AuthStatus { initial, authenticated, unauthenticated }
 
-class AuthInitial extends AuthState {
-  @override
-  List<Object?> get props => [];
-}
+class AuthState extends Equatable {
+  final String? token;
+  final AuthStatus status;
+  const AuthState({this.token, this.status = AuthStatus.initial});
 
-class Authenticated extends AuthState {
-  final String token;
-
-  Authenticated({required this.token});
+  AuthState copyWith({String? token, AuthStatus? status}) =>
+      AuthState(token: token ?? this.token, status: status ?? this.status);
 
   @override
-  List<Object?> get props => [token];
-}
-
-class Unauthenticated extends AuthState {
-  @override
-  List<Object?> get props => [];
+  List<Object?> get props => [token, status];
 }

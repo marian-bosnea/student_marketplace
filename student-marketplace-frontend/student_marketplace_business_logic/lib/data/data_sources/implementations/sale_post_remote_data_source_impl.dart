@@ -23,7 +23,7 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
 
   @override
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
-      String token, String categoryId) async {
+      String token, int categoryId) async {
     final result = await httpInterface.fetchAllSalePostsOfCategory(
         token: token, categoryId: categoryId);
     if (result == null) {
@@ -35,7 +35,7 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
 
   @override
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
-      String token, String ownerId) async {
+      String token, int ownerId) async {
     final result = await httpInterface.fetchAllSalePosts(token);
     if (result == null) {
       return Left(NetworkFailure());
@@ -63,7 +63,7 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
 
   @override
   Future<Either<Failure, SalePostEntity>> getDetailedPost(
-      String token, String postId) async {
+      String token, int postId) async {
     final result =
         await httpInterface.fetchDetailedSalePost(token: token, postId: postId);
     if (result == null) {
@@ -97,8 +97,7 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, bool>> addToFavorites(
-      String postId, String token) async {
+  Future<Either<Failure, bool>> addToFavorites(int postId, String token) async {
     final result =
         await httpInterface.addToFavorites(token: token, postId: postId);
     if (result == null) {
@@ -110,7 +109,7 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
 
   @override
   Future<Either<Failure, bool>> checkIfFavorite(
-      String postId, String token) async {
+      int postId, String token) async {
     final result =
         await httpInterface.checkIfFavorite(token: token, postId: postId);
     if (result == null) {
@@ -122,7 +121,7 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
 
   @override
   Future<Either<Failure, bool>> removeFromFavorites(
-      String postId, String token) async {
+      int postId, String token) async {
     final result =
         await httpInterface.removeFromFavorites(token: token, postId: postId);
     if (result == null) {

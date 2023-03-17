@@ -152,31 +152,34 @@ class HttpInterface {
             'Content-Type': 'application/json',
             'authorization': 'Bearer $token'
           },
-          body: jsonEncode(
-              <String, String>{'postId': map['id'].toString(), 'index': '0'}));
+          body: jsonEncode(<String, dynamic>{'postId': map['id'], 'index': 0}));
 
       // print(imageResponse.statusCode);
 
-      salePosts.add(SalePostModel(
-          postId: map['id'].toString(),
-          title: map['title'],
-          price: map['price'].toString(),
-          viewsCount: map['views_count'] as int,
-          images: [imageResponse.bodyBytes]));
+      salePosts.add(
+        SalePostModel(
+            postId: map['id'],
+            title: map['title'],
+            price: map['price'].toString(),
+            viewsCount: map['views_count'],
+            images: [imageResponse.bodyBytes],
+            isFavorite: map['is_favorite'] as bool,
+            isOwn: map['is_own'] as bool),
+      );
     }
 
     return salePosts;
   }
 
   Future<SalePostModel?> fetchDetailedSalePost(
-      {required String token, required String postId}) async {
+      {required String token, required int postId}) async {
     final requestUrl = "$baseUrl/sale-object/get/detailed";
     final response = await http.post(Uri.parse(requestUrl),
         headers: {
           'Content-Type': 'application/json',
           'authorization': 'Bearer $token'
         },
-        body: jsonEncode(<String, String>{'postId': postId}));
+        body: jsonEncode(<String, dynamic>{'postId': postId}));
 
     if (response.statusCode != getSuccessCode) return null;
     final bodyJson = json.decode(response.body) as Map<String, dynamic>;
@@ -202,27 +205,27 @@ class HttpInterface {
     }
 
     return SalePostModel(
-        postId: resultJson['id'].toString(),
+        postId: resultJson['id'],
         title: resultJson['title'],
         description: resultJson['description'],
         price: resultJson['price'].toString(),
         postingDate: resultJson['date'],
         categoryName: resultJson['category_name'],
         viewsCount: resultJson['views_count'],
-        ownerId: resultJson['owner_id'].toString(),
+        ownerId: resultJson['owner_id'],
         ownerName: resultJson['owner_name'],
         images: images);
   }
 
   Future<List<SalePostModel>?> fetchAllSalePostsOfCategory(
-      {required String token, required String categoryId}) async {
+      {required String token, required int categoryId}) async {
     final requestUrl = "$baseUrl/sale-object/get/category";
     final response = await http.post(Uri.parse(requestUrl),
         headers: {
           'Content-Type': 'application/json',
           'authorization': 'Bearer $token'
         },
-        body: jsonEncode(<String, String>{'categoryId': categoryId}));
+        body: jsonEncode(<String, dynamic>{'categoryId': categoryId}));
 
     if (response.statusCode != getSuccessCode) return null;
     final bodyJson = json.decode(response.body) as Map<String, dynamic>;
@@ -244,7 +247,7 @@ class HttpInterface {
       // print(imageResponse.statusCode);
 
       salePosts.add(SalePostModel(
-          postId: map['id'].toString(),
+          postId: map['id'],
           title: map['title'],
           price: map['price'].toString(),
           viewsCount: map['views_count'] as int,
@@ -282,7 +285,7 @@ class HttpInterface {
               <String, String>{'postId': map['id'].toString(), 'index': '0'}));
 
       salePosts.add(SalePostModel(
-          postId: map['id'].toString(),
+          postId: map['id'],
           title: map['title'],
           price: map['price'].toString(),
           viewsCount: map['views_count'] as int,
@@ -322,7 +325,7 @@ class HttpInterface {
       // print(imageResponse.statusCode);
 
       salePosts.add(SalePostModel(
-          postId: map['id'].toString(),
+          postId: map['id'],
           title: map['title'],
           price: map['price'].toString(),
           viewsCount: map['views_count'] as int,
@@ -410,8 +413,8 @@ class HttpInterface {
       request.fields['title'] = post.title;
       request.fields['description'] = post.description!;
       request.fields['price'] = post.price;
-      request.fields['ownerId'] = post.ownerId!;
-      request.fields['categoryId'] = post.categoryId!;
+      request.fields['ownerId'] = post.ownerId!.toString();
+      request.fields['categoryId'] = post.categoryId!.toString();
       request.fields['date'] = post.postingDate!;
 
       var response = await request.send();
@@ -424,27 +427,27 @@ class HttpInterface {
   }
 
   Future<bool> addToFavorites(
-      {required String token, required String postId}) async {
+      {required String token, required int postId}) async {
     final requestUrl = "$baseUrl/sale-object/favorites/add";
     final response = await http.post(Uri.parse(requestUrl),
         headers: {
           'Content-Type': 'application/json',
           'authorization': 'Bearer $token'
         },
-        body: jsonEncode(<String, String>{'postId': postId}));
+        body: jsonEncode(<String, dynamic>{'postId': postId}));
 
     return response.statusCode == postSuccessCode;
   }
 
   Future<bool> checkIfFavorite(
-      {required String token, required String postId}) async {
+      {required String token, required int postId}) async {
     final requestUrl = "$baseUrl/sale-object/favorites/check";
     final response = await http.post(Uri.parse(requestUrl),
         headers: {
           'Content-Type': 'application/json',
           'authorization': 'Bearer $token'
         },
-        body: jsonEncode(<String, String>{'postId': postId}));
+        body: jsonEncode(<String, dynamic>{'postId': postId}));
 
     final bodyJson = json.decode(response.body) as Map<String, dynamic>;
     final result = bodyJson['result'] as bool;
@@ -453,14 +456,14 @@ class HttpInterface {
   }
 
   Future<bool> removeFromFavorites(
-      {required String token, required String postId}) async {
+      {required String token, required int postId}) async {
     final requestUrl = "$baseUrl/sale-object/favorites/remove";
     final response = await http.post(Uri.parse(requestUrl),
         headers: {
           'Content-Type': 'application/json',
           'authorization': 'Bearer $token'
         },
-        body: jsonEncode(<String, String>{'postId': postId}));
+        body: jsonEncode(<String, dynamic>{'postId': postId}));
 
     return response.statusCode == postSuccessCode;
   }

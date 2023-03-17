@@ -13,7 +13,7 @@ enum RegisterPageStatus {
   submissionFailed
 }
 
-class RegisterPageState extends Equatable {
+class RegisterViewState extends Equatable {
   final bool showEmailCheckmark;
   final bool showPasswordWarning;
   final bool showConfirmPasswordWarning;
@@ -30,7 +30,7 @@ class RegisterPageState extends Equatable {
 
   final Uint8List? avatarImage;
 
-  const RegisterPageState(
+  const RegisterViewState(
       {this.status = RegisterPageStatus.credentialsInProgress,
       this.showEmailCheckmark = false,
       this.showPasswordWarning = false,
@@ -46,7 +46,7 @@ class RegisterPageState extends Equatable {
       this.selectedFacultyId = '',
       this.confirmPasswordValue = ''});
 
-  RegisterPageState copyWith(
+  RegisterViewState copyWith(
           {bool? showEmailCheckmark,
           bool? showPasswordWarning,
           bool? showConfirmPasswordWarning,
@@ -61,7 +61,7 @@ class RegisterPageState extends Equatable {
           List<FacultyEntity>? faculties,
           String? selectedFacultyId,
           RegisterPageStatus? status}) =>
-      RegisterPageState(
+      RegisterViewState(
           showEmailCheckmark: showEmailCheckmark ?? this.showEmailCheckmark,
           showPasswordWarning: showPasswordWarning ?? this.showPasswordWarning,
           showConfirmPasswordWarning:

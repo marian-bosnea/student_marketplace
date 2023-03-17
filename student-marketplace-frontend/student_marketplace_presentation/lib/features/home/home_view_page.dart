@@ -5,27 +5,26 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../core/constants/enums.dart';
 import '../../core/theme/colors.dart';
-import '../add_post/add_post_page.dart';
+import '../add_post/add_post_view_page.dart';
 import '../favorites/favorites_view_page.dart';
 import '../posts_view/posts_view_page.dart';
 import '../search/search_view_page.dart';
-import 'home_page_bloc.dart';
-import 'home_state.dart';
+import 'home_view_state.dart';
+import 'home_view_bloc.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  _init(BuildContext context) async {
-    BlocProvider.of<HomePageBloc>(context).fetchProfilePhoto();
-  }
+class HomeViewPage extends StatelessWidget {
+  const HomeViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomePageBloc, HomePageState>(
-      listener: (context, state) {},
+    return BlocConsumer<HomeViewBloc, HomePageState>(
+      listener: (context, state) async {
+        if (state.status == HomePageStatus.intial) {
+          await BlocProvider.of<HomeViewBloc>(context).fetchProfilePhoto();
+          BlocProvider.of<HomeViewBloc>(context).goToHome(context);
+        }
+      },
       builder: (context, state) {
-        _init(context);
-
         return PlatformScaffold(
           appBar: isMaterial(context)
               ? PlatformAppBar(
@@ -45,7 +44,7 @@ class HomePage extends StatelessWidget {
                         trailing: state.profileIcon != null
                             ? GestureDetector(
                                 onTap: () =>
-                                    BlocProvider.of<HomePageBloc>(context)
+                                    BlocProvider.of<HomeViewBloc>(context)
                                         .goToProfile(context),
                                 child: CircleAvatar(
                                   foregroundImage:
@@ -116,29 +115,31 @@ class HomePage extends StatelessWidget {
   onBottomNavbarItemTap(BuildContext context, int index) {
     switch (index) {
       case 0:
-        BlocProvider.of<HomePageBloc>(context).goToHome();
+        BlocProvider.of<HomeViewBloc>(context).goToHome(context);
         break;
       case 1:
-        BlocProvider.of<HomePageBloc>(context).goToSearch();
+        BlocProvider.of<HomeViewBloc>(context).goToSearch();
         break;
       case 2:
-        BlocProvider.of<HomePageBloc>(context).goToAddPost();
+        BlocProvider.of<HomeViewBloc>(context).goToAddPost();
         break;
       case 3:
-        BlocProvider.of<HomePageBloc>(context).goToFavorites();
+        BlocProvider.of<HomeViewBloc>(context).goToFavorites();
         break;
       case 4:
-        BlocProvider.of<HomePageBloc>(context).goToSettings();
+        BlocProvider.of<HomeViewBloc>(context).goToSettings();
         break;
     }
   }
 
   Widget _getCurrentPage(BuildContext context, HomePageState state) {
     switch (state.status) {
+      case HomePageStatus.intial:
+        return Container();
       case HomePageStatus.home:
         return PostViewPage();
       case HomePageStatus.search:
-        return const SearchPage();
+        return const SearchViewPage();
       case HomePageStatus.addPost:
         return AddPostPage();
       case HomePageStatus.favorites:

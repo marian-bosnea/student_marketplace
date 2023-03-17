@@ -3,19 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:student_marketplace_presentation/features/search/search_page_state.dart';
+import 'package:student_marketplace_presentation/features/search/search_view_state.dart';
 import 'package:student_marketplace_presentation/features/search/search_view_bloc.dart';
 
 import '../../core/theme/colors.dart';
 import '../shared/post_item.dart';
 import '../shared/animation_options.dart';
 
-class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
+class SearchViewPage extends StatelessWidget {
+  const SearchViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SearchBloc, SearchPageState>(
+    return BlocBuilder<SearchViewBloc, SearchViewState>(
       builder: (context, state) {
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -28,8 +28,8 @@ class SearchPage extends StatelessWidget {
               child: PlatformTextField(
                 cupertino: (context, target) =>
                     _searchCupertinoTextFieldData(context, state.status),
-                onChanged: (text) =>
-                    BlocProvider.of<SearchBloc>(context).performSearch(text),
+                onChanged: (text) => BlocProvider.of<SearchViewBloc>(context)
+                    .performSearch(text),
               ),
             ),
             Expanded(
@@ -59,7 +59,7 @@ class SearchPage extends StatelessWidget {
                                 child: PostItem(
                                   post: post,
                                   onTap: () {
-                                    BlocProvider.of<SearchBloc>(context)
+                                    BlocProvider.of<SearchViewBloc>(context)
                                         .goToDetailedPostPage(
                                             post.postId!, context);
                                   },

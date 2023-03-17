@@ -5,34 +5,34 @@ import 'package:student_marketplace_business_logic/domain/entities/product_categ
 
 enum AddPostPageStatus { initial, submittind, submittedSuccesfully }
 
-class AddPostPageState extends Equatable {
+class AddPostState extends Equatable {
   final String titleValue;
   final String descriptionValue;
-  final String categoryId;
+  final int categoryId;
   final String price;
   final List<ProductCategoryEntity> categories;
   final List<Uint8List> images;
 
   final AddPostPageStatus status;
-  const AddPostPageState(
+  const AddPostState(
       {this.titleValue = '',
       this.descriptionValue = '',
-      this.categoryId = '',
+      this.categoryId = 0,
       this.price = '',
       this.images = const [],
       this.categories = const [],
       this.status = AddPostPageStatus.initial});
 
-  AddPostPageState copyWith({
+  AddPostState copyWith({
     String? titleValue,
     String? descriptionValue,
-    String? categoryId,
+    int? categoryId,
     String? price,
     List<ProductCategoryEntity>? categories,
     List<Uint8List>? images,
     AddPostPageStatus? status,
   }) {
-    return AddPostPageState(
+    return AddPostState(
       titleValue: titleValue ?? this.titleValue,
       descriptionValue: descriptionValue ?? this.descriptionValue,
       categoryId: categoryId ?? this.categoryId,

@@ -2,26 +2,28 @@ import '../../domain/entities/sale_post_entity.dart';
 
 class SalePostModel extends SalePostEntity {
   SalePostModel(
-      {required super.title,
-      super.description,
-      super.ownerId,
-      super.postingDate,
-      super.categoryId,
-      required super.price,
+      {required super.price,
+      required super.title,
       required super.images,
-      super.viewsCount,
       super.postId,
+      super.ownerId,
+      super.categoryId,
+      super.description,
+      super.postingDate,
       super.ownerName,
-      super.categoryName});
+      super.categoryName,
+      super.viewsCount,
+      super.isFavorite,
+      super.isOwn});
 
   factory SalePostModel.fromJson(Map<String, dynamic> json) {
     return SalePostModel(
+      price: json['price'].toString(),
       title: json['title'],
       description: json['description'],
-      ownerId: json['owner_id'].toString(),
+      ownerId: json['owner_id'],
       postingDate: json['date'],
-      price: json['price'].toString(),
-      categoryId: json['category_id'].toString(),
+      categoryId: json['category_id'],
       images: const [],
     );
   }

@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../core/constants/enums.dart';
 
-class ProfilePageState extends Equatable {
+class ProfileViewState extends Equatable {
   final String firstName;
   final String lastName;
   final String secondLastName;
@@ -14,7 +14,7 @@ class ProfilePageState extends Equatable {
   final Uint8List? avatarBytes;
   final ProfilePageStatus status;
 
-  const ProfilePageState(
+  const ProfileViewState(
       {this.firstName = '',
       this.lastName = '',
       this.secondLastName = '',
@@ -23,7 +23,7 @@ class ProfilePageState extends Equatable {
       this.facultyName = '',
       this.status = ProfilePageStatus.initial});
 
-  ProfilePageState copyWith(
+  ProfileViewState copyWith(
           {String? firstName,
           String? lastName,
           String? secondLastName,
@@ -31,7 +31,7 @@ class ProfilePageState extends Equatable {
           String? facultyName,
           Uint8List? avatarBytes,
           ProfilePageStatus? status}) =>
-      ProfilePageState(
+      ProfileViewState(
           firstName: firstName ?? this.firstName,
           lastName: lastName ?? this.lastName,
           secondLastName: secondLastName ?? this.secondLastName,

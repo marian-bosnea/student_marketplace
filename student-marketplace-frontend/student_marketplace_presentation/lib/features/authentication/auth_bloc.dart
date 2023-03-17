@@ -7,24 +7,27 @@ import 'package:student_marketplace_business_logic/data/models/auth_session_mode
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/deauthenticate_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_authentication_status_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
+import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 
 import 'auth_state.dart';
 
-class AuthCubit extends Cubit<AuthState> {
+class AuthBloc extends Cubit<AuthState> {
   final GetAuthenticationStatusUsecase authenticationStatusUsecase;
   final DeauthenticateUsecase deauthenticateUsecase;
   final GetCachedSessionUsecase getCachedSessionUsecase;
 
-  AuthCubit(
+  AuthBloc(
       {required this.authenticationStatusUsecase,
       required this.getCachedSessionUsecase,
       required this.deauthenticateUsecase})
-      : super(AuthInitial());
+      : super(const AuthState());
 
   Future<void> onAppStarted(BuildContext context) async {
     final eitherSession = await getCachedSessionUsecase(NoParams());
 
-    if (eitherSession is Left) emit(Unauthenticated());
+    if (eitherSession is Left) {
+      emit(state.copyWith(status: AuthStatus.unauthenticated));
+    }
 
     final session = (eitherSession as Right).value;
 
@@ -39,33 +42,36 @@ class AuthCubit extends Cubit<AuthState> {
       final hasCheckedKeepSignedIn = sharedPrefs.getBool('keepSignedIn');
 
       if (isSignedIn && hasCheckedKeepSignedIn!) {
-        emit(Authenticated(token: session.token));
+        emit(state.copyWith(token: session, status: AuthStatus.authenticated));
       } else {
-        emit(Unauthenticated());
+        emit(state.copyWith(status: AuthStatus.unauthenticated));
       }
     } catch (_) {
-      emit(Unauthenticated());
+      emit(state.copyWith(status: AuthStatus.unauthenticated));
     }
   }
 
   Future<void> onSignIn() async {
     try {
       final result = await getCachedSessionUsecase(NoParams());
-      if (result is Left) emit(Unauthenticated());
+      if (result is Left) {
+        emit(state.copyWith(status: AuthStatus.unauthenticated));
+      }
 
       final session = (result as Right).value;
-      emit(Authenticated(token: session.token));
+      emit(state.copyWith(
+          token: session.token, status: AuthStatus.authenticated));
     } catch (_) {
-      emit(Unauthenticated());
+      emit(state.copyWith(status: AuthStatus.unauthenticated));
     }
   }
 
   Future<void> signOutUser() async {
     try {
       await deauthenticateUsecase(NoParams());
-      emit(Unauthenticated());
+      emit(state.copyWith(status: AuthStatus.unauthenticated));
     } catch (_) {
-      emit(Unauthenticated());
+      emit(state.copyWith(status: AuthStatus.unauthenticated));
     }
   }
 }

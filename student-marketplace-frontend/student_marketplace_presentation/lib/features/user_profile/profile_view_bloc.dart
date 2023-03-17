@@ -4,16 +4,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/data/models/user_model.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/get_own_user_usecase.dart';
-import 'package:student_marketplace_presentation/features/user_profile/profile_page_state.dart';
+import 'package:student_marketplace_presentation/features/user_profile/profile_view_state.dart';
 
 import '../../core/constants/enums.dart';
 
-class ProfileCubit extends Cubit<ProfilePageState> {
+class ProfileViewBloc extends Cubit<ProfileViewState> {
   final GetOwnUserProfile getUserUsecase;
-  late ProfilePageState state = const ProfilePageState();
+  late ProfileViewState state = const ProfileViewState();
 
-  ProfileCubit({required this.getUserUsecase})
-      : super(const ProfilePageState());
+  ProfileViewBloc({required this.getUserUsecase})
+      : super(const ProfileViewState());
 
   Future<void> fetchUserProfile() async {
     emit(state.copyWith(status: ProfilePageStatus.loading));

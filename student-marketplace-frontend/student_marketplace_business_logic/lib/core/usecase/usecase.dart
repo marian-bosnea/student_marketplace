@@ -17,7 +17,7 @@ class NoParams extends Equatable {
 }
 
 class IdParam extends Equatable {
-  final String id;
+  final int id;
 
   const IdParam({required this.id});
 
@@ -71,7 +71,7 @@ class TokenIdParam extends Equatable {
 }
 
 class CategoryParam extends Equatable {
-  final String categoryId;
+  final int categoryId;
 
   const CategoryParam({required this.categoryId});
 

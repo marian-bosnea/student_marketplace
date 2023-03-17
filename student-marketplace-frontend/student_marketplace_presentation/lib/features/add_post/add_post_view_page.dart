@@ -6,8 +6,8 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_presentation/core/theme/colors.dart';
 
 import '../shared/circle_button.dart';
-import 'add_post_cubit.dart';
-import 'add_post_page_state.dart';
+import 'add_post_view_bloc.dart';
+import 'add_post_view_state.dart';
 
 class AddPostPage extends StatelessWidget {
   AddPostPage({super.key});
@@ -16,9 +16,9 @@ class AddPostPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<AddPostCubit>(context).fetchAllCategories();
+    BlocProvider.of<AddPostViewBloc>(context).fetchAllCategories();
 
-    return BlocBuilder<AddPostCubit, AddPostPageState>(
+    return BlocBuilder<AddPostViewBloc, AddPostState>(
       builder: (context, state) {
         return Material(
           child: Stack(
@@ -32,7 +32,7 @@ class AddPostPage extends StatelessWidget {
                       PlatformTextField(
                         hintText: 'Title',
                         onChanged: (text) =>
-                            BlocProvider.of<AddPostCubit>(context)
+                            BlocProvider.of<AddPostViewBloc>(context)
                                 .setTitleValue(text),
                         cupertino: (context, platform) =>
                             _personalInfoCupertinoTextDataField(
@@ -42,7 +42,7 @@ class AddPostPage extends StatelessWidget {
                         hintText: 'Description',
                         maxLines: 5,
                         onChanged: (text) =>
-                            BlocProvider.of<AddPostCubit>(context)
+                            BlocProvider.of<AddPostViewBloc>(context)
                                 .setDescriptionValue(text),
                         cupertino: (context, platform) =>
                             _personalInfoCupertinoTextDataField(
@@ -52,7 +52,7 @@ class AddPostPage extends StatelessWidget {
                         hintText: 'Price',
                         maxLines: 1,
                         onChanged: (text) =>
-                            BlocProvider.of<AddPostCubit>(context)
+                            BlocProvider.of<AddPostViewBloc>(context)
                                 .setPriceValue(text),
                         cupertino: (context, platform) =>
                             _personalInfoCupertinoTextDataField(
@@ -74,7 +74,7 @@ class AddPostPage extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: () =>
-                                  BlocProvider.of<AddPostCubit>(context)
+                                  BlocProvider.of<AddPostViewBloc>(context)
                                       .setPhotos(),
                               child: Card(
                                 elevation: 5,
@@ -90,7 +90,7 @@ class AddPostPage extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () =>
-                                  BlocProvider.of<AddPostCubit>(context)
+                                  BlocProvider.of<AddPostViewBloc>(context)
                                       .setPhotos(),
                               child: Card(
                                 elevation: 5,
@@ -106,7 +106,7 @@ class AddPostPage extends StatelessWidget {
                             ),
                             GestureDetector(
                               onTap: () =>
-                                  BlocProvider.of<AddPostCubit>(context)
+                                  BlocProvider.of<AddPostViewBloc>(context)
                                       .setPhotos(),
                               child: Card(
                                 elevation: 5,
@@ -130,7 +130,7 @@ class AddPostPage extends StatelessWidget {
                   bottom: 20,
                   child: CircleButton(
                     onTap: () =>
-                        BlocProvider.of<AddPostCubit>(context).uploadPost(),
+                        BlocProvider.of<AddPostViewBloc>(context).uploadPost(),
                     icon: const Icon(
                       Icons.add,
                       color: Colors.white,
@@ -143,8 +143,7 @@ class AddPostPage extends StatelessWidget {
     );
   }
 
-  void _openDrowDownFacultiesList(
-      AddPostPageState state, BuildContext context) {
+  void _openDrowDownFacultiesList(AddPostState state, BuildContext context) {
     DropDownState(
       DropDown(
         bottomSheetTitle: const Text(
@@ -164,8 +163,8 @@ class AddPostPage extends StatelessWidget {
         data: _getListItemsData(state),
         selectedItems: (List<dynamic> selectedList) {
           final item = selectedList.first as SelectedListItem;
-          BlocProvider.of<AddPostCubit>(context)
-              .setCategoryValue(item.value!)
+          BlocProvider.of<AddPostViewBloc>(context)
+              .setCategoryValue(int.parse(item.value!))
               .then((value) {
             _categoryTextfieldController.text = item.name;
           });
@@ -175,7 +174,7 @@ class AddPostPage extends StatelessWidget {
     ).showModal(context);
   }
 
-  List<SelectedListItem> _getListItemsData(AddPostPageState state) {
+  List<SelectedListItem> _getListItemsData(AddPostState state) {
     List<SelectedListItem> items = [];
     for (var c in state.categories) {
       items.add(

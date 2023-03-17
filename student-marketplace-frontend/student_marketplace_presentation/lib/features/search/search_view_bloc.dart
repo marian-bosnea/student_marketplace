@@ -3,21 +3,21 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_by_query_usecase.dart';
-import 'package:student_marketplace_presentation/features/search/search_page_state.dart';
+import 'package:student_marketplace_presentation/features/search/search_view_state.dart';
 
-import '../detailed_post/detailed_post_cubit.dart';
+import '../detailed_post/detailed_post_view_bloc.dart';
 
-class SearchBloc extends Cubit<SearchPageState> {
+class SearchViewBloc extends Cubit<SearchViewState> {
   final GetAllPostsByQueryUsecase getAllPostsByQueryUsecase;
 
-  late SearchPageState _state = const SearchPageState();
+  late SearchViewState _state = const SearchViewState();
 
-  SearchBloc({
+  SearchViewBloc({
     required this.getAllPostsByQueryUsecase,
-  }) : super(const SearchPageState());
+  }) : super(const SearchViewState());
 
-  Future<void> goToDetailedPostPage(String id, BuildContext context) async {
-    BlocProvider.of<DetailedPostCubit>(context).setSelectedImage(0);
+  Future<void> goToDetailedPostPage(int id, BuildContext context) async {
+    BlocProvider.of<DetailedPostViewBloc>(context).setSelectedImage(0);
     Navigator.of(context).pushNamed('/detailed_post', arguments: id);
   }
 
