@@ -14,18 +14,19 @@ import 'home_view_bloc.dart';
 
 class HomeViewPage extends StatelessWidget {
   const HomeViewPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeViewBloc, HomePageState>(
       listener: (context, state) async {
+        BlocProvider.of<HomeViewBloc>(context).fetchProfilePhoto();
+
         if (state.status == HomePageStatus.intial) {
-          await BlocProvider.of<HomeViewBloc>(context).fetchProfilePhoto();
           BlocProvider.of<HomeViewBloc>(context).goToHome(context);
         }
       },
       builder: (context, state) {
         return PlatformScaffold(
+          cupertino: (context, platform) => CupertinoPageScaffoldData(),
           appBar: isMaterial(context)
               ? PlatformAppBar(
                   automaticallyImplyLeading: false,
@@ -38,6 +39,7 @@ class HomeViewPage extends StatelessWidget {
               : null,
           body: isCupertino(context)
               ? NestedScrollView(
+                  controller: ScrollController(),
                   headerSliverBuilder: (context, innerBoxIsScroller) {
                     return <Widget>[
                       CupertinoSliverNavigationBar(
@@ -62,6 +64,8 @@ class HomeViewPage extends StatelessWidget {
                   body: _getCurrentPage(context, state))
               : _getCurrentPage(context, state),
           bottomNavBar: PlatformNavBar(
+            cupertino: (context, platform) =>
+                CupertinoTabBarData(activeColor: accentColor),
             backgroundColor: Colors.white,
             items: [
               BottomNavigationBarItem(
@@ -118,16 +122,16 @@ class HomeViewPage extends StatelessWidget {
         BlocProvider.of<HomeViewBloc>(context).goToHome(context);
         break;
       case 1:
-        BlocProvider.of<HomeViewBloc>(context).goToSearch();
+        BlocProvider.of<HomeViewBloc>(context).goToSearch(context);
         break;
       case 2:
-        BlocProvider.of<HomeViewBloc>(context).goToAddPost();
+        BlocProvider.of<HomeViewBloc>(context).goToAddPost(context);
         break;
       case 3:
-        BlocProvider.of<HomeViewBloc>(context).goToFavorites();
+        BlocProvider.of<HomeViewBloc>(context).goToFavorites(context);
         break;
       case 4:
-        BlocProvider.of<HomeViewBloc>(context).goToSettings();
+        BlocProvider.of<HomeViewBloc>(context).goToSettings(context);
         break;
     }
   }

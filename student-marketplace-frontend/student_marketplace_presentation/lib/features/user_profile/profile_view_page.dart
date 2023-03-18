@@ -110,7 +110,7 @@ class ProfileViewPage extends StatelessWidget {
                           ),
                           onPressed: (context) {
                             BlocProvider.of<HomeViewBloc>(context)
-                                .goToFavorites();
+                                .goToFavorites(context);
                             Navigator.of(context).pop();
                           },
                           title: const Text('Favorites'),

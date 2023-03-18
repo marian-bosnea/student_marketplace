@@ -8,6 +8,7 @@ import 'package:student_marketplace_business_logic/domain/usecases/authenticatio
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_authentication_status_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import 'auth_state.dart';
 

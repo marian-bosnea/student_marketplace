@@ -1,4 +1,3 @@
-import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +7,6 @@ import 'package:student_marketplace_presentation/features/search/search_view_blo
 
 import '../../core/theme/colors.dart';
 import '../shared/post_item.dart';
-import '../shared/animation_options.dart';
 
 class SearchViewPage extends StatelessWidget {
   const SearchViewPage({super.key});
@@ -17,58 +15,47 @@ class SearchViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SearchViewBloc, SearchViewState>(
       builder: (context, state) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              color: Colors.white,
-              height: 50,
-              padding:
-                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-              child: PlatformTextField(
-                cupertino: (context, target) =>
-                    _searchCupertinoTextFieldData(context, state.status),
-                onChanged: (text) => BlocProvider.of<SearchViewBloc>(context)
-                    .performSearch(text),
+        return Material(
+          color: primaryColor,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: 50,
+                padding: const EdgeInsets.only(
+                    left: 20, right: 20, top: 5, bottom: 5),
+                child: PlatformTextField(
+                  cupertino: (context, target) =>
+                      _searchCupertinoTextFieldData(context, state.status),
+                  onChanged: (text) => BlocProvider.of<SearchViewBloc>(context)
+                      .performSearch(text),
+                ),
               ),
-            ),
-            Expanded(
-                child: Material(
-              color: Colors.white,
-              child: Container(
+              Expanded(
+                  child: Container(
                 margin: EdgeInsets.zero,
                 padding: const EdgeInsets.only(left: 10, right: 10),
-                child: LiveGrid.options(
+                child: GridView.builder(
                     itemCount: state.posts.length,
-                    controller: ScrollController(),
-                    options: salePostAnimationOptions,
                     gridDelegate:
                         const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent: 200,
                             childAspectRatio: 2 / 3,
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20),
-                    itemBuilder: (context, index, anim) {
+                    itemBuilder: (context, index) {
                       final post = state.posts.elementAt(index);
-                      return AnimateIfVisible(
-                          key: ValueKey(post.postId),
-                          duration: const Duration(milliseconds: 200),
-                          builder: (context, animation) => FadeTransition(
-                                opacity: Tween<double>(begin: 0, end: 1)
-                                    .animate(animation),
-                                child: PostItem(
-                                  post: post,
-                                  onTap: () {
-                                    BlocProvider.of<SearchViewBloc>(context)
-                                        .goToDetailedPostPage(
-                                            post.postId!, context);
-                                  },
-                                ),
-                              ));
+                      return PostItem(
+                        post: post,
+                        onTap: () {
+                          BlocProvider.of<SearchViewBloc>(context)
+                              .goToDetailedPostPage(post.postId!, context);
+                        },
+                      );
                     }),
-              ),
-            ))
-          ],
+              ))
+            ],
+          ),
         );
       },
     );

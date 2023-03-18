@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:like_button/like_button.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
-import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_bloc.dart';
-import 'package:student_marketplace_presentation/features/posts_view/posts_view_cubit.dart';
-import 'package:student_marketplace_presentation/features/posts_view/posts_view_page.dart';
+import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/theme/colors.dart';
 
 class PostItem extends StatelessWidget {
   final SalePostEntity post;
   final VoidCallback onTap;
+  late bool _isFavorite;
 
-  const PostItem({super.key, required this.post, required this.onTap});
+  PostItem({super.key, required this.post, required this.onTap}) {
+    _isFavorite = post.isFavorite!;
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Material(
-        elevation: 0,
+        elevation: 1.0,
         borderRadius: const BorderRadius.all(Radius.circular(30)),
         child: Container(
           decoration: BoxDecoration(
@@ -30,19 +32,32 @@ class PostItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  LikeButton(
-                    isLiked: post.isFavorite,
-                    onTap: (isLiked) {
-                      final result =
-                          BlocProvider.of<DetailedPostViewBloc>(context)
-                              .onFavoritePressed(post.postId!);
-                      return result;
-                    },
-                  )
-                ],
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Row(
+                  mainAxisAlignment: post.isOwn!
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.end,
+                  children: [
+                    // if (post.isOwn!)
+                    //   PlatformText(
+                    //     'Posted by you',
+                    //     style: TextStyle(color: accentTextcolor),
+                    //   ),
+                    // if (!post.isOwn!)
+                    LikeButton(
+                      isLiked: post.isFavorite,
+                      onTap: (isLiked) async {
+                        final result =
+                            await BlocProvider.of<PostViewBloc>(context)
+                                .onFavoriteButtonPressed(
+                                    context, post, isLiked);
+
+                        return result;
+                      },
+                    )
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(5.0),

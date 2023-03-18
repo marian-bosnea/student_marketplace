@@ -12,28 +12,39 @@ class HomePageState extends Equatable {
   final bool hasLoadedProfile;
   final Uint8List? profileIcon;
 
+  final bool shouldRefreshPosts;
+
   const HomePageState(
       {this.status = HomePageStatus.home,
       this.hasLoadedPosts = false,
       this.hasLoadedProfile = false,
       this.title = 'Discover',
-      this.profileIcon});
+      this.profileIcon,
+      this.shouldRefreshPosts = false});
 
   HomePageState copyWith(
       {String? title,
       HomePageStatus? status,
       Uint8List? profileIcon,
       bool? hasLoadedPosts,
-      bool? hasLoadedProfile}) {
+      bool? hasLoadedProfile,
+      bool? shouldRefreshPosts}) {
     return HomePageState(
         status: status ?? this.status,
         title: title ?? this.title,
         profileIcon: profileIcon,
         hasLoadedPosts: hasLoadedPosts ?? this.hasLoadedPosts,
-        hasLoadedProfile: hasLoadedProfile ?? this.hasLoadedProfile);
+        hasLoadedProfile: hasLoadedProfile ?? this.hasLoadedProfile,
+        shouldRefreshPosts: shouldRefreshPosts ?? this.shouldRefreshPosts);
   }
 
   @override
-  List<Object?> get props =>
-      [status, title, profileIcon, hasLoadedPosts, hasLoadedProfile];
+  List<Object?> get props => [
+        status,
+        title,
+        profileIcon,
+        hasLoadedPosts,
+        hasLoadedProfile,
+        shouldRefreshPosts
+      ];
 }

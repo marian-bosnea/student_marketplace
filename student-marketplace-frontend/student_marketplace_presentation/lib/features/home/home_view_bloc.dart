@@ -7,7 +7,7 @@ import 'package:student_marketplace_business_logic/domain/usecases/user/get_own_
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
 
 import '../../core/constants/enums.dart';
-import '../posts_view/posts_view_cubit.dart';
+import '../posts_view/posts_view_bloc.dart';
 import 'home_view_state.dart';
 
 class HomeViewBloc extends Cubit<HomePageState> {
@@ -16,10 +16,18 @@ class HomeViewBloc extends Cubit<HomePageState> {
   HomeViewBloc({required this.getOwnUserProfileUsecase})
       : super(const HomePageState());
 
+  Future<void> notifyPostItemChanged(BuildContext context) async {
+    if (state.status != HomePageStatus.home) {
+      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    }
+
+    emit(state.copyWith(shouldRefreshPosts: true));
+  }
+
   void goToHome(BuildContext context) {
     if (!state.hasLoadedPosts) {
-      BlocProvider.of<PostViewCubit>(context).fetchAllCategories();
-      BlocProvider.of<PostViewCubit>(context).fetchAllPosts();
+      BlocProvider.of<PostViewBloc>(context).fetchAllCategories();
+      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
       emit(state.copyWith(
           status: HomePageStatus.home,
           title: "Discover",
@@ -33,24 +41,30 @@ class HomeViewBloc extends Cubit<HomePageState> {
   }
 
   Future<void> fetchProfilePhoto() async {
-    if (!state.hasLoadedProfile) {
-      final result = await getOwnUserProfileUsecase(NoParams());
+    final result = await getOwnUserProfileUsecase(NoParams());
 
-      if (result is Right) {
-        final user = result.getOrElse(() => const UserModel());
-        emit(state.copyWith(
-            profileIcon: user.avatarImage, hasLoadedProfile: true));
-      }
+    if (result is Right) {
+      final user = result.getOrElse(() => const UserModel());
+      emit(state.copyWith(
+          profileIcon: user.avatarImage, hasLoadedProfile: true));
     }
   }
 
-  void goToSearch() {
+  void goToSearch(BuildContext context) {
+    if (state.shouldRefreshPosts) {
+      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    }
+
     if (state.status != HomePageStatus.search) {
       emit(state.copyWith(status: HomePageStatus.search, title: "Search"));
     }
   }
 
-  void goToAddPost() {
+  void goToAddPost(BuildContext context) {
+    if (state.shouldRefreshPosts) {
+      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    }
+
     if (state.status != HomePageStatus.addPost) {
       emit(state.copyWith(
           status: HomePageStatus.addPost, title: "Sell an item"));
@@ -58,17 +72,29 @@ class HomeViewBloc extends Cubit<HomePageState> {
   }
 
   void goToProfile(BuildContext context) {
+    if (state.shouldRefreshPosts) {
+      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    }
+
     Navigator.of(context).pushNamed(PageNames.userProfilePage);
   }
 
-  void goToFavorites() {
+  void goToFavorites(BuildContext context) {
+    if (state.shouldRefreshPosts) {
+      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    }
+
     if (state.status != HomePageStatus.favorites) {
       emit(
           state.copyWith(status: HomePageStatus.favorites, title: 'Favorites'));
     }
   }
 
-  void goToSettings() {
+  void goToSettings(BuildContext context) {
+    if (state.shouldRefreshPosts) {
+      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    }
+
     if (state.status != HomePageStatus.settings) {
       emit(state.copyWith(status: HomePageStatus.settings, title: 'Settings'));
       emit(state);

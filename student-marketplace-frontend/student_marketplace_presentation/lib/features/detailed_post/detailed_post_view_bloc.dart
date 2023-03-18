@@ -1,10 +1,12 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/add_to_favorites_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/check_if_favorite_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
+import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
 import 'detailed_post_view_state.dart';
@@ -55,7 +57,7 @@ class DetailedPostViewBloc extends Cubit<DetailedPostViewState> {
     emit(_state);
   }
 
-  Future<bool> onFavoritePressed(int id) async {
+  Future<bool> onFavoritePressed(BuildContext context, int id) async {
     bool result = false;
     if (_state.isFavorite) {
       await removeFromFavoritesUsecase(IdParam(id: id));
@@ -65,6 +67,8 @@ class DetailedPostViewBloc extends Cubit<DetailedPostViewState> {
     }
     _state = _state.copyWith(isFavorite: !_state.isFavorite);
     emit(_state);
+
+    BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
 
     return result;
   }

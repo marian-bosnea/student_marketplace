@@ -146,7 +146,7 @@ class DetailedPostViewPage extends StatelessWidget {
                                           BlocProvider.of<DetailedPostViewBloc>(
                                                   context)
                                               .onFavoritePressed(
-                                                  state.post!.postId!),
+                                                  context, state.post!.postId!),
                                     ),
                                   ]),
                             ),

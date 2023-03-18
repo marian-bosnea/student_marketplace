@@ -20,7 +20,7 @@ class CategoryItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(left: 5, right: 5, bottom: 10),
         child: Material(
-          elevation: isSelected ? 5 : 0,
+          elevation: isSelected ? 1 : 5,
           borderRadius: const BorderRadius.all(Radius.circular(15)),
           child: Container(
             padding: const EdgeInsets.all(10),

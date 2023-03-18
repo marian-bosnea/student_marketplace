@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+
 import 'package:student_marketplace_business_logic/data/data_sources/contracts/auth_session_local_data_source.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/contracts/auth_session_remote_data_source.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/contracts/credentials_remote_data_source.dart';
@@ -59,7 +60,7 @@ import '../../features/detailed_post/detailed_post_view_bloc.dart';
 import '../../features/favorites/favorites_view_bloc.dart';
 import '../../features/home/home_view_bloc.dart';
 import '../../features/login/login_view_bloc.dart';
-import '../../features/posts_view/posts_view_cubit.dart';
+import '../../features/posts_view/posts_view_bloc.dart';
 import '../../features/register/register_view_bloc.dart';
 import '../../features/search/search_view_bloc.dart';
 import '../../features/user_profile/profile_view_bloc.dart';
@@ -91,7 +92,9 @@ Future<void> init() async {
 
   sl.registerFactory(() => ProfileViewBloc(getUserUsecase: sl.call()));
 
-  sl.registerFactory(() => PostViewCubit(
+  sl.registerFactory(() => PostViewBloc(
+      addToFavoritesUsecase: sl.call(),
+      removeFromFavoritesUsecase: sl.call(),
       getAllPostsUsecase: sl.call(),
       getCachedSessionUsecase: sl.call(),
       getDetailedPostUsecase: sl.call(),

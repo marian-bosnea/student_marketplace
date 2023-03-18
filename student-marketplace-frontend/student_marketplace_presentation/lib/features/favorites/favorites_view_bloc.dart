@@ -5,6 +5,8 @@ import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_favorite_posts_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
+import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
 import 'favorites_view_state.dart';
@@ -22,9 +24,10 @@ class FavoritesViewBloc extends Cubit<FavoritesViewState> {
     getFavoritePosts();
   }
 
-  Future<void> removeFromFavorites(int postId) async {
+  Future<void> removeFromFavorites(BuildContext context, int postId) async {
     await removeFromFavoritesUsecase(IdParam(id: postId));
     getFavoritePosts();
+    BlocProvider.of<HomeViewBloc>(context).notifyPostItemChanged(context);
   }
 
   Future<void> goToDetailedPostPage(

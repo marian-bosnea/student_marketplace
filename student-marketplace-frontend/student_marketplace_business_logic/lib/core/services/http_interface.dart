@@ -251,6 +251,8 @@ class HttpInterface {
           title: map['title'],
           price: map['price'].toString(),
           viewsCount: map['views_count'] as int,
+          isFavorite: map['is_favorite'] as bool,
+          isOwn: map['is_own'] as bool,
           images: [imageResponse.bodyBytes]));
     }
 
@@ -289,6 +291,8 @@ class HttpInterface {
           title: map['title'],
           price: map['price'].toString(),
           viewsCount: map['views_count'] as int,
+          isFavorite: map['is_favorite'] as bool,
+          isOwn: map['is_own'] as bool,
           images: [imageResponse.bodyBytes]));
     }
     return salePosts;

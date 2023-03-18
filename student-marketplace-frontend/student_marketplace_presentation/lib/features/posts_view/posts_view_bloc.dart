@@ -7,28 +7,35 @@ import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/product_category/get_all_categories_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/sale_post/add_to_favorites_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_by_category_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
+import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
 import '../detailed_post/detailed_post_view_bloc.dart';
 import 'posts_state.dart';
 
-class PostViewCubit extends Cubit<PostViewState> {
+class PostViewBloc extends Cubit<PostViewState> {
   final GetAllPostsUsecase getAllPostsUsecase;
   final GetAllPostsByCategory getAllPostsByCategoryUsecase;
   final GetAllCategoriesUsecase getAllCategoriesUsecase;
   final GetCachedSessionUsecase getCachedSessionUsecase;
   final GetDetailedPostUsecase getDetailedPostUsecase;
+  final AddToFavoritesUsecase addToFavoritesUsecase;
+  final RemoveFromFavoritesUsecase removeFromFavoritesUsecase;
 
-  PostViewCubit(
-      {required this.getAllPostsUsecase,
-      required this.getCachedSessionUsecase,
-      required this.getAllCategoriesUsecase,
-      required this.getDetailedPostUsecase,
-      required this.getAllPostsByCategoryUsecase})
-      : super(const PostViewState());
+  PostViewBloc({
+    required this.getAllPostsUsecase,
+    required this.getCachedSessionUsecase,
+    required this.getAllCategoriesUsecase,
+    required this.getDetailedPostUsecase,
+    required this.getAllPostsByCategoryUsecase,
+    required this.addToFavoritesUsecase,
+    required this.removeFromFavoritesUsecase,
+  }) : super(const PostViewState());
 
   Future<void> fetchAllCategories() async {
     final categoriesResult = await getAllCategoriesUsecase(NoParams());
@@ -84,11 +91,21 @@ class PostViewCubit extends Cubit<PostViewState> {
     } else {
       final posts = (postsResult as Right).value;
       emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
+
+      _getFeaturedItem();
     }
+  }
 
-    _getFeaturedItem();
+  Future<bool> onFavoriteButtonPressed(
+      BuildContext context, SalePostEntity post, bool isFavorite) async {
+    if (isFavorite) {
+      removeFromFavoritesUsecase(IdParam(id: post.postId!));
+    } else {
+      addToFavoritesUsecase(IdParam(id: post.postId!));
+    }
+    BlocProvider.of<HomeViewBloc>(context).notifyPostItemChanged(context);
 
-    emit(state);
+    return !isFavorite;
   }
 
   _getFeaturedItem() {
