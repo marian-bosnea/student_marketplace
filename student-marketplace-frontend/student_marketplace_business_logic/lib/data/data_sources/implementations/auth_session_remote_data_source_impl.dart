@@ -15,7 +15,7 @@ class AuthSessionRemoteDataSourceImpl extends AuthSessionRemoteDataSource {
     final HttpInterface http = HttpInterface();
     try {
       final result = await http.signInUser(email, password);
-      return Right(AuthSessionModel(token: result));
+      return Right(AuthSessionModel(token: result, keepPerssistent: false));
     } catch (e) {
       return Left(NetworkFailure());
     }

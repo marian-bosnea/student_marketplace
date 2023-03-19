@@ -49,13 +49,14 @@ class PostViewBloc extends Cubit<PostViewState> {
   }
 
   Future<void> selectCategory(int index) async {
-    emit(state.copyWith(selectedCategoryIndex: index));
-    emit(state);
+    if (index != state.selectedCategoryIndex) {
+      emit(state.copyWith(selectedCategoryIndex: index));
 
-    if (index != -1) {
-      await fetchAllPostsOfSelectedCategory();
-    } else {
-      fetchAllPosts();
+      if (index != -1) {
+        await fetchAllPostsOfSelectedCategory();
+      } else {
+        fetchAllPosts();
+      }
     }
   }
 

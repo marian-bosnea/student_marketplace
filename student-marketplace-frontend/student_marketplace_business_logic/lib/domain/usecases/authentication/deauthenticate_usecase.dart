@@ -19,7 +19,7 @@ class DeauthenticateUsecase extends Usecase<bool, NoParams> {
     if (resultSession is Left) return Left(UnauthenticatedFailure());
 
     final session = (resultSession as Right).value;
-    final result = await authSessionOperations.deauthenticate(session.token);
+    final result = await authSessionOperations.deauthenticate(session);
     if (result is Left) return Left(NetworkFailure());
     return result;
   }

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
@@ -14,6 +16,14 @@ abstract class Usecase<Type, Params> {
 class NoParams extends Equatable {
   @override
   List<Object?> get props => [];
+}
+
+class BoolParam extends Equatable {
+  final bool value;
+
+  const BoolParam({required this.value});
+  @override
+  List<Object?> get props => [value];
 }
 
 class IdParam extends Equatable {

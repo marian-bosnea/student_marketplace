@@ -35,6 +35,7 @@ import 'package:student_marketplace_business_logic/domain/repositories/product_c
 import 'package:student_marketplace_business_logic/domain/repositories/sale_post_repository.dart';
 import 'package:student_marketplace_business_logic/domain/repositories/user_repository.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/authenticate_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/authentication/cache_session_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/deauthenticate_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_authentication_status_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
@@ -75,6 +76,7 @@ Future<void> init() async {
   sl.registerFactory(() => LoginViewBloc(
         signUpUsecase: sl.call(),
         authenticateUsecase: sl.call(),
+        cacheSessionUsecase: sl.call(),
         checkEmailAvailabilityUsecase: sl.call(),
       ));
 
@@ -90,7 +92,8 @@ Future<void> init() async {
 
   sl.registerFactory(() => HomeViewBloc(getOwnUserProfileUsecase: sl.call()));
 
-  sl.registerFactory(() => ProfileViewBloc(getUserUsecase: sl.call()));
+  sl.registerFactory(() => ProfileViewBloc(
+      getUserUsecase: sl.call(), deauthenticateUsecase: sl.call()));
 
   sl.registerFactory(() => PostViewBloc(
       addToFavoritesUsecase: sl.call(),
@@ -129,6 +132,8 @@ Future<void> init() async {
       () => GetAuthenticationStatusUsecase(operations: sl.call()));
   sl.registerLazySingleton(
       () => GetCachedSessionUsecase(repository: sl.call()));
+
+  sl.registerLazySingleton(() => CacheSessionUsecase(operations: sl.call()));
 
   sl.registerLazySingleton(
       () => CheckEmailAvailabilityUsecase(operations: sl.call()));
@@ -175,8 +180,9 @@ Future<void> init() async {
 
   // Repositories
 
-  sl.registerLazySingleton<AuthSessionOperations>(
-      () => AuthSessionOperationsImpl(authRemoteDataSource: sl.call()));
+  sl.registerLazySingleton<AuthSessionOperations>(() =>
+      AuthSessionOperationsImpl(
+          authRemoteDataSource: sl.call(), authLocalDataSource: sl.call()));
 
   sl.registerLazySingleton<UserOperations>(
       () => UserServicesImpl(remoteDataSource: sl.call()));

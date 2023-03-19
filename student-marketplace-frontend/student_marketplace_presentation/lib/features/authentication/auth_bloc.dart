@@ -7,8 +7,6 @@ import 'package:student_marketplace_business_logic/data/models/auth_session_mode
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/deauthenticate_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_authentication_status_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
-import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
-import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import 'auth_state.dart';
 
@@ -32,22 +30,22 @@ class AuthBloc extends Cubit<AuthState> {
 
     final session = (eitherSession as Right).value;
 
-    final sharedPrefs = await SharedPreferences.getInstance();
-
     try {
-      final result = await authenticationStatusUsecase(
-          AuthSessionParam(session: AuthSessionModel(token: session)));
+      final result = await authenticationStatusUsecase(AuthSessionParam(
+          session:
+              AuthSessionModel(token: session.token, keepPerssistent: true)));
 
       final isSignedIn = (result as Right).value;
 
-      final hasCheckedKeepSignedIn = sharedPrefs.getBool('keepSignedIn');
+      final hasCheckedKeepSignedIn = session.keepPerssistent;
 
       if (isSignedIn && hasCheckedKeepSignedIn!) {
-        emit(state.copyWith(token: session, status: AuthStatus.authenticated));
+        emit(state.copyWith(
+            token: session.token, status: AuthStatus.authenticated));
       } else {
         emit(state.copyWith(status: AuthStatus.unauthenticated));
       }
-    } catch (_) {
+    } catch (e) {
       emit(state.copyWith(status: AuthStatus.unauthenticated));
     }
   }
@@ -67,11 +65,12 @@ class AuthBloc extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signOutUser() async {
+  Future<void> signOutUser(BuildContext context) async {
     try {
+      Navigator.of(context).popAndPushNamed('/');
       await deauthenticateUsecase(NoParams());
       emit(state.copyWith(status: AuthStatus.unauthenticated));
-    } catch (_) {
+    } catch (e) {
       emit(state.copyWith(status: AuthStatus.unauthenticated));
     }
   }

@@ -41,25 +41,7 @@ class HomeViewPage extends StatelessWidget {
               ? NestedScrollView(
                   controller: ScrollController(),
                   headerSliverBuilder: (context, innerBoxIsScroller) {
-                    return <Widget>[
-                      CupertinoSliverNavigationBar(
-                        trailing: state.profileIcon != null
-                            ? GestureDetector(
-                                onTap: () =>
-                                    BlocProvider.of<HomeViewBloc>(context)
-                                        .goToProfile(context),
-                                child: CircleAvatar(
-                                  foregroundImage:
-                                      Image.memory(state.profileIcon!).image,
-                                ),
-                              )
-                            : null,
-                        largeTitle: Text(
-                          state.title,
-                          style: const TextStyle(color: accentColor),
-                        ),
-                      )
-                    ];
+                    return <Widget>[_getNavigationBar(context, state)];
                   },
                   body: _getCurrentPage(context, state))
               : _getCurrentPage(context, state),
@@ -113,6 +95,24 @@ class HomeViewPage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _getNavigationBar(BuildContext context, HomePageState state) {
+    return CupertinoSliverNavigationBar(
+      trailing: GestureDetector(
+        onTap: () =>
+            BlocProvider.of<HomeViewBloc>(context).goToProfile(context),
+        child: state.profileIcon != null
+            ? CircleAvatar(
+                foregroundImage: Image.memory(state.profileIcon!).image,
+              )
+            : null,
+      ),
+      largeTitle: Text(
+        state.title,
+        style: const TextStyle(color: accentColor),
+      ),
     );
   }
 

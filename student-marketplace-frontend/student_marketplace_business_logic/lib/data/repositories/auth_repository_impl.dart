@@ -22,6 +22,6 @@ class AuthRepositoryImpl extends AuthSessionRepository {
 
   @override
   Future<Either<Failure, AuthSessionEntity>> getCachedSession() async {
-    return await localDataSource.getCachedToken();
+    return await localDataSource.getCachedSession();
   }
 }

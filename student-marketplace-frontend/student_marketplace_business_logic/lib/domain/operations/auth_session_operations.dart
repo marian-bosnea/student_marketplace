@@ -8,4 +8,6 @@ abstract class AuthSessionOperations {
 
   Future<Either<Failure, bool>> getAuthenticationStatus(
       AuthSessionEntity session);
+
+  Future<Either<Failure, void>> cacheSession(AuthSessionEntity session);
 }

@@ -46,7 +46,8 @@ class ListPostItem extends StatelessWidget {
                       ),
                       Text(
                         '${post.price} RON',
-                        style: const TextStyle(fontSize: 16),
+                        style:
+                            const TextStyle(fontSize: 16, color: accentColor),
                       ),
                     ]),
               ),

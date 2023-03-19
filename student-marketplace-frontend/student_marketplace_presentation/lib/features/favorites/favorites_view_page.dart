@@ -6,7 +6,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../core/theme/colors.dart';
 import 'favorites_view_bloc.dart';
 import 'favorites_view_state.dart';
-import 'widgets/list_post_item.dart';
+import '../shared/list_post_item.dart';
 
 class FavoritesViewPage extends StatelessWidget {
   const FavoritesViewPage({super.key});
@@ -26,7 +26,7 @@ class FavoritesViewPage extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Slidable(
                     key: ValueKey(post.postId),
-                    startActionPane:
+                    endActionPane:
                         ActionPane(motion: const ScrollMotion(), children: [
                       SlidableAction(
                         onPressed: (context) =>
@@ -34,7 +34,7 @@ class FavoritesViewPage extends StatelessWidget {
                                 .removeFromFavorites(context, post.postId!),
                         autoClose: true,
                         borderRadius:
-                            const BorderRadius.all(Radius.circular(20)),
+                            const BorderRadius.all(Radius.circular(10)),
                         backgroundColor: const Color(0xFFFE4A49),
                         foregroundColor: Colors.white,
                         icon: CupertinoIcons.trash,

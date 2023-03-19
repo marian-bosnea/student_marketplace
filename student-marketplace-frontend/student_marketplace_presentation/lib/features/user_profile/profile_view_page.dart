@@ -127,7 +127,8 @@ class ProfileViewPage extends StatelessWidget {
                             color: Colors.red,
                           ),
                           onPressed: (context) =>
-                              BlocProvider.of<AuthBloc>(context).signOutUser(),
+                              BlocProvider.of<AuthBloc>(context)
+                                  .signOutUser(context),
                           title: const Text('Sign Out'),
                         ),
                       ],

@@ -35,7 +35,7 @@ class LoginViewState extends Equatable {
         isEmailPrefixActive: isEmailPrefixActive ?? this.isEmailPrefixActive,
         isPasswordPrefixActive:
             isPasswordPrefixActive ?? this.isPasswordPrefixActive,
-        keepSignedIn: keepSignedIn ?? false,
+        keepSignedIn: keepSignedIn ?? this.keepSignedIn,
         status: status ?? this.status);
   }
 
