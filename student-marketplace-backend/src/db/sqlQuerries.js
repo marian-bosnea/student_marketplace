@@ -41,5 +41,5 @@ module.exports.SALE_OBJECT_READ_OWNER = 'SELECT d.title, d.description, d.price,
 
 module.exports.SALE_OBJECT_ADD_TO_FAVORITE = 'INSERT INTO favorite_post (user_id, post_id) VALUES ($1, $2)';
 module.exports.SALE_OBJECT_REMOVE_FROM_FAVORITES = 'DELETE FROM favorite_post WHERE user_id = $1 AND post_id = $2';
-module.exports.SALE_OBJECT_READ_ALL_FAVORITES = 'SELECT s.id, d.title, d.price, s.views_count FROM sale_object s INNER JOIN favorite_post f ON f.post_id = s.id INNER JOIN object_description d ON s.description_id = d.id WHERE f.user_id = $1';
+module.exports.SALE_OBJECT_READ_ALL_FAVORITES = 'SELECT s.id, d.title, d.price, s.views_count, c.name as category_name, u.id as owner_id, p.last_name as owner_name FROM sale_object s INNER JOIN favorite_post f ON f.post_id = s.id  INNER JOIN object_category c ON s.category_id = c.id INNER JOIN user_centralized u ON s.owner_id = u.id INNER JOIN user_profile p ON u.profile_id  = p.id INNER JOIN object_description d ON s.description_id = d.id  WHERE f.user_id = $1';
 module.exports.SALE_OBJECT_CHECK_IF_FAVORITE = 'SELECT post_id FROM favorite_post WHERE user_id = $1 AND post_id = $2';

@@ -27,7 +27,14 @@ getAllFaculties = (req, res) => {
  }
  
 getUserProfile = async (req, res) => {
-    const userId = req.userId;
+    var userId = req.body.userId;
+
+    if(userId == -1){
+    userId = res.locals.decryptedId;
+    }
+
+    console.log(userId);
+
     const client = await pool.connect()
 
     try {
@@ -37,12 +44,11 @@ getUserProfile = async (req, res) => {
           firstName: result.rows[0].first_name,
           lastName: result.rows[0].last_name,
           secondaryLastName: result.rows[0].secondary_last_name,
-          //avatarImage: result.rows[0].avatar_image,
           facultyName: result.rows[0].faculty_name
        }
        const fileSrc = result.rows[0].avatar_image;
        const filePath = path.resolve(__dirname + '../../../' +  fileSrc);
-       res.sendFile(filePath);
+      // res.sendFile(filePath);
        res.status(codes.GET_SUCCESS_CODE);
        
        res.send(profileJson);
@@ -59,8 +65,11 @@ getUserProfile = async (req, res) => {
 
   
 getUserAvatar = async (req, res) => {
-  const userId = res.locals.decryptedId;
+  var userId = req.body.userId;
 
+  if(userId == -1){
+  userId = res.locals.decryptedId;
+  }
    const client = await pool.connect()
 
    try {

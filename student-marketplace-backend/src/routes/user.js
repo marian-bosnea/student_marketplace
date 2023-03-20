@@ -5,13 +5,13 @@ const authorization = require('../authorization');
 
 const userRouter = express.Router();
 
-userRouter.get('/user/get/profile',
+userRouter.post('/user/get/profile',
     authorization.authenticateToken,
     (req, res) => {
         userController.getUserProfile(req, res);
     });
 
-userRouter.get('/user/get/avatar_image',
+userRouter.post('/user/get/avatar_image',
     authorization.authenticateToken,
     (req, res) => {
         userController.getUserAvatar(req, res);

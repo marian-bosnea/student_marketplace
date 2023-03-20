@@ -68,12 +68,11 @@ insert = async (req, res) => {
 
 getDetailedSalePost = async (req, res) => {
    const postId = req.body.postId;
+   const userId = res.locals.decryptedId;
 
-   console.log(`Requeste detailed post with  id ${postId}`);
    const client = await pool.connect()
 
    await client.query(sql.SALE_OBJECT_INCREMENT_VIEWS_COUNT, [postId]);
-
 
    try {
       const results = await client.query(sql.SALE_OBJECT_READ_DETAILED, [postId]);
@@ -81,7 +80,6 @@ getDetailedSalePost = async (req, res) => {
 
       for (i = 0; i < results.rowCount; i++) {
          const countResult = await client.query(sql.SALE_OBJECT_IMAGE_COUNT, [results.rows[i].description_id]);
-
          saleObjectsJson.push({
             id: results.rows[i].id,
             title: results.rows[i].title,
@@ -92,6 +90,7 @@ getDetailedSalePost = async (req, res) => {
             views_count: results.rows[i].views_count,
             owner_id: results.rows[i].owner_id,
             owner_name: results.rows[i].owner_name,
+            is_own: results.rows[i].owner_id == userId,
             images_count: countResult.rows[0].count
          });
       }
@@ -117,31 +116,24 @@ getAll = async (req, res) => {
    try {
       const results = await client.query(sql.SALE_OBJECT_READ_ALL);
       let saleObjectsJson = [];
-
-      console.log(`Will send ${results.rowCount}`)
-
       for (i = 0; i < results.rowCount; i++) {
-      const isOwnPost = userId == results.rows[i].owner_id;
+      const isOwn = userId == results.rows[i].owner_id;
       const postId = results.rows[i].id;
       const title = results.rows[i].title;
       const price = results.rows[i].price;
       const viewsCount = results.rows[i].views_count;
-      console.log(`Should push ${postId}`);
 
       const favResults = await client.query(sql.SALE_OBJECT_CHECK_IF_FAVORITE, [userId, postId]);
       const isFavorite  =   favResults.rowCount != 0;
-
 
          saleObjectsJson.push({
             id:postId,
             title: title,
             price: price,
             views_count: viewsCount,
-            is_own: isOwnPost,
+            is_own: isOwn,
             is_favorite: isFavorite
          });
-
-         console.log(`Pushed ${postId}`);
       }
 
       res.status(codes.GET_SUCCESS_CODE);
@@ -248,7 +240,12 @@ searchWithTextQuery = async (req, res) => {
 }
 
 getAllByOwnerId = async (req, res) => {
-   const ownerId = req.body.ownerId;
+   var userId = req.body.userId;
+
+   if(userId == -1){
+   userId = res.locals.decryptedId;
+   }
+   
    const client = await pool.connect()
 
    try {
@@ -367,6 +364,9 @@ readAllFavorites = async (req, res) => {
             id: results.rows[i].id,
             title: results.rows[i].title,
             price: results.rows[i].price,
+            category_name: results.rows[i].category_name,
+            owner_id: results.rows[i].owner_id,
+            owner_name: results.rows[i].owner_name,
             views_count: results.rows[i].views_count,
          });
       }
@@ -388,7 +388,7 @@ removeFromFavorites = async (req, res) => {
    const postId = req.body.postId;
    const userId = res.locals.decryptedId;
 
-   const client = await pool.connect()
+   const client = await pool.connect();
 
    try {
     await client.query(sql.SALE_OBJECT_REMOVE_FROM_FAVORITES, [userId, postId]);
