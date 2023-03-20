@@ -1,30 +1,33 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:get_it/get_it.dart';
+import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_page.dart';
 
 import '../../core/theme/colors.dart';
 import 'favorites_view_bloc.dart';
 import 'favorites_view_state.dart';
-import '../shared/list_post_item.dart';
+import '../shared/favorite_list_item.dart';
 
 class FavoritesViewPage extends StatelessWidget {
-  const FavoritesViewPage({super.key});
+  final sl = GetIt.instance;
+
+  FavoritesViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<FavoritesViewBloc>(context).getFavoritePosts();
-    return BlocBuilder<FavoritesViewBloc, FavoritesViewState>(
-      builder: (context, state) {
-        return Container(
-          color: primaryColor,
-          child: ListView.builder(
+    return BlocProvider(
+      create: (context) => sl.get<FavoritesViewBloc>()..fetchFavoritePosts(),
+      child: BlocBuilder<FavoritesViewBloc, FavoritesViewState>(
+        builder: (context, state) {
+          return ListView.builder(
+              shrinkWrap: true,
               itemCount: state.posts.length,
               itemBuilder: (context, index) {
                 final post = state.posts.elementAt(index);
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Slidable(
+                return Slidable(
                     key: ValueKey(post.postId),
                     endActionPane:
                         ActionPane(motion: const ScrollMotion(), children: [
@@ -41,15 +44,12 @@ class FavoritesViewPage extends StatelessWidget {
                         label: 'Remove',
                       ),
                     ]),
-                    child: ListPostItem(
-                        post: post,
-                        onTap: () => BlocProvider.of<FavoritesViewBloc>(context)
-                            .goToDetailedPostPage(post, context)),
-                  ),
-                );
-              }),
-        );
-      },
+                    child: FavoriteListItem(
+                      post: post,
+                    ));
+              });
+        },
+      ),
     );
   }
 }

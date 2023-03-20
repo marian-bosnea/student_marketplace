@@ -47,10 +47,6 @@ class SearchViewPage extends StatelessWidget {
                       final post = state.posts.elementAt(index);
                       return PostItem(
                         post: post,
-                        onTap: () {
-                          BlocProvider.of<SearchViewBloc>(context)
-                              .goToDetailedPostPage(post.postId!, context);
-                        },
                       );
                     }),
               ))

@@ -24,6 +24,8 @@ class LoginViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
+      cupertino: (context, platform) =>
+          CupertinoPageScaffoldData(resizeToAvoidBottomInset: false),
       body: BlocConsumer<LoginViewBloc, LoginViewState>(
         listener: _onStateChangedListener,
         builder: (context, state) {
@@ -32,7 +34,7 @@ class LoginViewPage extends StatelessWidget {
                 builder: (context, authState) {
               if (authState.status == AuthStatus.authenticated) {
                 // Form submitted succesful and authentication was succcesful
-                return const HomeViewPage();
+                return HomeViewPage();
               } else {
                 // Form submitted succesful and authentication was not succcesful
                 return _bodyWidget(context, state);
@@ -47,107 +49,115 @@ class LoginViewPage extends StatelessWidget {
   }
 
   Widget _bodyWidget(BuildContext context, LoginViewState state) {
-    return Center(
-      child: Material(
-        elevation: 5,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          width: MediaQuery.of(context).size.width * 0.75,
-          height: state.status == LoginPageStatus.emailSucces
-              ? MediaQuery.of(context).size.height * 0.35
-              : MediaQuery.of(context).size.height * 0.3,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: secondaryColor,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          ),
-          child: Center(
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 20),
-                child: const Text(
-                  "Let's log you in",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+    return Container(
+      decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/login_background.png'),
+              fit: BoxFit.cover)),
+      child: Center(
+        child: Material(
+          elevation: 5,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            width: MediaQuery.of(context).size.width * 0.75,
+            height: state.status == LoginPageStatus.emailSucces
+                ? MediaQuery.of(context).size.height * 0.3
+                : MediaQuery.of(context).size.height * 0.25,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: secondaryColor,
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
+            child: Center(
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 5, bottom: 20),
+                  child: const Text(
+                    "Let's log you in",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                  ),
                 ),
-              ),
-              PlatformTextField(
-                hintText: "E-mail",
-                controller: _emailTextfieldController,
-                onChanged: (text) => BlocProvider.of<LoginViewBloc>(context)
-                    .onEmailInputChanged(text),
-                onSubmitted: state.isEmailPrefixActive
-                    ? (text) => BlocProvider.of<LoginViewBloc>(context)
-                        .checkIfEmailIsRegistered(CredentialsModel(
-                            email: _emailTextfieldController.text,
-                            password: ''))
-                    : null,
-                cupertino: (context, target) =>
-                    _emailCupertinoTextFieldData(context, state),
-              ),
-              if (state.status == LoginPageStatus.emailSucces)
                 PlatformTextField(
-                  focusNode: _passwordFieldFocusNode,
-                  hintText: "Password",
+                  hintText: "E-mail",
+                  controller: _emailTextfieldController,
+                  autocorrect: false,
                   onChanged: (text) => BlocProvider.of<LoginViewBloc>(context)
-                      .onPasswordInputChanged(text),
+                      .onEmailInputChanged(text),
                   onSubmitted: state.isEmailPrefixActive
-                      ? (text) =>
-                          BlocProvider.of<LoginViewBloc>(context).signInUser(
-                            CredentialsModel(
-                                email: _emailTextfieldController.text,
-                                password: _passwordTextfielController.text),
-                          )
+                      ? (text) => BlocProvider.of<LoginViewBloc>(context)
+                          .checkIfEmailIsRegistered(CredentialsModel(
+                              email: _emailTextfieldController.text,
+                              password: ''))
                       : null,
                   cupertino: (context, target) =>
-                      _passwordCupertinoTextFieldData(context, state),
-                  controller: _passwordTextfielController,
+                      _emailCupertinoTextFieldData(context, state),
                 ),
-              Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: 30,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                if (state.status == LoginPageStatus.emailSucces)
+                  PlatformTextField(
+                    focusNode: _passwordFieldFocusNode,
+                    hintText: "Password",
+                    autocorrect: false,
+                    onChanged: (text) => BlocProvider.of<LoginViewBloc>(context)
+                        .onPasswordInputChanged(text),
+                    onSubmitted: state.isEmailPrefixActive
+                        ? (text) =>
+                            BlocProvider.of<LoginViewBloc>(context).signInUser(
+                              CredentialsModel(
+                                  email: _emailTextfieldController.text,
+                                  password: _passwordTextfielController.text),
+                            )
+                        : null,
+                    cupertino: (context, target) =>
+                        _passwordCupertinoTextFieldData(context, state),
+                    controller: _passwordTextfielController,
+                  ),
+                Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  height: 30,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 25,
+                        child: PlatformIconButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () =>
+                                BlocProvider.of<LoginViewBloc>(context)
+                                    .changeKeepSignedIn(),
+                            icon: Icon(
+                              state.keepSignedIn
+                                  ? Icons.check_box
+                                  : Icons.check_box_outline_blank,
+                              color: state.keepSignedIn
+                                  ? accentColor
+                                  : Colors.black12,
+                            )),
+                      ),
+                      const Text("Keep me signed in",
+                          style: TextStyle(fontSize: 16))
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: 25,
-                      child: PlatformIconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () =>
-                              BlocProvider.of<LoginViewBloc>(context)
-                                  .changeKeepSignedIn(),
-                          icon: Icon(
-                            state.keepSignedIn
-                                ? Icons.check_box
-                                : Icons.check_box_outline_blank,
-                            color: state.keepSignedIn
-                                ? accentColor
-                                : Colors.black12,
-                          )),
+                    const Text(
+                      "Don't have an account?",
+                      style: TextStyle(fontSize: 16),
                     ),
-                    const Text("Keep me signed in",
-                        style: TextStyle(fontSize: 16))
+                    PlatformTextButton(
+                      onPressed: () => Navigator.of(context)
+                          .pushNamed(PageNames.registerPage),
+                      child: const Text("Register",
+                          style: TextStyle(fontSize: 16, color: accentColor)),
+                    )
                   ],
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Don't have an account?",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  PlatformTextButton(
-                    onPressed: () =>
-                        Navigator.of(context).pushNamed(PageNames.registerPage),
-                    child: const Text("Register",
-                        style: TextStyle(fontSize: 16, color: accentColor)),
-                  )
-                ],
-              ),
-            ]),
+              ]),
+            ),
           ),
         ),
       ),
@@ -188,6 +198,7 @@ class LoginViewPage extends StatelessWidget {
     return CupertinoTextFieldData(
       suffix: _getEmailTextFieldPrefix(context, state),
       padding: const EdgeInsets.only(left: 10),
+      autocorrect: false,
       decoration: BoxDecoration(
           borderRadius: state.status == LoginPageStatus.emailSucces
               ? const BorderRadius.only(
@@ -248,6 +259,7 @@ class LoginViewPage extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 icon: const Icon(
                   CupertinoIcons.arrow_right_circle,
+                  color: accentColor,
                   size: 30,
                 ),
                 onPressed: state.isPasswordPrefixActive

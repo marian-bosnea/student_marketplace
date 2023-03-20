@@ -16,7 +16,6 @@ class DetailedPostViewBloc extends Cubit<DetailedPostViewState> {
   final CheckIfFavoriteUsecase checkIfFavoriteUsecase;
   final GetDetailedPostUsecase getDetailedPostUsecase;
   final RemoveFromFavoritesUsecase removeFromFavoritesUsecase;
-  DetailedPostViewState _state = const DetailedPostViewState();
 
   DetailedPostViewBloc(
       {required this.addToFavoritesUsecase,
@@ -26,8 +25,7 @@ class DetailedPostViewBloc extends Cubit<DetailedPostViewState> {
       : super(const DetailedPostViewState());
 
   setSelectedImage(int index) {
-    _state = _state.copyWith(selectedImageIndex: index);
-    emit(_state);
+    emit(state.copyWith(selectedImageIndex: index));
   }
 
   Future<void> checkIfFavorite(int id) async {
@@ -37,36 +35,36 @@ class DetailedPostViewBloc extends Cubit<DetailedPostViewState> {
       return;
     } else {
       final isFavorite = (result as Right).value;
-      _state = _state.copyWith(isFavorite: isFavorite);
+      emit(state.copyWith(isFavorite: isFavorite));
     }
     emit(state);
   }
 
   Future<void> fetchDetailedPost(int id) async {
-    _state = _state.copyWith(status: PostsViewStatus.loading);
-    emit(_state);
+    emit(state.copyWith(status: PostsViewStatus.loading));
 
     final result = await getDetailedPostUsecase(IdParam(id: id));
 
     if (result is Left) {
-      _state = _state.copyWith(status: PostsViewStatus.fail);
+      emit(state.copyWith(status: PostsViewStatus.fail));
     } else {
       final post = (result as Right).value;
-      _state = _state.copyWith(post: post, status: PostsViewStatus.loaded);
+      emit(state.copyWith(post: post, status: PostsViewStatus.loaded));
     }
-    emit(_state);
+    emit(state);
+
+    checkIfFavorite(id);
   }
 
   Future<bool> onFavoritePressed(BuildContext context, int id) async {
     bool result = false;
-    if (_state.isFavorite) {
+    if (state.isFavorite) {
       await removeFromFavoritesUsecase(IdParam(id: id));
     } else {
       await addToFavoritesUsecase(IdParam(id: id));
       result = true;
     }
-    _state = _state.copyWith(isFavorite: !_state.isFavorite);
-    emit(_state);
+    emit(state.copyWith(isFavorite: !state.isFavorite));
 
     BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
 
@@ -74,6 +72,6 @@ class DetailedPostViewBloc extends Cubit<DetailedPostViewState> {
   }
 
   resetContext() {
-    _state = const DetailedPostViewState();
+    emit(const DetailedPostViewState());
   }
 }

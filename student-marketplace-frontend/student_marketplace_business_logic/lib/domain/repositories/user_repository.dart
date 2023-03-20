@@ -4,5 +4,7 @@ import '../../../core/error/failures.dart';
 import '../entities/user_entity.dart';
 
 abstract class UserRepository {
-  Future<Either<Failure, UserEntity>> getOwnUserProfile(String id);
+  Future<Either<Failure, UserEntity>> getOwnUserProfile(String token);
+
+  Future<Either<Failure, UserEntity>> getUserProfile(String token, int id);
 }

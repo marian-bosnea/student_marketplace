@@ -1,13 +1,17 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 
 import '../../../core/theme/colors.dart';
+import '../../detailed_post/detailed_post_view_page.dart';
 
 class FeaturedItem extends StatelessWidget {
   final SalePostEntity post;
-  final VoidCallback onTap;
-  const FeaturedItem({super.key, required this.post, required this.onTap});
+  const FeaturedItem({
+    super.key,
+    required this.post,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +19,7 @@ class FeaturedItem extends StatelessWidget {
       padding: const EdgeInsets.only(top: 10, bottom: 20, left: 10, right: 10),
       child: Material(
         elevation: 5,
-        borderRadius: const BorderRadius.all(Radius.circular(30)),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
         child: Container(
           padding: const EdgeInsets.all(20),
           // margin: const EdgeInsets.only(top: 10, bottom: 10),
@@ -29,6 +33,7 @@ class FeaturedItem extends StatelessWidget {
                 width: MediaQuery.of(context).size.width / 2,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       const Text(
                         'Most viewed',
@@ -46,19 +51,26 @@ class FeaturedItem extends StatelessWidget {
                         '${post.price} RON',
                         style: const TextStyle(fontSize: 20),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 30),
-                        width: 80,
-                        height: 40,
-                        child: PlatformElevatedButton(
-                          color: accentColor,
-                          padding: const EdgeInsets.all(5),
-                          onPressed: onTap,
-                          child: const Text(
-                            'View',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
+                      OpenContainer(
+                        transitionDuration: Duration(milliseconds: 500),
+                        openBuilder: (BuildContext context,
+                            void Function({Object? returnValue}) action) {
+                          return DetailedPostViewPage(postId: post.postId!);
+                        },
+                        closedBuilder:
+                            (BuildContext context, void Function() action) {
+                          return Container(
+                              width: 80,
+                              height: 40,
+                              decoration:
+                                  const BoxDecoration(color: accentColor),
+                              child: const Center(
+                                child: Text(
+                                  'View',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ));
+                        },
                       )
                     ]),
               ),

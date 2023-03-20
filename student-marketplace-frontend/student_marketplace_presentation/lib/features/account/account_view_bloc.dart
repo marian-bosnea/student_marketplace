@@ -4,31 +4,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/data/models/user_model.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/deauthenticate_usecase.dart';
-import 'package:student_marketplace_business_logic/domain/usecases/user/get_own_user_usecase.dart';
-import 'package:student_marketplace_presentation/features/user_profile/profile_view_state.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/user/get_user_usecase.dart';
 
 import '../../core/constants/enums.dart';
+import 'account_view_state.dart';
 
-class ProfileViewBloc extends Cubit<ProfileViewState> {
-  final GetOwnUserProfile getUserUsecase;
+class AccountViewBloc extends Cubit<AccountViewState> {
+  final GetUserProfile getUserUsecase;
   final DeauthenticateUsecase deauthenticateUsecase;
-  late ProfileViewState state = const ProfileViewState();
 
-  ProfileViewBloc(
+  AccountViewBloc(
       {required this.getUserUsecase, required this.deauthenticateUsecase})
-      : super(const ProfileViewState());
+      : super(const AccountViewState());
 
-  Future<void> fetchUserProfile() async {
+  Future<void> fetchUserProfile(int? id) async {
     emit(state.copyWith(status: ProfilePageStatus.loading));
-    final sharedPrefs = await SharedPreferences.getInstance();
-    final token = sharedPrefs.getString('authorizationToken');
 
-    if (token == null) {
-      emit(state.copyWith(status: ProfilePageStatus.initial));
-      return;
-    }
-
-    final result = await getUserUsecase(NoParams());
+    final result = await getUserUsecase(OptionalIdParam(id: id));
 
     if (result is Right) {
       final user = result.getOrElse(() => const UserModel());

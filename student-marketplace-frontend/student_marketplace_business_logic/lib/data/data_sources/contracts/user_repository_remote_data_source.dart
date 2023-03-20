@@ -5,4 +5,5 @@ import '../../../../core/error/failures.dart';
 
 abstract class UserRepositoryRemoteDataSource {
   Future<Either<Failure, UserEntity>> getOwnUserProfile(String token);
+  Future<Either<Failure, UserEntity>> getUserProfile(String token, int id);
 }

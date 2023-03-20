@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_state.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/posts_view/widgets/featured_item.dart';
@@ -13,15 +11,14 @@ import 'widgets/category_item.dart';
 
 class PostViewPage extends StatelessWidget {
   final _scrollController = ScrollController();
+
+  PostViewPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Material(
       color: primaryColor,
       child:
-          BlocConsumer<PostViewBloc, PostViewState>(listener: (context, state) {
-        if (state.status == PostsViewStatus.loaded) {}
-      }, builder: (context, state) {
-        // if (state.status == PostsViewStatus.loaded) {
+          BlocBuilder<PostViewBloc, PostViewState>(builder: (context, state) {
         return RefreshIndicator(
           color: accentColor,
           backgroundColor: primaryColor,
@@ -34,6 +31,8 @@ class PostViewPage extends StatelessWidget {
             }
           },
           child: CustomScrollView(
+            key: const PageStorageKey(0),
+            controller: _scrollController,
             slivers: state.status == PostsViewStatus.loaded
                 ? _buildPostsLoadedWidgets(context, state)
                 : [
@@ -114,13 +113,8 @@ class PostViewPage extends StatelessWidget {
                 }),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.25,
-            child: FeaturedItem(
-              post: state.featuredPost!,
-              onTap: () => BlocProvider.of<PostViewBloc>(context)
-                  .goToDetailedPostPage(state.featuredPost!.postId!, context),
-            ),
-          ),
+              height: MediaQuery.of(context).size.height * 0.25,
+              child: FeaturedItem(post: state.featuredPost!)),
         ]),
       ),
       SliverPadding(
@@ -132,10 +126,6 @@ class PostViewPage extends StatelessWidget {
             final post = state.posts.elementAt(index);
             return PostItem(
               post: post,
-              onTap: () {
-                BlocProvider.of<PostViewBloc>(context)
-                    .goToDetailedPostPage(post.postId!, context);
-              },
             );
           },
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(

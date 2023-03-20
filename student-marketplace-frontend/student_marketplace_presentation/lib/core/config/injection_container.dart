@@ -52,7 +52,7 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_favorite_posts_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upload_post_usecase.dart';
-import 'package:student_marketplace_business_logic/domain/usecases/user/get_own_user_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/user/get_user_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/sign_up_usecase.dart';
 
 import '../../features/add_post/add_post_view_bloc.dart';
@@ -64,7 +64,7 @@ import '../../features/login/login_view_bloc.dart';
 import '../../features/posts_view/posts_view_bloc.dart';
 import '../../features/register/register_view_bloc.dart';
 import '../../features/search/search_view_bloc.dart';
-import '../../features/user_profile/profile_view_bloc.dart';
+import '../../features/account/account_view_bloc.dart';
 
 /// Service locator
 ///
@@ -92,7 +92,7 @@ Future<void> init() async {
 
   sl.registerFactory(() => HomeViewBloc(getOwnUserProfileUsecase: sl.call()));
 
-  sl.registerFactory(() => ProfileViewBloc(
+  sl.registerFactory(() => AccountViewBloc(
       getUserUsecase: sl.call(), deauthenticateUsecase: sl.call()));
 
   sl.registerFactory(() => PostViewBloc(
@@ -143,7 +143,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SignUpUsecase(operations: sl.call()));
 
   sl.registerLazySingleton(() =>
-      GetOwnUserProfile(userRepository: sl.call(), authRepository: sl.call()));
+      GetUserProfile(userRepository: sl.call(), authRepository: sl.call()));
 
   sl.registerLazySingleton(() =>
       GetAllPostsUsecase(postRepository: sl.call(), authRepository: sl.call()));

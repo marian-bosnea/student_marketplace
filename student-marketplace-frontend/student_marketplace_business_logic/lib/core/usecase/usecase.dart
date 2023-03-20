@@ -18,6 +18,15 @@ class NoParams extends Equatable {
   List<Object?> get props => [];
 }
 
+class OptionalIdParam extends Equatable {
+  final int? id;
+
+  OptionalIdParam({this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class BoolParam extends Equatable {
   final bool value;
 

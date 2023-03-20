@@ -12,7 +12,7 @@ import 'features/login/login_view_bloc.dart';
 import 'features/add_post/add_post_view_bloc.dart';
 import 'features/posts_view/posts_view_bloc.dart';
 import 'features/search/search_view_bloc.dart';
-import 'features/user_profile/profile_view_bloc.dart';
+import 'features/account/account_view_bloc.dart';
 import 'features/register/register_view_bloc.dart';
 
 import 'core/config/injection_container.dart' as di;
@@ -35,13 +35,9 @@ class StudentMarketPlace extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<AuthBloc>()..onAppStarted(context)),
         BlocProvider(create: (_) => di.sl<LoginViewBloc>()),
         BlocProvider(create: (_) => di.sl<RegisterViewBloc>()),
-        BlocProvider(create: (_) => di.sl<ProfileViewBloc>()),
-        BlocProvider(create: (_) => di.sl<HomeViewBloc>()),
         BlocProvider(create: (_) => di.sl<PostViewBloc>()),
         BlocProvider(create: (_) => di.sl<AddPostViewBloc>()),
-        BlocProvider(create: (_) => di.sl<DetailedPostViewBloc>()),
         BlocProvider(create: (_) => di.sl<SearchViewBloc>()),
-        BlocProvider(create: (_) => di.sl<FavoritesViewBloc>())
       ],
       child: MaterialApp(
         title: 'Student Marketplace',

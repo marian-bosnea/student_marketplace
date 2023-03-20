@@ -2,28 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:like_button/like_button.dart';
+import 'package:animations/animations.dart';
+
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
+import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/theme/colors.dart';
+import '../detailed_post/detailed_post_view_bloc.dart';
 
 class PostItem extends StatelessWidget {
   final SalePostEntity post;
-  final VoidCallback onTap;
   late bool _isFavorite;
 
-  PostItem({super.key, required this.post, required this.onTap}) {
+  PostItem({
+    super.key,
+    required this.post,
+  }) {
     _isFavorite = post.isFavorite!;
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Material(
-        elevation: 1.0,
-        borderRadius: const BorderRadius.all(Radius.circular(30)),
-        child: Container(
+    return OpenContainer(
+      transitionType: ContainerTransitionType.fadeThrough,
+      transitionDuration: const Duration(milliseconds: 500),
+      openShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+      closedShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+      closedBuilder: (BuildContext context, void Function() action) {
+        return Container(
           decoration: BoxDecoration(
               color: secondaryColor,
               borderRadius: const BorderRadius.all(Radius.circular(30))),
@@ -39,28 +48,28 @@ class PostItem extends StatelessWidget {
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.end,
                   children: [
-                    // if (post.isOwn!)
-                    //   PlatformText(
-                    //     'Posted by you',
-                    //     style: TextStyle(color: accentTextcolor),
-                    //   ),
-                    // if (!post.isOwn!)
-                    LikeButton(
-                      isLiked: post.isFavorite,
-                      onTap: (isLiked) async {
-                        final result =
-                            await BlocProvider.of<PostViewBloc>(context)
-                                .onFavoriteButtonPressed(
-                                    context, post, isLiked);
-
-                        return result;
-                      },
-                    )
+                    if (post.isOwn!)
+                      PlatformText(
+                        'Posted by you',
+                        style: TextStyle(color: accentTextcolor),
+                      ),
+                    if (!post.isOwn!)
+                      LikeButton(
+                        isLiked: _isFavorite,
+                        onTap: (isLiked) async {
+                          final result =
+                              await BlocProvider.of<PostViewBloc>(context)
+                                  .onFavoriteButtonPressed(
+                                      context, post, _isFavorite);
+                          _isFavorite = result;
+                          return result;
+                        },
+                      )
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
+              SizedBox(
+                height: 180,
                 child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
                     child: Image.memory(post.images.first)),
@@ -83,8 +92,16 @@ class PostItem extends StatelessWidget {
               ])
             ],
           ),
-        ),
-      ),
+        );
+      },
+      openBuilder:
+          (BuildContext context, void Function({Object? returnValue}) action) {
+        return DetailedPostViewPage(
+          postId: post.postId!,
+        );
+      },
     );
   }
+
+  void _fetchDetailedPost(BuildContext context) async {}
 }

@@ -77,12 +77,6 @@ class PostViewBloc extends Cubit<PostViewState> {
     emit(state);
   }
 
-  Future<void> goToDetailedPostPage(int id, BuildContext context) async {
-    BlocProvider.of<DetailedPostViewBloc>(context).setSelectedImage(0);
-
-    Navigator.of(context).pushNamed('/detailed_post', arguments: id);
-  }
-
   Future<void> fetchAllPosts() async {
     emit(state.copyWith(status: PostsViewStatus.loading));
 

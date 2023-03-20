@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/data/models/user_model.dart';
-import 'package:student_marketplace_business_logic/domain/usecases/user/get_own_user_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/user/get_user_usecase.dart';
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
 
 import '../../core/constants/enums.dart';
@@ -11,7 +11,7 @@ import '../posts_view/posts_view_bloc.dart';
 import 'home_view_state.dart';
 
 class HomeViewBloc extends Cubit<HomePageState> {
-  final GetOwnUserProfile getOwnUserProfileUsecase;
+  final GetUserProfile getOwnUserProfileUsecase;
 
   HomeViewBloc({required this.getOwnUserProfileUsecase})
       : super(const HomePageState());
@@ -41,7 +41,7 @@ class HomeViewBloc extends Cubit<HomePageState> {
   }
 
   Future<void> fetchProfilePhoto() async {
-    final result = await getOwnUserProfileUsecase(NoParams());
+    final result = await getOwnUserProfileUsecase(OptionalIdParam());
 
     if (result is Right) {
       final user = result.getOrElse(() => const UserModel());
@@ -71,14 +71,6 @@ class HomeViewBloc extends Cubit<HomePageState> {
     }
   }
 
-  void goToProfile(BuildContext context) {
-    if (state.shouldRefreshPosts) {
-      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
-    }
-
-    Navigator.of(context).pushNamed(PageNames.userProfilePage);
-  }
-
   void goToFavorites(BuildContext context) {
     if (state.shouldRefreshPosts) {
       BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
@@ -95,9 +87,8 @@ class HomeViewBloc extends Cubit<HomePageState> {
       BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
     }
 
-    if (state.status != HomePageStatus.settings) {
-      emit(state.copyWith(status: HomePageStatus.settings, title: 'Settings'));
-      emit(state);
+    if (state.status != HomePageStatus.profile) {
+      emit(state.copyWith(status: HomePageStatus.profile, title: 'Profile'));
     }
   }
 }

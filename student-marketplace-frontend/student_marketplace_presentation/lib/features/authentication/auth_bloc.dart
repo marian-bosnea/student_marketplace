@@ -58,6 +58,7 @@ class AuthBloc extends Cubit<AuthState> {
       }
 
       final session = (result as Right).value;
+
       emit(state.copyWith(
           token: session.token, status: AuthStatus.authenticated));
     } catch (_) {
@@ -67,11 +68,12 @@ class AuthBloc extends Cubit<AuthState> {
 
   Future<void> signOutUser(BuildContext context) async {
     try {
-      Navigator.of(context).popAndPushNamed('/');
       await deauthenticateUsecase(NoParams());
       emit(state.copyWith(status: AuthStatus.unauthenticated));
+
+      Navigator.of(context).popAndPushNamed('/');
     } catch (e) {
-      emit(state.copyWith(status: AuthStatus.unauthenticated));
+      //   emit(state.copyWith(status: AuthStatus.unauthenticated));
     }
   }
 }

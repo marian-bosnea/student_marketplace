@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
@@ -115,15 +116,16 @@ class HttpInterface {
     }
   }
 
-  Future<Uint8List> getUserAvatar(String token) async {
+  Future<Uint8List> getUserAvatar(String token, int? id) async {
+    id ??= -1;
+
     final requestUrl = "$baseUrl/user/get/avatar_image";
-    final response = await http.get(
-      Uri.parse(requestUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $token'
-      },
-    );
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{'userId': id}));
 
     return response.bodyBytes;
   }
@@ -214,6 +216,7 @@ class HttpInterface {
         viewsCount: resultJson['views_count'],
         ownerId: resultJson['owner_id'],
         ownerName: resultJson['owner_name'],
+        isOwn: resultJson['is_own'],
         images: images);
   }
 
@@ -243,8 +246,6 @@ class HttpInterface {
           },
           body: jsonEncode(
               <String, String>{'postId': map['id'].toString(), 'index': '0'}));
-
-      // print(imageResponse.statusCode);
 
       salePosts.add(SalePostModel(
           postId: map['id'],
@@ -298,6 +299,43 @@ class HttpInterface {
     return salePosts;
   }
 
+  Future<List<SalePostModel>?> fetchAllPostsByOwner(
+      {required String token, required int id}) async {
+    final requestUrl = "$baseUrl/sale-object/get/owner";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{'ownerId': id}));
+
+    if (response.statusCode != getSuccessCode) return null;
+    final bodyJson = json.decode(response.body) as Map<String, dynamic>;
+    final resultJson = bodyJson['results'];
+    List<SalePostModel> salePosts = [];
+
+    for (var json in resultJson) {
+      final map = json as Map<String, dynamic>;
+
+      final imageRequestUrl = "$baseUrl/sale-object/get/image";
+      final imageResponse = await http.post(Uri.parse(imageRequestUrl),
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer $token'
+          },
+          body: jsonEncode(
+              <String, String>{'postId': map['id'].toString(), 'index': '0'}));
+
+      salePosts.add(SalePostModel(
+          postId: map['id'],
+          title: map['title'],
+          price: map['price'].toString(),
+          viewsCount: map['views_count'] as int,
+          images: [imageResponse.bodyBytes]));
+    }
+    return salePosts;
+  }
+
   Future<List<SalePostModel>?> fetchFavoritePosts(String token) async {
     final requestUrl = "$baseUrl/sale-object/favorites/read-all";
     final response = await http.post(
@@ -332,22 +370,26 @@ class HttpInterface {
           postId: map['id'],
           title: map['title'],
           price: map['price'].toString(),
+          ownerName: map['owner_name'].toString(),
+          categoryName: map['category_name'].toString(),
+          ownerId: map['owner_id'] as int,
           viewsCount: map['views_count'] as int,
           images: [imageResponse.bodyBytes]));
     }
     return salePosts;
   }
 
-  Future<UserModel?> fetchOwnUserProfile(String token) async {
+  Future<UserModel?> fetchUserProfile(String token, int? id) async {
     final requestUrl = "$baseUrl/user/get/profile";
 
-    final response = await http.get(
-      Uri.parse(requestUrl),
-      headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $token'
-      },
-    );
+    id ??= -1;
+
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{'userId': id}));
 
     if (response.statusCode != getSuccessCode) return null;
     final resultJson = json.decode(response.body) as Map<String, dynamic>;
