@@ -3,16 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'core/config/routes.dart';
-import 'core/theme/colors.dart';
-import 'features/detailed_post/detailed_post_view_bloc.dart';
-import 'features/favorites/favorites_view_bloc.dart';
-import 'features/home/home_view_bloc.dart';
 import 'features/authentication/auth_bloc.dart';
 import 'features/login/login_view_bloc.dart';
 import 'features/add_post/add_post_view_bloc.dart';
 import 'features/posts_view/posts_view_bloc.dart';
 import 'features/search/search_view_bloc.dart';
-import 'features/account/account_view_bloc.dart';
 import 'features/register/register_view_bloc.dart';
 
 import 'core/config/injection_container.dart' as di;

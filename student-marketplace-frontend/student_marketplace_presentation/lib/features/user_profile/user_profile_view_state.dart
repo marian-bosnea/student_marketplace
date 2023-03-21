@@ -2,6 +2,7 @@
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
+import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 
 import '../../core/constants/enums.dart';
 
@@ -14,6 +15,8 @@ class UserProfileViewState extends Equatable {
   final Uint8List? avatarBytes;
   final ProfilePageStatus status;
 
+  final List<SalePostEntity> posts;
+
   const UserProfileViewState(
       {this.firstName = '',
       this.lastName = '',
@@ -21,6 +24,7 @@ class UserProfileViewState extends Equatable {
       this.emailAdress = '',
       this.avatarBytes,
       this.facultyName = '',
+      this.posts = const [],
       this.status = ProfilePageStatus.initial});
 
   UserProfileViewState copyWith(
@@ -30,6 +34,7 @@ class UserProfileViewState extends Equatable {
           String? emailAdress,
           String? facultyName,
           Uint8List? avatarBytes,
+          List<SalePostEntity>? posts,
           ProfilePageStatus? status}) =>
       UserProfileViewState(
           firstName: firstName ?? this.firstName,
@@ -38,9 +43,17 @@ class UserProfileViewState extends Equatable {
           emailAdress: emailAdress ?? this.emailAdress,
           facultyName: facultyName ?? this.facultyName,
           avatarBytes: avatarBytes ?? this.avatarBytes,
+          posts: posts ?? this.posts,
           status: status ?? this.status);
 
   @override
-  List<Object?> get props =>
-      [firstName, lastName, secondLastName, emailAdress, facultyName, status];
+  List<Object?> get props => [
+        firstName,
+        lastName,
+        secondLastName,
+        emailAdress,
+        facultyName,
+        status,
+        posts
+      ];
 }

@@ -19,13 +19,8 @@ class GetUserProfile implements Usecase<UserEntity, OptionalIdParam> {
 
     final session = (resultSession as Right).value;
 
-    Either<Failure, UserEntity> result;
-
-    if (params.id == null) {
-      result = await userRepository.getOwnUserProfile(session.token);
-    } else {
-      result = await userRepository.getUserProfile(session.token, params.id!);
-    }
+    final result =
+        await userRepository.getUserProfile(session.token, params.id);
 
     if (result is Left) return Left(NetworkFailure());
     final posts = (result as Right).value;

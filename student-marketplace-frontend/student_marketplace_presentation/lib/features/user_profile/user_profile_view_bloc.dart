@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/data/models/user_model.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_by_owner_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/get_user_usecase.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_state.dart';
 
@@ -9,8 +10,10 @@ import '../../core/constants/enums.dart';
 
 class UserProfileViewBloc extends Cubit<UserProfileViewState> {
   final GetUserProfile getUserUsecase;
+  final GetAllPostsByOwnerUsecase getAllPostsByOwnerUsecase;
 
-  UserProfileViewBloc({required this.getUserUsecase})
+  UserProfileViewBloc(
+      {required this.getAllPostsByOwnerUsecase, required this.getUserUsecase})
       : super(const UserProfileViewState());
 
   Future<void> fetchUserProfile(int? id) async {
@@ -29,5 +32,14 @@ class UserProfileViewBloc extends Cubit<UserProfileViewState> {
           facultyName: user.facultyName,
           status: ProfilePageStatus.loaded));
     } else {}
+
+    final fetchPostsResult =
+        await getAllPostsByOwnerUsecase(OptionalIdParam(id: id));
+
+    if (fetchPostsResult is Left) return;
+
+    final posts = (fetchPostsResult as Right).value;
+
+    emit(state.copyWith(posts: posts));
   }
 }

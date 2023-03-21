@@ -14,6 +14,7 @@ abstract class SalePostRepository {
       String token, String query);
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
       String token, int categoryId);
+
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
-      String token, int ownerId);
+      String token, int? ownerId);
 }

@@ -5,6 +5,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_page.dart';
 import '../../core/theme/colors.dart';
 
 import '../authentication/auth_bloc.dart';
@@ -98,7 +99,9 @@ class AccountViewPage extends StatelessWidget {
                           Icons.sell,
                           color: Colors.white,
                         )),
-                        onPressed: (context) {},
+                        onPressed: (context) => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => OwnPostsViewPage())),
                         title: const Text('My posts'),
                       ),
                       SettingsTile.navigation(

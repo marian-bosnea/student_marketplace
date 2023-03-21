@@ -17,6 +17,7 @@ class HttpInterface {
   final port = "3000";
 
   final baseUrl = "http://192.168.0.106:3000";
+  //final baseUrl = "http://bore.pub:33289";
   //final baseUrl = ' https://7776-212-93-144-202.eu.ngrok.io';
   final int getSuccessCode = 200;
   final int postSuccessCode = 201;
@@ -300,8 +301,11 @@ class HttpInterface {
   }
 
   Future<List<SalePostModel>?> fetchAllPostsByOwner(
-      {required String token, required int id}) async {
+      {required String token, required int? id}) async {
     final requestUrl = "$baseUrl/sale-object/get/owner";
+
+    id ??= -1;
+
     final response = await http.post(Uri.parse(requestUrl),
         headers: {
           'Content-Type': 'application/json',
@@ -310,8 +314,10 @@ class HttpInterface {
         body: jsonEncode(<String, dynamic>{'ownerId': id}));
 
     if (response.statusCode != getSuccessCode) return null;
+
     final bodyJson = json.decode(response.body) as Map<String, dynamic>;
     final resultJson = bodyJson['results'];
+
     List<SalePostModel> salePosts = [];
 
     for (var json in resultJson) {
@@ -331,6 +337,8 @@ class HttpInterface {
           title: map['title'],
           price: map['price'].toString(),
           viewsCount: map['views_count'] as int,
+          postingDate: map['date'],
+          categoryName: map['category_name'],
           images: [imageResponse.bodyBytes]));
     }
     return salePosts;

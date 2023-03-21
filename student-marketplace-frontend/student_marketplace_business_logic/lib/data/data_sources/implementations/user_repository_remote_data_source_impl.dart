@@ -30,7 +30,7 @@ class UserRepositortRemoteDataSourceImpl
 
   @override
   Future<Either<Failure, UserEntity>> getUserProfile(
-      String token, int id) async {
+      String token, int? id) async {
     UserModel? result = await http.fetchUserProfile(token, id);
 
     final avatarImageBytes = await http.getUserAvatar(token, id);

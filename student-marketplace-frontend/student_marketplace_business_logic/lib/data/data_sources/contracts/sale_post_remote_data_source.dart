@@ -14,7 +14,7 @@ abstract class SalePostRemoteDataSource {
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
       String token, int categoryId);
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
-      String token, int ownerId);
+      String token, int? ownerId);
 
   Future<Either<Failure, bool>> addToFavorites(int postId, String token);
   Future<Either<Failure, bool>> removeFromFavorites(int postId, String token);

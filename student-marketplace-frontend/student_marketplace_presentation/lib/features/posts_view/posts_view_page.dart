@@ -10,8 +10,6 @@ import '../../core/theme/colors.dart';
 import 'widgets/category_item.dart';
 
 class PostViewPage extends StatelessWidget {
-  final _scrollController = ScrollController();
-
   PostViewPage({super.key});
   @override
   Widget build(BuildContext context) {
@@ -32,7 +30,7 @@ class PostViewPage extends StatelessWidget {
           },
           child: CustomScrollView(
             key: const PageStorageKey(0),
-            controller: _scrollController,
+            // controller: _scrollController,
             slivers: state.status == PostsViewStatus.loaded
                 ? _buildPostsLoadedWidgets(context, state)
                 : [

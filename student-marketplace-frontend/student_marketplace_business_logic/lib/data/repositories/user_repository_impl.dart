@@ -10,11 +10,7 @@ class UserRepositoryImpl implements UserRepository {
   const UserRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, UserEntity>> getOwnUserProfile(String id) async =>
-      remoteDataSource.getOwnUserProfile(id);
-
-  @override
   Future<Either<Failure, UserEntity>> getUserProfile(
-          String token, int id) async =>
+          String token, int? id) async =>
       remoteDataSource.getUserProfile(token, id);
 }

@@ -21,7 +21,7 @@ class SalePostRepositoryImpl implements SalePostRepository {
 
   @override
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByOwner(
-          String token, int ownerId) async =>
+          String token, int? ownerId) async =>
       remoteDataSource.getAllPostsByOwner(token, ownerId);
 
   @override

@@ -328,27 +328,29 @@ class DetailedPostViewPage extends StatelessWidget {
                               style: const TextStyle(
                                   fontSize: 24, fontWeight: FontWeight.w700),
                             ),
-                            GestureDetector(
-                                onTap: () => Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            UserProfileViewPage(
-                                                userId: state.post!.ownerId!))),
-                                child: Container(
-                                  height: 40,
-                                  width: 100,
-                                  decoration: const BoxDecoration(
-                                      color: primaryColor,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5))),
-                                  child: const Center(
-                                    child: Text('👤Profile',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color: accentColor,
-                                            fontWeight: FontWeight.w600)),
-                                  ),
-                                )),
+                            if (!state.post!.isOwn!)
+                              GestureDetector(
+                                  onTap: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              UserProfileViewPage(
+                                                  userId:
+                                                      state.post!.ownerId!))),
+                                  child: Container(
+                                    height: 40,
+                                    width: 100,
+                                    decoration: const BoxDecoration(
+                                        color: primaryColor,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: const Center(
+                                      child: Text('👤Profile',
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: accentColor,
+                                              fontWeight: FontWeight.w600)),
+                                    ),
+                                  )),
                             if (!state.post!.isOwn!)
                               Container(
                                 width: 120,
