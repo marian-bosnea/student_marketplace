@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_state.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/posts_view/widgets/featured_item.dart';
@@ -10,7 +11,7 @@ import '../../core/theme/colors.dart';
 import 'widgets/category_item.dart';
 
 class PostViewPage extends StatelessWidget {
-  PostViewPage({super.key});
+  const PostViewPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -111,7 +112,7 @@ class PostViewPage extends StatelessWidget {
                 }),
           ),
           SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
+              height: ScreenUtil().setHeight(500),
               child: FeaturedItem(post: state.featuredPost!)),
         ]),
       ),

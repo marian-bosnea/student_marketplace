@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
@@ -29,15 +30,11 @@ class AccountViewPage extends StatelessWidget {
 
   Widget _getBodyWidget(BuildContext context, AccountViewState state) {
     return Material(
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/profile_background.png'),
-                fit: BoxFit.cover)),
-        padding: const EdgeInsets.all(10),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Column(
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        Container(
+          padding: EdgeInsets.all(10),
+          color: accentColor,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Row(
@@ -58,109 +55,113 @@ class AccountViewPage extends StatelessWidget {
                 children: [
                   PlatformText(
                     '${state.firstName} ',
-                    style: const TextStyle(fontSize: 20, color: primaryColor),
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(50), color: Colors.white),
                   ),
                   PlatformText('${state.lastName} ',
-                      style:
-                          const TextStyle(fontSize: 20, color: primaryColor)),
+                      style: TextStyle(
+                          fontSize: ScreenUtil().setSp(50),
+                          color: Colors.white)),
                   if (state.secondLastName != 'null')
                     PlatformText(state.secondLastName,
-                        style:
-                            const TextStyle(fontSize: 20, color: primaryColor)),
+                        style: TextStyle(
+                            fontSize: ScreenUtil().setSp(50),
+                            color: Colors.white)),
                 ],
               ),
               PlatformText(state.emailAdress,
-                  style: const TextStyle(fontSize: 20, color: primaryColor)),
-              PlatformText(
-                state.facultyName,
-              ),
+                  style: TextStyle(
+                      fontSize: ScreenUtil().setSp(50), color: Colors.white)),
+              PlatformText(state.facultyName,
+                  style: TextStyle(
+                      fontSize: ScreenUtil().setSp(50), color: Colors.white)),
             ],
           ),
-          Align(
-            heightFactor: 2,
-            child: Container(
-              margin: const EdgeInsets.only(top: 20),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: SettingsList(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                contentPadding: EdgeInsets.zero,
-                lightTheme: const SettingsThemeData(
-                    settingsListBackground: Colors.white),
-                sections: [
-                  SettingsSection(
-                    margin: EdgeInsetsDirectional.zero,
-                    title: const Text('Posts'),
-                    tiles: <SettingsTile>[
-                      SettingsTile.navigation(
-                        leading: const LeadingIcon(
-                            icon: Icon(
-                          Icons.sell,
-                          color: Colors.white,
-                        )),
-                        onPressed: (context) => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => OwnPostsViewPage())),
-                        title: const Text('My posts'),
-                      ),
-                      SettingsTile.navigation(
-                        leading: const LeadingIcon(
-                            color: Colors.red,
-                            icon: Icon(
-                              Icons.favorite,
-                              color: Colors.white,
-                            )),
-                        onPressed: (context) {
-                          BlocProvider.of<HomeViewBloc>(context)
-                              .goToFavorites(context);
-                        },
-                        title: const Text('Favorites'),
-                      ),
-                    ],
-                  ),
-                  SettingsSection(
-                    margin: EdgeInsetsDirectional.zero,
-                    title: const Text('Account'),
-                    tiles: <SettingsTile>[
-                      SettingsTile.navigation(
-                        leading: const LeadingIcon(
-                            color: Colors.red,
-                            icon: Icon(
-                              CupertinoIcons.power,
-                              color: Colors.white,
-                            )),
-                        onPressed: (context) =>
-                            BlocProvider.of<AuthBloc>(context)
-                                .signOutUser(context),
-                        title: const Text('Sign Out'),
-                      ),
-                    ],
-                  ),
-                ],
+        ),
+        Container(
+          child: Column(children: [
+            ProfileMenuItem(
+              icon: const Icon(
+                Icons.price_change,
+                color: Colors.white,
               ),
+              color: accentColor,
+              label: 'My Posts',
+              onTap: () => Navigator.of(context).pushNamed('/own_posts'),
             ),
-          ),
-        ]),
-      ),
+            ProfileMenuItem(
+              icon: const Icon(
+                Icons.favorite,
+                color: Colors.white,
+              ),
+              color: Colors.red,
+              label: 'Favorites',
+              onTap: () =>
+                  BlocProvider.of<HomeViewBloc>(context).goToFavorites(context),
+            )
+          ]),
+        )
+      ]),
     );
   }
 }
 
-class LeadingIcon extends StatelessWidget {
+class ProfileMenuItem extends StatelessWidget {
   final Icon icon;
   final Color color;
-  const LeadingIcon({super.key, required this.icon, this.color = accentColor});
+  final String label;
+  final VoidCallback onTap;
+  final bool isLast;
+
+  const ProfileMenuItem(
+      {super.key,
+      required this.icon,
+      required this.color,
+      required this.label,
+      required this.onTap,
+      this.isLast = false});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 30,
-      height: 30,
-      decoration: BoxDecoration(
-          color: color,
-          borderRadius: const BorderRadius.all(Radius.circular(5))),
-      child: icon,
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            Padding(
+              padding:
+                  const EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 10),
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                            color: color,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(5))),
+                        child: icon,
+                      ),
+                      Text(label),
+                    ],
+                  ),
+                  const Icon(CupertinoIcons.arrow_right)
+                ],
+              ),
+            ),
+            if (!isLast)
+              const Divider(
+                indent: 50,
+                thickness: 1,
+              )
+          ],
+        ),
+      ),
     );
   }
 }

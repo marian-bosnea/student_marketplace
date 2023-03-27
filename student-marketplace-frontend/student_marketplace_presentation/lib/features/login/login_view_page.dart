@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/config/on_generate_route.dart';
 import '../../core/theme/colors.dart';
 import '../authentication/auth_bloc.dart';
@@ -60,10 +61,10 @@ class LoginViewPage extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 500),
-            width: MediaQuery.of(context).size.width * 0.75,
+            width: ScreenUtil().setWidth(700),
             height: state.status == LoginPageStatus.emailSucces
-                ? MediaQuery.of(context).size.height * 0.3
-                : MediaQuery.of(context).size.height * 0.25,
+                ? ScreenUtil().setHeight(650)
+                : ScreenUtil().setHeight(520),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: secondaryColor,
@@ -73,11 +74,13 @@ class LoginViewPage extends StatelessWidget {
               child:
                   Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 5, bottom: 20),
-                  child: const Text(
+                  margin: const EdgeInsets.only(top: 5, bottom: 10),
+                  child: Text(
                     "Let's log you in",
                     textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(50),
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
                 PlatformTextField(
@@ -114,45 +117,47 @@ class LoginViewPage extends StatelessWidget {
                         _passwordCupertinoTextFieldData(context, state),
                     controller: _passwordTextfielController,
                   ),
-                Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  height: 30,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 25,
-                        child: PlatformIconButton(
-                            padding: EdgeInsets.zero,
-                            onPressed: () =>
-                                BlocProvider.of<LoginViewBloc>(context)
-                                    .changeKeepSignedIn(),
-                            icon: Icon(
-                              state.keepSignedIn
-                                  ? Icons.check_box
-                                  : Icons.check_box_outline_blank,
-                              color: state.keepSignedIn
-                                  ? accentColor
-                                  : Colors.black12,
-                            )),
-                      ),
-                      const Text("Keep me signed in",
-                          style: TextStyle(fontSize: 16))
-                    ],
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: ScreenUtil().setWidth(50),
+                      child: PlatformIconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () =>
+                              BlocProvider.of<LoginViewBloc>(context)
+                                  .changeKeepSignedIn(),
+                          icon: Icon(
+                            state.keepSignedIn
+                                ? Icons.check_box
+                                : Icons.check_box_outline_blank,
+                            color: state.keepSignedIn
+                                ? accentColor
+                                : Colors.black12,
+                          )),
+                    ),
+                    Text("Keep me signed in",
+                        style: TextStyle(
+                          fontSize: ScreenUtil().setSp(40),
+                        ))
+                  ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Don't have an account?",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: ScreenUtil().setSp(40)),
                     ),
-                    PlatformTextButton(
-                      onPressed: () => Navigator.of(context)
-                          .pushNamed(PageNames.registerPage),
-                      child: const Text("Register",
-                          style: TextStyle(fontSize: 16, color: accentColor)),
+                    SizedBox(
+                      child: PlatformTextButton(
+                        onPressed: () => Navigator.of(context)
+                            .pushNamed(PageNames.registerPage),
+                        child: Text("Register",
+                            style: TextStyle(
+                                fontSize: ScreenUtil().setSp(40),
+                                color: accentColor)),
+                      ),
                     )
                   ],
                 ),

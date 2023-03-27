@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 
 import '../../core/theme/colors.dart';
@@ -14,7 +15,7 @@ class FavoriteListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(10),
-      height: 150,
+      height: ScreenUtil().setHeight(400),
       child: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
         transitionDuration: const Duration(milliseconds: 500),
@@ -46,29 +47,37 @@ class FavoriteListItem extends StatelessWidget {
                       children: [
                         Text(
                           post.title,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              fontSize: ScreenUtil().setSp(50),
+                              fontWeight: FontWeight.w600),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(top: 10, bottom: 10),
-                          height: 30,
-                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(top: 5, bottom: 5),
+                          height: ScreenUtil().setHeight(80),
+                          padding: const EdgeInsets.all(2),
                           decoration: const BoxDecoration(
                               color: primaryColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
-                          child: Text(post.categoryName!),
+                          child: Text(
+                            post.categoryName!,
+                            style: TextStyle(fontSize: ScreenUtil().setSp(30)),
+                          ),
                         ),
                         Text(
                           '${post.price} RON',
-                          style:
-                              const TextStyle(fontSize: 20, color: accentColor),
+                          style: TextStyle(
+                              fontSize: ScreenUtil().setSp(50),
+                              color: accentColor),
                         ),
                         Container(
-                            margin: const EdgeInsets.only(top: 10),
+                            margin: const EdgeInsets.only(top: 5),
                             child: Text(
                               "Posted by ${post.ownerName}",
-                              style: TextStyle(color: Colors.black38),
+                              style: TextStyle(
+                                color: Colors.black38,
+                                fontSize: ScreenUtil().setSp(40),
+                              ),
                             )),
                       ]),
                 ),

@@ -26,6 +26,7 @@ class AuthBloc extends Cubit<AuthState> {
 
     if (eitherSession is Left) {
       emit(state.copyWith(status: AuthStatus.unauthenticated));
+      return;
     }
 
     final session = (eitherSession as Right).value;

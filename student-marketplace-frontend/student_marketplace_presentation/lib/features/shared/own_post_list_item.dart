@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 
 import '../../core/theme/colors.dart';
@@ -13,8 +14,8 @@ class OwnPostListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(10),
-      height: 150,
+      margin: const EdgeInsets.all(5),
+      height: ScreenUtil().setHeight(400),
       child: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
         transitionDuration: const Duration(milliseconds: 500),
@@ -26,8 +27,6 @@ class OwnPostListItem extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.all(10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   child: SizedBox(
@@ -39,7 +38,6 @@ class OwnPostListItem extends StatelessWidget {
                 ),
                 Container(
                   margin: const EdgeInsets.only(left: 10),
-                  width: MediaQuery.of(context).size.width * 0.4,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +57,7 @@ class OwnPostListItem extends StatelessWidget {
                                   BorderRadius.all(Radius.circular(5))),
                           child: Text(
                             post.categoryName!,
-                            style: const TextStyle(fontSize: 14),
+                            style: TextStyle(fontSize: ScreenUtil().setSp(30)),
                           ),
                         ),
                         Text(
@@ -78,26 +76,21 @@ class OwnPostListItem extends StatelessWidget {
                               style: const TextStyle(color: Colors.black45),
                             ),
                           ],
-                        )
+                        ),
+                        Row(
+                          children: [
+                            const Text(
+                              'Views: ',
+                              style: TextStyle(fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              post.viewsCount!.toString(),
+                              style: const TextStyle(color: Colors.black45),
+                            ),
+                          ],
+                        ),
                       ]),
                 ),
-                SizedBox(
-                  //width: 30,
-                  child: Center(
-                    child: Row(
-                      children: [
-                        const Text(
-                          'Views: ',
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        Text(
-                          post.viewsCount!.toString(),
-                          style: const TextStyle(color: Colors.black45),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
               ],
             ),
           );

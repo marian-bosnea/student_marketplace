@@ -16,8 +16,8 @@ class HttpInterface {
   final ip = "192.168.0.105";
   final port = "3000";
 
-  final baseUrl = "http://192.168.0.106:3000";
-  //final baseUrl = "http://bore.pub:33289";
+  final baseUrl = "http://192.168.0.109:3000";
+  //final baseUrl = "http://bore.pub:35701";
   //final baseUrl = ' https://7776-212-93-144-202.eu.ngrok.io';
   final int getSuccessCode = 200;
   final int postSuccessCode = 201;

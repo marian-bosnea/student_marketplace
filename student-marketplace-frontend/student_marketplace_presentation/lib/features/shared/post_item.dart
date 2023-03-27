@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:like_button/like_button.dart';
 import 'package:animations/animations.dart';
 
@@ -69,7 +70,7 @@ class PostItem extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: 180,
+                height: ScreenUtil().setHeight(300),
                 child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(20)),
                     child: Image.memory(post.images.first)),

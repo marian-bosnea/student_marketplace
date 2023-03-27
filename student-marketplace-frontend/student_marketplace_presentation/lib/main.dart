@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'core/config/routes.dart';
@@ -34,13 +35,20 @@ class StudentMarketPlace extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<AddPostViewBloc>()),
         BlocProvider(create: (_) => di.sl<SearchViewBloc>()),
       ],
-      child: MaterialApp(
-        title: 'Student Marketplace',
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: OnGenerateRoute.route,
-        theme: ThemeData(textTheme: GoogleFonts.varelaRoundTextTheme()),
-        initialRoute: '/',
-        routes: appRoutes,
+      child: ScreenUtilInit(
+        designSize: const Size(828, 1792),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return MaterialApp(
+            title: 'Student Marketplace',
+            debugShowCheckedModeBanner: false,
+            onGenerateRoute: OnGenerateRoute.route,
+            theme: ThemeData(textTheme: GoogleFonts.varelaRoundTextTheme()),
+            initialRoute: '/',
+            routes: appRoutes,
+          );
+        },
       ),
     );
   }

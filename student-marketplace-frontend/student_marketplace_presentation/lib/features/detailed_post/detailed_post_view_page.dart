@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:like_button/like_button.dart';
 import 'package:photo_view/photo_view.dart';
@@ -325,8 +326,9 @@ class DetailedPostViewPage extends StatelessWidget {
                           children: [
                             Text(
                               '${state.post!.price} RON',
-                              style: const TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.w700),
+                              style: TextStyle(
+                                  fontSize: ScreenUtil().setSp(50),
+                                  fontWeight: FontWeight.w700),
                             ),
                             if (!state.post!.isOwn!)
                               GestureDetector(
@@ -337,33 +339,33 @@ class DetailedPostViewPage extends StatelessWidget {
                                                   userId:
                                                       state.post!.ownerId!))),
                                   child: Container(
-                                    height: 40,
-                                    width: 100,
+                                    height: ScreenUtil().setWidth(80),
+                                    width: ScreenUtil().setWidth(160),
                                     decoration: const BoxDecoration(
                                         color: primaryColor,
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(5))),
-                                    child: const Center(
+                                    child: Center(
                                       child: Text('👤Profile',
                                           style: TextStyle(
-                                              fontSize: 18,
+                                              fontSize: ScreenUtil().setSp(40),
                                               color: accentColor,
                                               fontWeight: FontWeight.w600)),
                                     ),
                                   )),
                             if (!state.post!.isOwn!)
                               Container(
-                                width: 120,
-                                height: 40,
+                                width: ScreenUtil().setWidth(250),
+                                height: ScreenUtil().setWidth(80),
                                 decoration: const BoxDecoration(
                                     color: accentColor,
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10))),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
                                     '✉️ Message',
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: ScreenUtil().setSp(40),
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600),
                                   ),
