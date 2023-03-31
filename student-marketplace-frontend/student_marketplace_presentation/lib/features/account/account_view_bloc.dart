@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
@@ -17,14 +18,16 @@ class AccountViewBloc extends Cubit<AccountViewState> {
       {required this.getUserUsecase, required this.deauthenticateUsecase})
       : super(const AccountViewState());
 
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     await deauthenticateUsecase(NoParams());
+    Navigator.of(context).pushReplacementNamed('/');
   }
 
   Future<void> fetchUserProfile(int? id) async {
     emit(state.copyWith(status: ProfilePageStatus.loading));
 
-    final result = await getUserUsecase(OptionalIdParam(id: id));
+    //final result = await getUserUsecase(OptionalIdParam(id: id));
+    final result = await getUserUsecase(OptionalIdParam());
 
     if (result is Right) {
       final user = result.getOrElse(() => const UserModel());

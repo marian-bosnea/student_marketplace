@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
 
@@ -9,6 +10,7 @@ import '../../core/constants/enums.dart';
 import '../../core/theme/colors.dart';
 import '../add_post/add_post_view_page.dart';
 import '../favorites/favorites_view_page.dart';
+import '../posts_view/posts_view_bloc.dart';
 import '../posts_view/posts_view_page.dart';
 import 'home_view_state.dart';
 import 'home_view_bloc.dart';
@@ -26,11 +28,6 @@ class HomeViewPage extends StatelessWidget {
       child: BlocBuilder<HomeViewBloc, HomePageState>(
         builder: (context, state) {
           return PlatformScaffold(
-            iosContentBottomPadding: false,
-            iosContentPadding: false,
-            cupertino: (context, platform) => CupertinoPageScaffoldData(
-                resizeToAvoidBottomInset: false,
-                resizeToAvoidBottomInsetTab: false),
             appBar: isMaterial(context)
                 ? PlatformAppBar(
                     automaticallyImplyLeading: false,
@@ -103,11 +100,73 @@ class HomeViewPage extends StatelessWidget {
   }
 
   Widget _getNavigationBar(BuildContext context, HomePageState state) {
+    final postsBloc = BlocProvider.of<PostViewBloc>(context);
     return CupertinoSliverNavigationBar(
-      largeTitle: Text(
-        state.title,
-        style: const TextStyle(color: accentColor),
+      alwaysShowMiddle: false,
+      backgroundColor: Colors.white,
+      middle: state.status == HomePageStatus.home
+          ? const Text(
+              'Discover',
+              style: TextStyle(color: accentColor),
+            )
+          : null,
+      largeTitle: state.status == HomePageStatus.home
+          ? Row(
+              children: [
+                Container(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    height: ScreenUtil().setHeight(80),
+                    width: ScreenUtil().setWidth(690),
+                    child: PlatformTextField(
+                        hintText: postsBloc.getSearchHint(),
+                        onChanged: (text) =>
+                            postsBloc.onSearchQueryChanged(text),
+                        cupertino: (context, target) =>
+                            _searchCupertinoTextFieldData(context),
+                        onSubmitted: (text) =>
+                            postsBloc.fetchAllPostsByTextQuery(text))),
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                      color: accentColor,
+                      border: Border.all(color: Colors.black12),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
+                  height: ScreenUtil().setHeight(80),
+                  width: ScreenUtil().setWidth(80),
+                  child: Center(
+                    child: Icon(
+                      Icons.category,
+                      color: Colors.white,
+                      size: ScreenUtil().setHeight(50),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Text(
+              state.title,
+              style: const TextStyle(color: accentColor),
+            ),
+    );
+  }
+
+  CupertinoTextFieldData _searchCupertinoTextFieldData(BuildContext context) {
+    return CupertinoTextFieldData(
+      padding: const EdgeInsets.only(left: 10),
+      prefix: const SizedBox(
+        width: 30,
+        height: 30,
+        child: Icon(
+          CupertinoIcons.search,
+          color: accentColor,
+        ),
       ),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
+          border: Border.all(color: Colors.black12)),
     );
   }
 

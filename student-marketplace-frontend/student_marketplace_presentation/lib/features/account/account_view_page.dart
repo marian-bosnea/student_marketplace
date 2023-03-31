@@ -4,12 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:settings_ui/settings_ui.dart';
+
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
-import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_page.dart';
 import '../../core/theme/colors.dart';
 
-import '../authentication/auth_bloc.dart';
 import 'account_view_bloc.dart';
 import 'account_view_state.dart';
 
@@ -20,11 +18,8 @@ class AccountViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl.get<AccountViewBloc>()..fetchUserProfile(null),
-      child: BlocBuilder<AccountViewBloc, AccountViewState>(
-        builder: (context, state) => _getBodyWidget(context, state),
-      ),
+    return BlocBuilder<AccountViewBloc, AccountViewState>(
+      builder: (context, state) => _getBodyWidget(context, state),
     );
   }
 

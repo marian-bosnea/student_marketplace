@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_marketplace_presentation/features/account/account_view_bloc.dart';
 
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
+import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_page.dart';
 
 import '../../features/authentication/auth_bloc.dart';
@@ -17,6 +19,8 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
         if (authState.status == AuthStatus.authenticated) {
           BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
           BlocProvider.of<PostViewBloc>(context).fetchAllCategories();
+          BlocProvider.of<FavoritesViewBloc>(context).fetchFavoritePosts();
+          BlocProvider.of<AccountViewBloc>(context).fetchUserProfile(0);
           return HomeViewPage();
         } else {
           return LoginViewPage();

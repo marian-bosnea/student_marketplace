@@ -6,6 +6,7 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/add
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/check_if_favorite_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
+import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
@@ -67,6 +68,7 @@ class DetailedPostViewBloc extends Cubit<DetailedPostViewState> {
     emit(state.copyWith(isFavorite: !state.isFavorite));
 
     BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    BlocProvider.of<FavoritesViewBloc>(context).fetchFavoritePosts();
 
     return result;
   }

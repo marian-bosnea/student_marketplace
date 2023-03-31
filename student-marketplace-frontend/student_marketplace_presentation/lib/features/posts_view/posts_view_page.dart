@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:student_marketplace_business_logic/data/models/sale_post_model.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_state.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/posts_view/widgets/featured_item.dart';
@@ -41,15 +41,6 @@ class PostViewPage extends StatelessWidget {
                     SliverList(
                       delegate: SliverChildListDelegate([
                         Container(
-                            padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 5),
-                            height: ScreenUtil().setHeight(100),
-                            child: PlatformTextField(
-                              hintText: _getSearchHint(state),
-                              cupertino: (context, target) =>
-                                  _searchCupertinoTextFieldData(context),
-                            )),
-                        Container(
                           height: 70,
                           padding: const EdgeInsets.only(
                               top: 10, left: 10, right: 10),
@@ -82,6 +73,7 @@ class PostViewPage extends StatelessWidget {
                                 }
                               }),
                         ),
+                        _buildShimmerWidget(),
                       ]),
                     ),
                   ],
@@ -91,22 +83,55 @@ class PostViewPage extends StatelessWidget {
     );
   }
 
+  SizedBox _buildShimmerWidget() {
+    return SizedBox(
+        height: ScreenUtil().setHeight(1500),
+        child: Shimmer.fromColors(
+            baseColor: secondaryColor,
+            highlightColor: primaryColor,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: GridView(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 2 / 3,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10),
+                children: [
+                  Container(
+                    width: ScreenUtil().setWidth(200),
+                    decoration: const BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                  ),
+                  Container(
+                    width: ScreenUtil().setWidth(200),
+                    decoration: const BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                  ),
+                  Container(
+                    width: ScreenUtil().setWidth(200),
+                    decoration: const BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                  ),
+                  Container(
+                    width: ScreenUtil().setWidth(200),
+                    decoration: const BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                  )
+                ],
+              ),
+            )));
+  }
+
   List<Widget> _buildPostsLoadedWidgets(
       BuildContext context, PostViewState state) {
     return [
       SliverList(
         delegate: SliverChildListDelegate([
-          Container(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-              height: ScreenUtil().setHeight(100),
-              child: PlatformTextField(
-                  hintText: _getSearchHint(state),
-                  onChanged: (text) => BlocProvider.of<PostViewBloc>(context)
-                      .onSearchQueryChanged(text),
-                  cupertino: (context, target) =>
-                      _searchCupertinoTextFieldData(context),
-                  onSubmitted: (text) => BlocProvider.of<PostViewBloc>(context)
-                      .fetchAllPostsByTextQuery(text))),
           Container(
             height: 70,
             padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
@@ -135,7 +160,7 @@ class PostViewPage extends StatelessWidget {
           ),
           if (state.featuredPost != null)
             SizedBox(
-                height: ScreenUtil().setHeight(500),
+                height: ScreenUtil().setHeight(400),
                 child: FeaturedItem(post: state.featuredPost!)),
         ]),
       ),
@@ -152,35 +177,11 @@ class PostViewPage extends StatelessWidget {
           },
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
-              childAspectRatio: 2 / 3,
+              childAspectRatio: 2 / 2.5,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10),
         ),
       )
     ];
-  }
-
-  String _getSearchHint(PostViewState state) {
-    return state.selectedCategoryIndex != -1
-        ? 'Search in ${state.categories[state.selectedCategoryIndex - 1].name}'
-        : 'Search';
-  }
-
-  CupertinoTextFieldData _searchCupertinoTextFieldData(BuildContext context) {
-    return CupertinoTextFieldData(
-      padding: const EdgeInsets.only(left: 10),
-      prefix: const SizedBox(
-        width: 30,
-        height: 30,
-        child: Icon(
-          CupertinoIcons.search,
-          color: accentColor,
-        ),
-      ),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(color: Colors.black12)),
-    );
   }
 }

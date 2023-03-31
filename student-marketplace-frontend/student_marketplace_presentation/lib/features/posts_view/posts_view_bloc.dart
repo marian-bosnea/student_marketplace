@@ -1,11 +1,9 @@
 import 'dart:math';
 
 import 'package:dartz/dartz.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
-import 'package:student_marketplace_business_logic/data/models/product_category_model.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/product_category/get_all_categories_usecase.dart';
@@ -15,10 +13,10 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
+import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
-import '../detailed_post/detailed_post_view_bloc.dart';
 import 'posts_state.dart';
 
 class PostViewBloc extends Cubit<PostViewState> {
@@ -140,7 +138,7 @@ class PostViewBloc extends Cubit<PostViewState> {
     } else {
       addToFavoritesUsecase(IdParam(id: post.postId!));
     }
-    BlocProvider.of<HomeViewBloc>(context).notifyPostItemChanged(context);
+    BlocProvider.of<FavoritesViewBloc>(context).fetchFavoritePosts();
 
     return !isFavorite;
   }
@@ -157,5 +155,11 @@ class PostViewBloc extends Cubit<PostViewState> {
     }
 
     emit(state.copyWith(featuredPost: item));
+  }
+
+  String getSearchHint() {
+    return state.selectedCategoryIndex != -1
+        ? 'Search in ${state.categories[state.selectedCategoryIndex - 1].name}'
+        : 'Search';
   }
 }

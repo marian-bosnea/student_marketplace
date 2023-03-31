@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:student_marketplace_presentation/features/account/account_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 
 import 'core/config/routes.dart';
 import 'features/authentication/auth_bloc.dart';
@@ -30,6 +32,8 @@ class StudentMarketPlace extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<LoginViewBloc>()),
         BlocProvider(create: (_) => di.sl<RegisterViewBloc>()),
         BlocProvider(create: (_) => di.sl<PostViewBloc>()),
+        BlocProvider(create: (_) => di.sl<FavoritesViewBloc>()),
+        BlocProvider(create: (_) => di.sl<AccountViewBloc>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(828, 1792),

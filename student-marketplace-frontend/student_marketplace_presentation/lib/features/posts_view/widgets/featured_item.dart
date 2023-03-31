@@ -17,13 +17,12 @@ class FeaturedItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 20, left: 10, right: 10),
+      padding: const EdgeInsets.only(top: 0, bottom: 20, left: 10, right: 10),
       child: Material(
-        elevation: 2,
+        elevation: 1,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         child: Container(
           padding: const EdgeInsets.all(20),
-          // margin: const EdgeInsets.only(top: 10, bottom: 10),
           decoration: BoxDecoration(
               color: secondaryColor,
               borderRadius: const BorderRadius.all(Radius.circular(10))),
@@ -32,24 +31,24 @@ class FeaturedItem extends StatelessWidget {
             children: [
               Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(
                       'Most viewed',
                       style: TextStyle(
-                          fontSize: ScreenUtil().setSp(60),
+                          fontSize: ScreenUtil().setSp(50),
                           fontWeight: FontWeight.w500,
                           color: accentColor),
                     ),
                     Text(
                       post.title,
                       style: TextStyle(
-                          fontSize: ScreenUtil().setSp(60),
+                          fontSize: ScreenUtil().setSp(40),
                           fontWeight: FontWeight.w600),
                     ),
                     Text(
                       '${post.price} RON',
-                      style: TextStyle(fontSize: ScreenUtil().setSp(50)),
+                      style: TextStyle(fontSize: ScreenUtil().setSp(40)),
                     ),
                     OpenContainer(
                       transitionDuration: const Duration(milliseconds: 500),
@@ -60,8 +59,8 @@ class FeaturedItem extends StatelessWidget {
                       closedBuilder:
                           (BuildContext context, void Function() action) {
                         return Container(
-                            width: ScreenUtil().setWidth(200),
-                            height: ScreenUtil().setHeight(80),
+                            width: ScreenUtil().setWidth(180),
+                            height: ScreenUtil().setHeight(70),
                             decoration: const BoxDecoration(color: accentColor),
                             child: Center(
                               child: Text(
@@ -76,11 +75,14 @@ class FeaturedItem extends StatelessWidget {
                   ]),
               SizedBox(
                 child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: ScreenUtil().setWidth(350),
                     child: ClipRRect(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(20)),
-                        child: Image.memory(post.images.first))),
+                        child: Image.memory(
+                          post.images.first,
+                          fit: BoxFit.cover,
+                        ))),
               )
             ],
           ),
