@@ -14,15 +14,15 @@ class OwnPostListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(5),
-      height: ScreenUtil().setHeight(400),
+      margin: const EdgeInsets.only(right: 5, left: 5, bottom: 5),
+      height: ScreenUtil().setHeight(450),
       child: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
         transitionDuration: const Duration(milliseconds: 500),
         openShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
         closedShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
         closedBuilder: (BuildContext context, void Function() action) {
           return Padding(
             padding: const EdgeInsets.all(10),
@@ -49,21 +49,24 @@ class OwnPostListItem extends StatelessWidget {
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 10, bottom: 10),
-                          height: 30,
                           padding: const EdgeInsets.all(5),
                           decoration: const BoxDecoration(
                               color: primaryColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5))),
-                          child: Text(
-                            post.categoryName!,
-                            style: TextStyle(fontSize: ScreenUtil().setSp(30)),
+                          child: Center(
+                            child: Text(
+                              post.categoryName!,
+                              style:
+                                  TextStyle(fontSize: ScreenUtil().setSp(30)),
+                            ),
                           ),
                         ),
                         Text(
                           '${post.price} RON',
-                          style:
-                              const TextStyle(fontSize: 20, color: accentColor),
+                          style: TextStyle(
+                              fontSize: ScreenUtil().setSp(30),
+                              color: accentColor),
                         ),
                         Row(
                           children: [

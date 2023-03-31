@@ -63,7 +63,6 @@ import '../../features/home/home_view_bloc.dart';
 import '../../features/login/login_view_bloc.dart';
 import '../../features/posts_view/posts_view_bloc.dart';
 import '../../features/register/register_view_bloc.dart';
-import '../../features/search/search_view_bloc.dart';
 import '../../features/account/account_view_bloc.dart';
 
 /// Service locator
@@ -102,6 +101,7 @@ Future<void> init() async {
       getCachedSessionUsecase: sl.call(),
       getDetailedPostUsecase: sl.call(),
       getAllPostsByCategoryUsecase: sl.call(),
+      getAllPostsByQueryUsecase: sl.call(),
       getAllCategoriesUsecase: sl.call()));
 
   sl.registerFactory(() => DetailedPostViewBloc(
@@ -109,9 +109,6 @@ Future<void> init() async {
       checkIfFavoriteUsecase: sl.call(),
       getDetailedPostUsecase: sl.call(),
       removeFromFavoritesUsecase: sl.call()));
-
-  sl.registerFactory(
-      () => SearchViewBloc(getAllPostsByQueryUsecase: sl.call()));
 
   sl.registerFactory(() => AddPostViewBloc(
       getAllCategoriesUsecase: sl.call(), uploadPostUsecase: sl.call()));

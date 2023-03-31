@@ -13,11 +13,14 @@ class AddPostState extends Equatable {
   final List<ProductCategoryEntity> categories;
   final List<Uint8List> images;
 
+  final int currentStep;
+
   final AddPostPageStatus status;
   const AddPostState(
       {this.titleValue = '',
       this.descriptionValue = '',
-      this.categoryId = 0,
+      this.categoryId = -1,
+      this.currentStep = 0,
       this.price = '',
       this.images = const [],
       this.categories = const [],
@@ -28,6 +31,7 @@ class AddPostState extends Equatable {
     String? descriptionValue,
     int? categoryId,
     String? price,
+    int? currentStep,
     List<ProductCategoryEntity>? categories,
     List<Uint8List>? images,
     AddPostPageStatus? status,
@@ -39,6 +43,7 @@ class AddPostState extends Equatable {
       price: price ?? this.price,
       images: images ?? this.images,
       categories: categories ?? this.categories,
+      currentStep: currentStep ?? this.currentStep,
       status: status ?? this.status,
     );
   }
@@ -51,6 +56,7 @@ class AddPostState extends Equatable {
         price,
         images,
         categories,
+        currentStep,
         status
       ];
 }

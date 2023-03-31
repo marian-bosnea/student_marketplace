@@ -19,14 +19,14 @@ class FeaturedItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 20, left: 10, right: 10),
       child: Material(
-        elevation: 5,
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        elevation: 2,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
         child: Container(
           padding: const EdgeInsets.all(20),
           // margin: const EdgeInsets.only(top: 10, bottom: 10),
           decoration: BoxDecoration(
               color: secondaryColor,
-              borderRadius: const BorderRadius.all(Radius.circular(30))),
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

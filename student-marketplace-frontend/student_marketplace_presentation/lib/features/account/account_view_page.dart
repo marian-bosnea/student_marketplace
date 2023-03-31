@@ -32,7 +32,7 @@ class AccountViewPage extends StatelessWidget {
     return Material(
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           color: accentColor,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -78,29 +78,36 @@ class AccountViewPage extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          child: Column(children: [
-            ProfileMenuItem(
-              icon: const Icon(
-                Icons.price_change,
-                color: Colors.white,
-              ),
-              color: accentColor,
-              label: 'My Posts',
-              onTap: () => Navigator.of(context).pushNamed('/own_posts'),
+        Column(children: [
+          ProfileMenuItem(
+            icon: const Icon(
+              Icons.price_change,
+              color: Colors.white,
             ),
-            ProfileMenuItem(
-              icon: const Icon(
-                Icons.favorite,
-                color: Colors.white,
-              ),
-              color: Colors.red,
-              label: 'Favorites',
-              onTap: () =>
-                  BlocProvider.of<HomeViewBloc>(context).goToFavorites(context),
-            )
-          ]),
-        )
+            color: accentColor,
+            label: 'My Posts',
+            onTap: () => Navigator.of(context).pushNamed('/own_posts'),
+          ),
+          ProfileMenuItem(
+            icon: const Icon(
+              Icons.favorite,
+              color: Colors.white,
+            ),
+            color: Colors.red,
+            label: 'Favorites',
+            onTap: () =>
+                BlocProvider.of<HomeViewBloc>(context).goToFavorites(context),
+          ),
+          ProfileMenuItem(
+            icon: const Icon(
+              CupertinoIcons.power,
+              color: Colors.white,
+            ),
+            color: Colors.red,
+            label: 'Logout',
+            onTap: () => BlocProvider.of<AccountViewBloc>(context).logout(),
+          )
+        ])
       ]),
     );
   }
@@ -147,7 +154,10 @@ class ProfileMenuItem extends StatelessWidget {
                                 const BorderRadius.all(Radius.circular(5))),
                         child: icon,
                       ),
-                      Text(label),
+                      Text(
+                        label,
+                        style: TextStyle(fontSize: ScreenUtil().setSp(35)),
+                      ),
                     ],
                   ),
                   const Icon(CupertinoIcons.arrow_right)

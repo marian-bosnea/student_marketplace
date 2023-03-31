@@ -56,7 +56,7 @@ class HomeViewBloc extends Cubit<HomePageState> {
     }
 
     if (state.status != HomePageStatus.search) {
-      emit(state.copyWith(status: HomePageStatus.search, title: "Search"));
+      emit(state.copyWith(status: HomePageStatus.search, title: "Orders"));
     }
   }
 

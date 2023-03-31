@@ -29,9 +29,9 @@ class PostItem extends StatelessWidget {
       transitionType: ContainerTransitionType.fadeThrough,
       transitionDuration: const Duration(milliseconds: 500),
       openShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
       closedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: BorderRadius.all(Radius.circular(10))),
       closedBuilder: (BuildContext context, void Function() action) {
         return Container(
           decoration: BoxDecoration(

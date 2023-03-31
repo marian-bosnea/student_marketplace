@@ -16,7 +16,7 @@ class HttpInterface {
   final ip = "192.168.0.105";
   final port = "3000";
 
-  final baseUrl = "http://192.168.0.109:3000";
+  final baseUrl = "http://192.168.0.106:3000";
   //final baseUrl = "http://bore.pub:35701";
   //final baseUrl = ' https://7776-212-93-144-202.eu.ngrok.io';
   final int getSuccessCode = 200;
@@ -295,6 +295,7 @@ class HttpInterface {
           viewsCount: map['views_count'] as int,
           isFavorite: map['is_favorite'] as bool,
           isOwn: map['is_own'] as bool,
+          categoryId: map['category_id'] as int,
           images: [imageResponse.bodyBytes]));
     }
     return salePosts;

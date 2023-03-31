@@ -14,15 +14,15 @@ class FavoriteListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(left: 10, right: 10, top: 5),
       height: ScreenUtil().setHeight(400),
       child: OpenContainer(
         transitionType: ContainerTransitionType.fadeThrough,
         transitionDuration: const Duration(milliseconds: 500),
         openShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
         closedShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
         closedBuilder: (BuildContext context, void Function() action) {
           return Padding(
             padding: const EdgeInsets.all(10),
@@ -32,54 +32,60 @@ class FavoriteListItem extends StatelessWidget {
               children: [
                 SizedBox(
                   child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.3,
+                      width: 170,
                       child: ClipRRect(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(20)),
                           child: Image.memory(post.images.first))),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          post.title,
-                          style: TextStyle(
-                              fontSize: ScreenUtil().setSp(50),
-                              fontWeight: FontWeight.w600),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 5, bottom: 5),
-                          height: ScreenUtil().setHeight(80),
-                          padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                              color: primaryColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
-                          child: Text(
-                            post.categoryName!,
-                            style: TextStyle(fontSize: ScreenUtil().setSp(30)),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            post.title,
+                            style: TextStyle(
+                                fontSize: ScreenUtil().setSp(50),
+                                fontWeight: FontWeight.w600),
                           ),
-                        ),
-                        Text(
-                          '${post.price} RON',
-                          style: TextStyle(
-                              fontSize: ScreenUtil().setSp(50),
-                              color: accentColor),
-                        ),
-                        Container(
-                            margin: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              "Posted by ${post.ownerName}",
-                              style: TextStyle(
-                                color: Colors.black38,
-                                fontSize: ScreenUtil().setSp(40),
+                          Container(
+                            margin: const EdgeInsets.only(top: 5, bottom: 5),
+                            height: ScreenUtil().setHeight(70),
+                            padding: const EdgeInsets.all(2),
+                            decoration: const BoxDecoration(
+                                color: primaryColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                            child: Center(
+                              child: Text(
+                                post.categoryName!,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style:
+                                    TextStyle(fontSize: ScreenUtil().setSp(30)),
                               ),
-                            )),
-                      ]),
+                            ),
+                          ),
+                          Text(
+                            '${post.price} RON',
+                            style: TextStyle(
+                                fontSize: ScreenUtil().setSp(50),
+                                color: accentColor),
+                          ),
+                          Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                "Posted by ${post.ownerName}",
+                                style: TextStyle(
+                                  color: Colors.black38,
+                                  fontSize: ScreenUtil().setSp(30),
+                                ),
+                              )),
+                        ]),
+                  ),
                 ),
               ],
             ),

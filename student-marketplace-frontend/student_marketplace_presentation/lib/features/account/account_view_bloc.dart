@@ -17,6 +17,10 @@ class AccountViewBloc extends Cubit<AccountViewState> {
       {required this.getUserUsecase, required this.deauthenticateUsecase})
       : super(const AccountViewState());
 
+  Future<void> logout() async {
+    await deauthenticateUsecase(NoParams());
+  }
+
   Future<void> fetchUserProfile(int? id) async {
     emit(state.copyWith(status: ProfilePageStatus.loading));
 

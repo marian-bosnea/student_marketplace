@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_state.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
@@ -30,6 +32,7 @@ class PostViewPage extends StatelessWidget {
             }
           },
           child: CustomScrollView(
+            reverse: false,
             key: const PageStorageKey(0),
             // controller: _scrollController,
             slivers: state.status == PostsViewStatus.loaded
@@ -37,6 +40,15 @@ class PostViewPage extends StatelessWidget {
                 : [
                     SliverList(
                       delegate: SliverChildListDelegate([
+                        Container(
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 5),
+                            height: ScreenUtil().setHeight(100),
+                            child: PlatformTextField(
+                              hintText: _getSearchHint(state),
+                              cupertino: (context, target) =>
+                                  _searchCupertinoTextFieldData(context),
+                            )),
                         Container(
                           height: 70,
                           padding: const EdgeInsets.only(
@@ -85,6 +97,17 @@ class PostViewPage extends StatelessWidget {
       SliverList(
         delegate: SliverChildListDelegate([
           Container(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+              height: ScreenUtil().setHeight(100),
+              child: PlatformTextField(
+                  hintText: _getSearchHint(state),
+                  onChanged: (text) => BlocProvider.of<PostViewBloc>(context)
+                      .onSearchQueryChanged(text),
+                  cupertino: (context, target) =>
+                      _searchCupertinoTextFieldData(context),
+                  onSubmitted: (text) => BlocProvider.of<PostViewBloc>(context)
+                      .fetchAllPostsByTextQuery(text))),
+          Container(
             height: 70,
             padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
             width: MediaQuery.of(context).size.width,
@@ -96,7 +119,6 @@ class PostViewPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   if (index > 0) {
                     final category = state.categories.elementAt(index - 1);
-
                     return CategoryItem(
                         label: category.name,
                         isSelected: index == state.selectedCategoryIndex,
@@ -111,9 +133,10 @@ class PostViewPage extends StatelessWidget {
                   }
                 }),
           ),
-          SizedBox(
-              height: ScreenUtil().setHeight(500),
-              child: FeaturedItem(post: state.featuredPost!)),
+          if (state.featuredPost != null)
+            SizedBox(
+                height: ScreenUtil().setHeight(500),
+                child: FeaturedItem(post: state.featuredPost!)),
         ]),
       ),
       SliverPadding(
@@ -130,10 +153,34 @@ class PostViewPage extends StatelessWidget {
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
               childAspectRatio: 2 / 3,
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20),
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10),
         ),
       )
     ];
+  }
+
+  String _getSearchHint(PostViewState state) {
+    return state.selectedCategoryIndex != -1
+        ? 'Search in ${state.categories[state.selectedCategoryIndex - 1].name}'
+        : 'Search';
+  }
+
+  CupertinoTextFieldData _searchCupertinoTextFieldData(BuildContext context) {
+    return CupertinoTextFieldData(
+      padding: const EdgeInsets.only(left: 10),
+      prefix: const SizedBox(
+        width: 30,
+        height: 30,
+        child: Icon(
+          CupertinoIcons.search,
+          color: accentColor,
+        ),
+      ),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          border: Border.all(color: Colors.black12)),
+    );
   }
 }

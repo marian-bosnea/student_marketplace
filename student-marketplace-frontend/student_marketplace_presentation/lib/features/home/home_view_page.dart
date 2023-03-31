@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:get_it/get_it.dart';
-import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
-import 'package:student_marketplace_presentation/features/account/account_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
 
 import '../../core/constants/enums.dart';
@@ -12,7 +10,6 @@ import '../../core/theme/colors.dart';
 import '../add_post/add_post_view_page.dart';
 import '../favorites/favorites_view_page.dart';
 import '../posts_view/posts_view_page.dart';
-import '../search/search_view_page.dart';
 import 'home_view_state.dart';
 import 'home_view_bloc.dart';
 
@@ -29,7 +26,11 @@ class HomeViewPage extends StatelessWidget {
       child: BlocBuilder<HomeViewBloc, HomePageState>(
         builder: (context, state) {
           return PlatformScaffold(
-            cupertino: (context, platform) => CupertinoPageScaffoldData(),
+            iosContentBottomPadding: false,
+            iosContentPadding: false,
+            cupertino: (context, platform) => CupertinoPageScaffoldData(
+                resizeToAvoidBottomInset: false,
+                resizeToAvoidBottomInsetTab: false),
             appBar: isMaterial(context)
                 ? PlatformAppBar(
                     automaticallyImplyLeading: false,
@@ -42,7 +43,6 @@ class HomeViewPage extends StatelessWidget {
                 : null,
             body: isCupertino(context)
                 ? NestedScrollView(
-                    controller: ScrollController(),
                     headerSliverBuilder: (context, innerBoxIsScroller) {
                       return <Widget>[_getNavigationBar(context, state)];
                     },
@@ -62,9 +62,9 @@ class HomeViewPage extends StatelessWidget {
                           : Colors.black38,
                     )),
                 BottomNavigationBarItem(
-                    label: 'Search',
+                    label: 'Orders',
                     icon: Icon(
-                      Icons.search,
+                      Icons.receipt,
                       color: state.status == HomePageStatus.search
                           ? accentColor
                           : Colors.black38,
@@ -136,9 +136,9 @@ class HomeViewPage extends StatelessWidget {
       case HomePageStatus.intial:
         return Container();
       case HomePageStatus.home:
-        return PostViewPage();
+        return const PostViewPage();
       case HomePageStatus.search:
-        return const SearchViewPage();
+        return Container();
       case HomePageStatus.addPost:
         return AddPostPage();
       case HomePageStatus.favorites:

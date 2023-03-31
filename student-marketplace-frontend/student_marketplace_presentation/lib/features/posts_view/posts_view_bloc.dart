@@ -1,14 +1,17 @@
 import 'dart:math';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
+import 'package:student_marketplace_business_logic/data/models/product_category_model.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/product_category/get_all_categories_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/add_to_favorites_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_by_category_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_by_query_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
@@ -25,17 +28,19 @@ class PostViewBloc extends Cubit<PostViewState> {
   final GetCachedSessionUsecase getCachedSessionUsecase;
   final GetDetailedPostUsecase getDetailedPostUsecase;
   final AddToFavoritesUsecase addToFavoritesUsecase;
+  final GetAllPostsByQueryUsecase getAllPostsByQueryUsecase;
   final RemoveFromFavoritesUsecase removeFromFavoritesUsecase;
 
-  PostViewBloc({
-    required this.getAllPostsUsecase,
-    required this.getCachedSessionUsecase,
-    required this.getAllCategoriesUsecase,
-    required this.getDetailedPostUsecase,
-    required this.getAllPostsByCategoryUsecase,
-    required this.addToFavoritesUsecase,
-    required this.removeFromFavoritesUsecase,
-  }) : super(const PostViewState());
+  PostViewBloc(
+      {required this.getAllPostsUsecase,
+      required this.getCachedSessionUsecase,
+      required this.getAllCategoriesUsecase,
+      required this.getDetailedPostUsecase,
+      required this.getAllPostsByCategoryUsecase,
+      required this.addToFavoritesUsecase,
+      required this.removeFromFavoritesUsecase,
+      required this.getAllPostsByQueryUsecase})
+      : super(const PostViewState());
 
   Future<void> fetchAllCategories() async {
     final categoriesResult = await getAllCategoriesUsecase(NoParams());
@@ -75,6 +80,43 @@ class PostViewBloc extends Cubit<PostViewState> {
     _getFeaturedItem();
 
     emit(state);
+  }
+
+  Future<void> fetchAllPostsByTextQuery(String query) async {
+    onSearchQueryChanged(query);
+    emit(state.copyWith(status: PostsViewStatus.loading));
+
+    final result = await getAllPostsByQueryUsecase(QueryParam(query: query));
+
+    if (result is Left) {
+      emit(state.copyWith(status: PostsViewStatus.fail));
+    } else {
+      final posts = (result as Right).value;
+      if (state.selectedCategoryIndex != -1) {
+        List<SalePostEntity> filteredPosts = [];
+        final selectedCategoryId =
+            state.categories[state.selectedCategoryIndex - 1].id;
+        for (var p in posts) {
+          if (p.categoryId == selectedCategoryId) {
+            filteredPosts.add(p);
+          }
+        }
+        emit(state.copyWith(
+            posts: filteredPosts, status: PostsViewStatus.loaded));
+      } else {
+        emit(state.copyWith(posts: posts, status: PostsViewStatus.loaded));
+      }
+    }
+  }
+
+  Future<void> onSearchQueryChanged(String query) async {
+    if (query.isEmpty) {
+      if (state.selectedCategoryIndex == -1) {
+        fetchAllPosts();
+      } else {
+        fetchAllPostsOfSelectedCategory();
+      }
+    }
   }
 
   Future<void> fetchAllPosts() async {

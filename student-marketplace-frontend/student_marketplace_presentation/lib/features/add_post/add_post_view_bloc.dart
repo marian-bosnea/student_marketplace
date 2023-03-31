@@ -76,4 +76,45 @@ class AddPostViewBloc extends Cubit<AddPostState> {
 
     emit(state.copyWith(categories: categories));
   }
+
+  setCurrentStep(int step) {
+    emit(state.copyWith(currentStep: step));
+  }
+
+  goToNextStep() {
+    if (state.currentStep == 4) {
+      uploadPost();
+      return;
+    }
+    final nextStep = state.currentStep + 1;
+    emit(state.copyWith(currentStep: nextStep));
+  }
+
+  goToPreviousStep() {
+    if (state.currentStep > 0) {
+      final prevStep = state.currentStep - 1;
+      emit(state.copyWith(currentStep: prevStep));
+    }
+  }
+
+  bool canGoToNextStep() {
+    if (state.currentStep == 0 && state.titleValue.length > 3) return true;
+    if (state.currentStep == 1 && state.descriptionValue.length > 3) {
+      return true;
+    }
+
+    if (state.currentStep == 2 && state.price.isNotEmpty) {
+      return true;
+    }
+
+    if (state.currentStep == 3 && state.categoryId != -1) {
+      return true;
+    }
+
+    if (state.currentStep == 4 && state.images.length > 0) {
+      return true;
+    }
+
+    return false;
+  }
 }
