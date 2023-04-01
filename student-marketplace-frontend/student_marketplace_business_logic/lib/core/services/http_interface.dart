@@ -481,6 +481,38 @@ class HttpInterface {
     }
   }
 
+  Future<bool> updatePost(SalePostEntity post, String token) async {
+    final requestUrl = "$baseUrl/sale-object/update";
+
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(requestUrl));
+
+      request.headers.addAll({
+        "authorization": "Bearear $token",
+        "Content-type": "multipart/form-data"
+      });
+
+      for (int i = 0; i < post.images.length; i++) {
+        final file = http.MultipartFile.fromBytes('images', post.images[i],
+            filename: 'images$i.jpg', contentType: MediaType('image', 'jpeg'));
+        request.files.add(file);
+      }
+
+      request.fields['id'] = post.postId.toString();
+      request.fields['title'] = post.title;
+      request.fields['description'] = post.description!;
+      request.fields['price'] = post.price;
+      request.fields['categoryId'] = post.categoryId!.toString();
+
+      var response = await request.send();
+
+      if (response.statusCode != postSuccessCode) return false;
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<bool> addToFavorites(
       {required String token, required int postId}) async {
     final requestUrl = "$baseUrl/sale-object/favorites/add";

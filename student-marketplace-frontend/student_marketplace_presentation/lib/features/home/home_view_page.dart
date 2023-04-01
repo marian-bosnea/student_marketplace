@@ -21,81 +21,76 @@ class HomeViewPage extends StatelessWidget {
   HomeViewPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => sl<HomeViewBloc>()),
-      ],
-      child: BlocBuilder<HomeViewBloc, HomePageState>(
-        builder: (context, state) {
-          return PlatformScaffold(
-            appBar: isMaterial(context)
-                ? PlatformAppBar(
-                    automaticallyImplyLeading: false,
-                    title: PlatformText(
-                      state.title,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    backgroundColor: Colors.black,
-                  )
-                : null,
-            body: isCupertino(context)
-                ? NestedScrollView(
-                    headerSliverBuilder: (context, innerBoxIsScroller) {
-                      return <Widget>[_getNavigationBar(context, state)];
-                    },
-                    body: _getCurrentPage(context, state))
-                : _getCurrentPage(context, state),
-            bottomNavBar: PlatformNavBar(
-              cupertino: (context, platform) =>
-                  CupertinoTabBarData(activeColor: accentColor),
-              backgroundColor: Colors.white,
-              items: [
-                BottomNavigationBarItem(
-                    label: 'Discover',
-                    icon: Icon(
-                      Icons.explore,
-                      color: state.status == HomePageStatus.home
-                          ? accentColor
-                          : Colors.black38,
-                    )),
-                BottomNavigationBarItem(
-                    label: 'Orders',
-                    icon: Icon(
-                      Icons.receipt,
-                      color: state.status == HomePageStatus.search
-                          ? accentColor
-                          : Colors.black38,
-                    )),
-                BottomNavigationBarItem(
-                    label: 'Sell',
-                    icon: Icon(
-                      Icons.sell,
-                      color: state.status == HomePageStatus.addPost
-                          ? accentColor
-                          : Colors.black38,
-                    )),
-                BottomNavigationBarItem(
-                    label: 'Favorites',
-                    icon: Icon(
-                      Icons.favorite_sharp,
-                      color: state.status == HomePageStatus.favorites
-                          ? accentColor
-                          : Colors.black38,
-                    )),
-                BottomNavigationBarItem(
-                    label: 'Account',
-                    icon: Icon(
-                      Icons.account_circle,
-                      color: state.status == HomePageStatus.profile
-                          ? accentColor
-                          : Colors.black38,
-                    ))
-              ],
-              itemChanged: (index) => onBottomNavbarItemTap(context, index),
-            ),
-          );
-        },
-      ),
+    return BlocBuilder<HomeViewBloc, HomePageState>(
+      builder: (context, state) {
+        return PlatformScaffold(
+          appBar: isMaterial(context)
+              ? PlatformAppBar(
+                  automaticallyImplyLeading: false,
+                  title: PlatformText(
+                    state.title,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.black,
+                )
+              : null,
+          body: isCupertino(context)
+              ? NestedScrollView(
+                  headerSliverBuilder: (context, innerBoxIsScroller) {
+                    return <Widget>[_getNavigationBar(context, state)];
+                  },
+                  body: _getCurrentPage(context, state))
+              : _getCurrentPage(context, state),
+          bottomNavBar: PlatformNavBar(
+            cupertino: (context, platform) =>
+                CupertinoTabBarData(activeColor: accentColor),
+            backgroundColor: Colors.white,
+            items: [
+              BottomNavigationBarItem(
+                  label: 'Discover',
+                  icon: Icon(
+                    Icons.explore,
+                    color: state.status == HomePageStatus.home
+                        ? accentColor
+                        : Colors.black38,
+                  )),
+              BottomNavigationBarItem(
+                  label: 'Orders',
+                  icon: Icon(
+                    Icons.receipt,
+                    color: state.status == HomePageStatus.search
+                        ? accentColor
+                        : Colors.black38,
+                  )),
+              BottomNavigationBarItem(
+                  label: 'Sell',
+                  icon: Icon(
+                    Icons.sell,
+                    color: state.status == HomePageStatus.addPost
+                        ? accentColor
+                        : Colors.black38,
+                  )),
+              BottomNavigationBarItem(
+                  label: 'Favorites',
+                  icon: Icon(
+                    Icons.favorite_sharp,
+                    color: state.status == HomePageStatus.favorites
+                        ? accentColor
+                        : Colors.black38,
+                  )),
+              BottomNavigationBarItem(
+                  label: 'Account',
+                  icon: Icon(
+                    Icons.account_circle,
+                    color: state.status == HomePageStatus.profile
+                        ? accentColor
+                        : Colors.black38,
+                  ))
+            ],
+            itemChanged: (index) => onBottomNavbarItemTap(context, index),
+          ),
+        );
+      },
     );
   }
 

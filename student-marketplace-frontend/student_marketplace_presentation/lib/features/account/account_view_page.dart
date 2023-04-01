@@ -100,7 +100,8 @@ class AccountViewPage extends StatelessWidget {
             ),
             color: Colors.red,
             label: 'Logout',
-            onTap: () => BlocProvider.of<AccountViewBloc>(context).logout(),
+            onTap: () =>
+                BlocProvider.of<AccountViewBloc>(context).logout(context),
           )
         ])
       ]),

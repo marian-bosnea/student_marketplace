@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:like_button/like_button.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_page.dart';
 
 import '../../core/constants/enums.dart';
@@ -41,6 +42,9 @@ class DetailedPostViewPage extends StatelessWidget {
                 trailingActions: [
                   if (state.post!.isOwn!)
                     PlatformIconButton(
+                      onPressed: () => Navigator.of(context).pushNamed(
+                          PageNames.editPostPage,
+                          arguments: state.post),
                       icon: const Icon(
                         Icons.edit,
                         color: accentColor,

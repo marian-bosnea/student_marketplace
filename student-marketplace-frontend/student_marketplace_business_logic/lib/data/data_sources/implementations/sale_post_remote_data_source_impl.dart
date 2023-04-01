@@ -46,9 +46,14 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, bool>> update(SalePostEntity post, String token) {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> update(
+      SalePostEntity post, String token) async {
+    try {
+      await httpInterface.updatePost(post, token);
+      return Right(true);
+    } catch (_) {
+      return Left(NetworkFailure());
+    }
   }
 
   @override

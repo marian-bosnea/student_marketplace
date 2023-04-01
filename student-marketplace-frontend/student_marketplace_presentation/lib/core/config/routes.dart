@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_bloc.dart';
 
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
+import 'package:student_marketplace_presentation/features/edit_post/edit_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_page.dart';
 
@@ -29,5 +30,5 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
   '/detailed_post': (context) => DetailedPostViewPage(
       postId: ModalRoute.of(context)!.settings.arguments as int),
   '/user_profile': (context) => AccountViewPage(),
-  '/own_posts': (context) => OwnPostsViewPage()
+  '/own_posts': (context) => OwnPostsViewPage(),
 };

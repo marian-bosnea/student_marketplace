@@ -75,7 +75,7 @@ class FeaturedItem extends StatelessWidget {
                   ]),
               SizedBox(
                 child: SizedBox(
-                    width: ScreenUtil().setWidth(350),
+                    width: ScreenUtil().setWidth(300),
                     child: ClipRRect(
                         borderRadius:
                             const BorderRadius.all(Radius.circular(20)),

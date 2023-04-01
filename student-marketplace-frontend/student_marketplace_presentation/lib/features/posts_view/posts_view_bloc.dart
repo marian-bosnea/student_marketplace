@@ -125,6 +125,10 @@ class PostViewBloc extends Cubit<PostViewState> {
       emit(state.copyWith(status: PostsViewStatus.fail));
     } else {
       final posts = (postsResult as Right).value;
+      if (posts.isEmpty) {
+        emit(state.copyWith(status: PostsViewStatus.fail));
+        return;
+      }
       emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
 
       _getFeaturedItem();

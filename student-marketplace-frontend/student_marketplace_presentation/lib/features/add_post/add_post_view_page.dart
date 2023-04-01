@@ -4,17 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_presentation/core/theme/colors.dart';
 import '../../core/config/injection_container.dart' as di;
 
-import '../shared/circle_button.dart';
 import 'add_post_view_bloc.dart';
 import 'add_post_view_state.dart';
 
 class AddPostPage extends StatelessWidget {
-  AddPostPage({super.key});
+  final SalePostEntity? postToEdit;
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _categoryController = TextEditingController();
 
-  final _categoryTextfieldController = TextEditingController();
+  AddPostPage({super.key, this.postToEdit}) {
+    if (postToEdit != null) {
+      _titleController.text = postToEdit!.title;
+      _descriptionController.text = postToEdit!.description!;
+      _priceController.text = postToEdit!.price;
+      _categoryController.text = postToEdit!.categoryName!;
+    }
+  }
+
   final titleStyle = TextStyle(fontSize: ScreenUtil().setSp(40));
   final singleLineFieldHeight = ScreenUtil().setWidth(70);
 
@@ -23,8 +35,9 @@ class AddPostPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => AddPostViewBloc(
           uploadPostUsecase: di.sl.call(),
+          updatePostUsecase: di.sl.call(),
           getAllCategoriesUsecase: di.sl.call())
-        ..fetchAllCategories(),
+        ..init(postToEdit),
       child: BlocBuilder<AddPostViewBloc, AddPostState>(
         builder: (context, state) {
           return getStepperForm(context, state);
@@ -47,7 +60,7 @@ class AddPostPage extends StatelessWidget {
         child: Stepper(
             physics: const NeverScrollableScrollPhysics(),
             currentStep: state.currentStep,
-            onStepContinue: () => bloc.goToNextStep(),
+            onStepContinue: () => bloc.goToNextStep(context),
             onStepCancel: () => bloc.goToPreviousStep(),
             //onStepTapped: (step) => bloc.setCurrentStep(step),
             controlsBuilder: (context, details) => Container(
@@ -67,7 +80,11 @@ class AddPostPage extends StatelessWidget {
                                       Radius.circular(15)))),
                           onPressed: details.onStepContinue,
                           child: Text(
-                            state.currentStep == 4 ? 'Post your item' : 'Next',
+                            state.currentStep == 4
+                                ? (postToEdit != null
+                                    ? 'Save Changes'
+                                    : 'Post your item')
+                                : 'Next',
                             style: const TextStyle(color: Colors.white),
                           ),
                         ),
@@ -108,6 +125,7 @@ class AddPostPage extends StatelessWidget {
                       SizedBox(
                         height: singleLineFieldHeight,
                         child: PlatformTextField(
+                          controller: _titleController,
                           onChanged: (text) => bloc.setTitleValue(text),
                           cupertino: (context, platform) =>
                               _personalInfoCupertinoTextDataField(context),
@@ -131,6 +149,7 @@ class AddPostPage extends StatelessWidget {
                         ),
                       ),
                       PlatformTextField(
+                        controller: _descriptionController,
                         maxLines: 5,
                         onChanged: (text) =>
                             BlocProvider.of<AddPostViewBloc>(context)
@@ -158,6 +177,7 @@ class AddPostPage extends StatelessWidget {
                       SizedBox(
                         height: singleLineFieldHeight,
                         child: PlatformTextField(
+                          controller: _priceController,
                           maxLines: 1,
                           keyboardType: const TextInputType.numberWithOptions(),
                           onChanged: (text) =>
@@ -189,7 +209,7 @@ class AddPostPage extends StatelessWidget {
                         child: PlatformTextField(
                           readOnly: true,
                           hintText: 'Select a category',
-                          controller: _categoryTextfieldController,
+                          controller: _categoryController,
                           onTap: () =>
                               _openDrowDownFacultiesList(state, context),
                           cupertino: (context, platform) =>
@@ -294,7 +314,7 @@ class AddPostPage extends StatelessWidget {
           BlocProvider.of<AddPostViewBloc>(context)
               .setCategoryValue(int.parse(item.value!))
               .then((value) {
-            _categoryTextfieldController.text = item.name;
+            _categoryController.text = item.name;
           });
         },
         enableMultipleSelection: false,

@@ -1,29 +1,61 @@
 import 'dart:typed_data';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/data/models/sale_post_model.dart';
+import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/product_category/get_all_categories_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/sale_post/update_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upload_post_usecase.dart';
+import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
+import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import 'add_post_view_state.dart';
 
 class AddPostViewBloc extends Cubit<AddPostState> {
   final GetAllCategoriesUsecase getAllCategoriesUsecase;
   final UploadPostUsecase uploadPostUsecase;
+  final UpdatePostUsecase updatePostUsecase;
 
   AddPostViewBloc(
-      {required this.uploadPostUsecase, required this.getAllCategoriesUsecase})
+      {required this.uploadPostUsecase,
+      required this.getAllCategoriesUsecase,
+      required this.updatePostUsecase})
       : super(const AddPostState());
 
+  Future<void> init(SalePostEntity? post) async {
+    await fetchAllCategories();
+    if (post != null) {
+      final postCategory = post.categoryName;
+      int categoryId = -1;
+
+      for (var c in state.categories) {
+        if (c.name == postCategory) {
+          categoryId = c.id;
+        }
+      }
+
+      emit(state.copyWith(
+          isUpdating: true,
+          title: post.title,
+          description: post.description,
+          images: post.images,
+          postId: post.postId,
+          categoryId: categoryId,
+          price: post.price));
+    }
+  }
+
   Future<void> setTitleValue(String value) async {
-    emit(state.copyWith(titleValue: value));
+    emit(state.copyWith(title: value));
   }
 
   Future<void> setDescriptionValue(String value) async {
-    emit(state.copyWith(descriptionValue: value));
+    emit(state.copyWith(description: value));
   }
 
   Future<void> setPriceValue(String value) async {
@@ -48,7 +80,20 @@ class AddPostViewBloc extends Cubit<AddPostState> {
     emit(state.copyWith(images: previousImages));
   }
 
-  Future<void> uploadPost() async {
+  Future<void> upload(BuildContext context) async {
+    if (state.isUpdating) {
+      updatePostUsecase(PostParam(
+          post: SalePostModel(
+              price: state.price,
+              title: state.title,
+              images: state.images,
+              postId: state.postId,
+              description: state.description,
+              categoryId: state.categoryId)));
+
+      return;
+    }
+
     DateTime today = DateTime.now();
     String dateSlug =
         "${today.year.toString()}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
@@ -56,12 +101,13 @@ class AddPostViewBloc extends Cubit<AddPostState> {
     uploadPostUsecase(PostParam(
         post: SalePostModel(
             categoryId: state.categoryId,
-            description: state.descriptionValue,
+            description: state.description,
             images: state.images,
             ownerId: 0,
             price: state.price,
+            postId: state.postId,
             postingDate: dateSlug,
-            title: state.titleValue)));
+            title: state.title)));
   }
 
   Future<void> setCategoryValue(int categoryId) async {
@@ -81,9 +127,13 @@ class AddPostViewBloc extends Cubit<AddPostState> {
     emit(state.copyWith(currentStep: step));
   }
 
-  goToNextStep() {
+  goToNextStep(BuildContext context) {
     if (state.currentStep == 4) {
-      uploadPost();
+      upload(context);
+      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+      BlocProvider.of<HomeViewBloc>(context).goToHome(context);
+      Navigator.of(context).pushReplacementNamed(PageNames.homePage);
+
       return;
     }
     final nextStep = state.currentStep + 1;
@@ -98,8 +148,8 @@ class AddPostViewBloc extends Cubit<AddPostState> {
   }
 
   bool canGoToNextStep() {
-    if (state.currentStep == 0 && state.titleValue.length > 3) return true;
-    if (state.currentStep == 1 && state.descriptionValue.length > 3) {
+    if (state.currentStep == 0 && state.title.length > 3) return true;
+    if (state.currentStep == 1 && state.description.length > 3) {
       return true;
     }
 

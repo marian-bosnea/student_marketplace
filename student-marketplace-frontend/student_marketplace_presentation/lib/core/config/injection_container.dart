@@ -51,6 +51,7 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_favorite_posts_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/sale_post/update_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/get_user_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/sign_up_usecase.dart';
@@ -111,7 +112,9 @@ Future<void> init() async {
       removeFromFavoritesUsecase: sl.call()));
 
   sl.registerFactory(() => AddPostViewBloc(
-      getAllCategoriesUsecase: sl.call(), uploadPostUsecase: sl.call()));
+      updatePostUsecase: sl.call(),
+      getAllCategoriesUsecase: sl.call(),
+      uploadPostUsecase: sl.call()));
 
   sl.registerFactory(() => FavoritesViewBloc(
       getFavoritePostsUsecase: sl.call(),
@@ -174,6 +177,9 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => UploadPostUsecase(
       salePostOperations: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() =>
+      UpdatePostUsecase(operations: sl.call(), authRepository: sl.call()));
 
   // Repositories
 

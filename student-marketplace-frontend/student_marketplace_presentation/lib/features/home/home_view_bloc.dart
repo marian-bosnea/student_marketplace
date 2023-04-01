@@ -26,8 +26,8 @@ class HomeViewBloc extends Cubit<HomePageState> {
 
   void goToHome(BuildContext context) {
     if (!state.hasLoadedPosts) {
-      BlocProvider.of<PostViewBloc>(context).fetchAllCategories();
-      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+      // BlocProvider.of<PostViewBloc>(context).fetchAllCategories();
+      // BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
       emit(state.copyWith(
           status: HomePageStatus.home,
           title: "Discover",
@@ -51,20 +51,12 @@ class HomeViewBloc extends Cubit<HomePageState> {
   }
 
   void goToSearch(BuildContext context) {
-    if (state.shouldRefreshPosts) {
-      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
-    }
-
     if (state.status != HomePageStatus.search) {
       emit(state.copyWith(status: HomePageStatus.search, title: "Orders"));
     }
   }
 
   void goToAddPost(BuildContext context) {
-    if (state.shouldRefreshPosts) {
-      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
-    }
-
     if (state.status != HomePageStatus.addPost) {
       emit(state.copyWith(
           status: HomePageStatus.addPost, title: "Sell an item"));
@@ -72,10 +64,6 @@ class HomeViewBloc extends Cubit<HomePageState> {
   }
 
   void goToFavorites(BuildContext context) {
-    if (state.shouldRefreshPosts) {
-      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
-    }
-
     if (state.status != HomePageStatus.favorites) {
       emit(
           state.copyWith(status: HomePageStatus.favorites, title: 'Favorites'));
