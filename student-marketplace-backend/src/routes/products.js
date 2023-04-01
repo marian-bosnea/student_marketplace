@@ -43,13 +43,20 @@ productRouter.post('/sale-object/post',
         productController.insert(req, res);
     });
 
+productRouter.post('/sale-object/update',
+    authorization.authenticateToken,
+    upload.array('images', 4),
+    (req, res) => {
+        productController.update(req, res);
+    });
+
 productRouter.post('/sale-object/get/category',
     authorization.authenticateToken,
     (req, res) => {
         productController.getAllFromCategory(req, res);
     });
 
-productRouter.get('/sale-object/get/owner',
+productRouter.post('/sale-object/get/owner',
     authorization.authenticateToken,
     (req, res) => {
         productController.getAllByOwnerId(req, res);
@@ -65,6 +72,7 @@ productRouter.get('/sale-object/get/all',
 productRouter.post('/sale-object/get/query',
     authorization.authenticateToken,
     (req, res) => {
+        console.log('Requested posts by query');
         productController.searchWithTextQuery(req, res);
     });
 
