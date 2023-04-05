@@ -5,10 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:student_marketplace_business_logic/domain/entities/faculty_entity.dart';
 
 enum RegisterPageStatus {
-  credentialsInProgress,
-  validCredentials,
-  personalInfoInProgress,
-  validPersonalInfo,
+  initial,
+  inProgress,
   submissionSuccessful,
   submissionFailed
 }
@@ -30,13 +28,16 @@ class RegisterViewState extends Equatable {
 
   final Uint8List? avatarImage;
 
+  final int currentStep;
+
   const RegisterViewState(
-      {this.status = RegisterPageStatus.credentialsInProgress,
+      {this.status = RegisterPageStatus.initial,
       this.showEmailCheckmark = false,
       this.showPasswordWarning = false,
       this.showConfirmPasswordWarning = false,
       this.hasUploadedPhoto = false,
       this.faculties = const [],
+      this.currentStep = 0,
       this.emailValue = '',
       this.avatarImage,
       this.passwordValue = '',
@@ -58,6 +59,7 @@ class RegisterViewState extends Equatable {
           String? lastNameValue,
           String? secondLastNameValue,
           Uint8List? avatarImage,
+          int? currentStep,
           List<FacultyEntity>? faculties,
           String? selectedFacultyId,
           RegisterPageStatus? status}) =>
@@ -68,6 +70,7 @@ class RegisterViewState extends Equatable {
               showConfirmPasswordWarning ?? this.showConfirmPasswordWarning,
           hasUploadedPhoto: hasUploadedPhoto ?? this.hasUploadedPhoto,
           status: status ?? this.status,
+          currentStep: currentStep ?? this.currentStep,
           emailValue: emailValue ?? this.emailValue,
           passwordValue: passwordValue ?? this.passwordValue,
           avatarImage: avatarImage ?? this.avatarImage,
@@ -93,6 +96,7 @@ class RegisterViewState extends Equatable {
         showConfirmPasswordWarning,
         status,
         avatarImage,
-        selectedFacultyId
+        selectedFacultyId,
+        currentStep
       ];
 }

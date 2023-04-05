@@ -21,7 +21,7 @@ class HomeViewPage extends StatelessWidget {
   HomeViewPage({super.key});
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeViewBloc, HomePageState>(
+    return BlocBuilder<HomeViewBloc, HomeViewState>(
       builder: (context, state) {
         return PlatformScaffold(
           appBar: isMaterial(context)
@@ -58,7 +58,7 @@ class HomeViewPage extends StatelessWidget {
                   label: 'Orders',
                   icon: Icon(
                     Icons.receipt,
-                    color: state.status == HomePageStatus.search
+                    color: state.status == HomePageStatus.orders
                         ? accentColor
                         : Colors.black38,
                   )),
@@ -82,7 +82,7 @@ class HomeViewPage extends StatelessWidget {
                   label: 'Account',
                   icon: Icon(
                     Icons.account_circle,
-                    color: state.status == HomePageStatus.profile
+                    color: state.status == HomePageStatus.account
                         ? accentColor
                         : Colors.black38,
                   ))
@@ -94,7 +94,7 @@ class HomeViewPage extends StatelessWidget {
     );
   }
 
-  Widget _getNavigationBar(BuildContext context, HomePageState state) {
+  Widget _getNavigationBar(BuildContext context, HomeViewState state) {
     final postsBloc = BlocProvider.of<PostViewBloc>(context);
     return CupertinoSliverNavigationBar(
       alwaysShowMiddle: false,
@@ -113,7 +113,7 @@ class HomeViewPage extends StatelessWidget {
                     height: ScreenUtil().setHeight(80),
                     width: ScreenUtil().setWidth(690),
                     child: PlatformTextField(
-                        hintText: postsBloc.getSearchHint(),
+                        hintText: state.searchHint,
                         onChanged: (text) =>
                             postsBloc.onSearchQueryChanged(text),
                         cupertino: (context, target) =>
@@ -168,36 +168,36 @@ class HomeViewPage extends StatelessWidget {
   onBottomNavbarItemTap(BuildContext context, int index) {
     switch (index) {
       case 0:
-        BlocProvider.of<HomeViewBloc>(context).goToHome(context);
+        BlocProvider.of<HomeViewBloc>(context).goToHome();
         break;
       case 1:
-        BlocProvider.of<HomeViewBloc>(context).goToSearch(context);
+        BlocProvider.of<HomeViewBloc>(context).goToOrders();
         break;
       case 2:
-        BlocProvider.of<HomeViewBloc>(context).goToAddPost(context);
+        BlocProvider.of<HomeViewBloc>(context).goToAddPost();
         break;
       case 3:
-        BlocProvider.of<HomeViewBloc>(context).goToFavorites(context);
+        BlocProvider.of<HomeViewBloc>(context).goToFavorites();
         break;
       case 4:
-        BlocProvider.of<HomeViewBloc>(context).goToSettings(context);
+        BlocProvider.of<HomeViewBloc>(context).goToAccount();
         break;
     }
   }
 
-  Widget _getCurrentPage(BuildContext context, HomePageState state) {
+  Widget _getCurrentPage(BuildContext context, HomeViewState state) {
     switch (state.status) {
       case HomePageStatus.intial:
         return Container();
       case HomePageStatus.home:
         return const PostViewPage();
-      case HomePageStatus.search:
+      case HomePageStatus.orders:
         return Container();
       case HomePageStatus.addPost:
         return AddPostPage();
       case HomePageStatus.favorites:
         return FavoritesViewPage();
-      case HomePageStatus.profile:
+      case HomePageStatus.account:
         return AccountViewPage();
     }
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:student_marketplace_business_logic/data/models/sale_post_model.dart';
+
 import 'package:student_marketplace_presentation/features/posts_view/posts_state.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/posts_view/widgets/featured_item.dart';
+import 'package:student_marketplace_presentation/features/shared/empty_list_placeholder.dart';
 import 'package:student_marketplace_presentation/features/shared/post_item.dart';
 
 import '../../core/constants/enums.dart';
@@ -14,6 +16,7 @@ import 'widgets/category_item.dart';
 
 class PostViewPage extends StatelessWidget {
   const PostViewPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -23,64 +26,44 @@ class PostViewPage extends StatelessWidget {
         return RefreshIndicator(
           color: accentColor,
           backgroundColor: primaryColor,
-          onRefresh: () async {
-            if (state.selectedCategoryIndex == -1) {
-              BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
-            } else {
-              BlocProvider.of<PostViewBloc>(context)
-                  .fetchAllPostsOfSelectedCategory();
-            }
-          },
+          onRefresh: () async => _onRefresh(context, state),
           child: CustomScrollView(
-            reverse: false,
-            key: const PageStorageKey(0),
-            // controller: _scrollController,
-            slivers: state.status == PostsViewStatus.loaded
-                ? _buildPostsLoadedWidgets(context, state)
-                : [
-                    SliverList(
-                      delegate: SliverChildListDelegate([
-                        Container(
-                          height: 70,
-                          padding: const EdgeInsets.only(
-                              top: 10, left: 10, right: 10),
-                          width: MediaQuery.of(context).size.width,
-                          child: ListView.builder(
-                              key: const PageStorageKey(0),
-                              controller: ScrollController(),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: state.categories.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index > 0) {
-                                  final category =
-                                      state.categories.elementAt(index - 1);
-
-                                  return CategoryItem(
-                                      label: category.name,
-                                      isSelected:
-                                          index == state.selectedCategoryIndex,
-                                      onTap: () =>
-                                          BlocProvider.of<PostViewBloc>(context)
-                                              .selectCategory(index));
-                                } else {
-                                  return CategoryItem(
-                                      label: '🏷️All  ',
-                                      onTap: () =>
-                                          BlocProvider.of<PostViewBloc>(context)
-                                              .selectCategory(-1),
-                                      isSelected:
-                                          state.selectedCategoryIndex == -1);
-                                }
-                              }),
-                        ),
-                        _buildShimmerWidget(),
-                      ]),
-                    ),
-                  ],
-          ),
+              reverse: false,
+              key: const PageStorageKey(0),
+              slivers: [_buildCategoryList(context, state)] +
+                  _getSlivers(context, state)),
         );
       }),
     );
+  }
+
+  @pragma('Components')
+  List<Widget> _getSlivers(BuildContext context, PostViewState state) {
+    switch (state.status) {
+      case PostsViewStatus.initial:
+        return [Container()];
+      case PostsViewStatus.loading:
+        return [
+          SliverToBoxAdapter(
+            child: _buildShimmerWidget(),
+          )
+        ];
+      case PostsViewStatus.loaded:
+        if (state.posts.isEmpty) {
+          return [
+            const SliverToBoxAdapter(
+                child: EmptyListPlaceholder(
+                    message: 'There is no item in this category'))
+          ];
+        }
+        return _buildPostsLoadedWidgets(context, state);
+      case PostsViewStatus.fail:
+        return [
+          const SliverToBoxAdapter(
+            child: Center(child: Text('Failed to load posts')),
+          )
+        ];
+    }
   }
 
   SizedBox _buildShimmerWidget() {
@@ -127,43 +110,46 @@ class PostViewPage extends StatelessWidget {
             )));
   }
 
+  Widget _buildCategoryList(BuildContext context, PostViewState state) {
+    return SliverToBoxAdapter(
+      child: Container(
+        height: 70,
+        padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+            key: const PageStorageKey(0),
+            controller: ScrollController(),
+            scrollDirection: Axis.horizontal,
+            itemCount: state.categories.length + 1,
+            itemBuilder: (context, index) {
+              if (index > 0) {
+                final category = state.categories.elementAt(index - 1);
+                return CategoryItem(
+                    label: category.name,
+                    isSelected: index == state.selectedCategoryIndex,
+                    onTap: () => BlocProvider.of<PostViewBloc>(context)
+                        .selectCategory(index));
+              } else {
+                return CategoryItem(
+                    label: '🏷️All  ',
+                    onTap: () => BlocProvider.of<PostViewBloc>(context)
+                        .selectCategory(-1),
+                    isSelected: state.selectedCategoryIndex == -1);
+              }
+            }),
+      ),
+    );
+  }
+
   List<Widget> _buildPostsLoadedWidgets(
       BuildContext context, PostViewState state) {
     return [
-      SliverList(
-        delegate: SliverChildListDelegate([
-          Container(
-            height: 70,
-            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            width: MediaQuery.of(context).size.width,
-            child: ListView.builder(
-                key: const PageStorageKey(0),
-                controller: ScrollController(),
-                scrollDirection: Axis.horizontal,
-                itemCount: state.categories.length + 1,
-                itemBuilder: (context, index) {
-                  if (index > 0) {
-                    final category = state.categories.elementAt(index - 1);
-                    return CategoryItem(
-                        label: category.name,
-                        isSelected: index == state.selectedCategoryIndex,
-                        onTap: () => BlocProvider.of<PostViewBloc>(context)
-                            .selectCategory(index));
-                  } else {
-                    return CategoryItem(
-                        label: '🏷️All  ',
-                        onTap: () => BlocProvider.of<PostViewBloc>(context)
-                            .selectCategory(-1),
-                        isSelected: state.selectedCategoryIndex == -1);
-                  }
-                }),
-          ),
-          if (state.featuredPost != null)
-            SizedBox(
-                height: ScreenUtil().setHeight(400),
-                child: FeaturedItem(post: state.featuredPost!)),
-        ]),
-      ),
+      if (state.featuredPost != null)
+        SliverToBoxAdapter(
+          child: SizedBox(
+              height: ScreenUtil().setHeight(400),
+              child: FeaturedItem(post: state.featuredPost!)),
+        ),
       SliverPadding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         sliver: SliverGrid.builder(
@@ -183,5 +169,14 @@ class PostViewPage extends StatelessWidget {
         ),
       )
     ];
+  }
+
+  @pragma('UI callback handlers')
+  _onRefresh(BuildContext context, PostViewState state) {
+    if (state.selectedCategoryIndex == -1) {
+      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    } else {
+      BlocProvider.of<PostViewBloc>(context).fetchAllPostsOfSelectedCategory();
+    }
   }
 }

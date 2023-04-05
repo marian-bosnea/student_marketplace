@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
@@ -7,6 +8,7 @@ import 'package:student_marketplace_business_logic/data/models/user_model.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/credentials/check_email_availability_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/faculty/get_all_faculties_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/sign_up_usecase.dart';
+import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
 
 import '../../core/utils/input_validators.dart';
 import 'register_view_state.dart';
@@ -15,8 +17,6 @@ class RegisterViewBloc extends Cubit<RegisterViewState> {
   final SignUpUsecase signUpUsecase;
   final GetAllFacultiesUsecase getAllFacultiesUsecase;
   final CheckEmailAvailabilityUsecase checkEmailRegistrationUsecase;
-
-  late RegisterViewState state = const RegisterViewState();
 
   RegisterViewBloc(
       {required this.signUpUsecase,
@@ -28,100 +28,91 @@ class RegisterViewBloc extends Cubit<RegisterViewState> {
     final result = await getAllFacultiesUsecase(NoParams());
     final faculties = result.getOrElse(() => []);
 
-    state = state.copyWith(faculties: faculties);
-    emit(state);
+    emit(state.copyWith(faculties: faculties));
+  }
+
+  Future<void> onSelectFaculty(String id) async {
+    emit(state.copyWith(selectedFacultyId: id));
   }
 
   Future<void> checkEmailForAvailability(CredentialsModel credentials) async {
-    state = state.copyWith(emailValue: credentials.email);
+    emit(state.copyWith(emailValue: credentials.email));
     final isEmailValid = checkEmail(credentials.email);
 
     if (credentials.email.trim().isEmpty || !isEmailValid) {
-      state = state.copyWith(showEmailCheckmark: false);
+      emit(state.copyWith(showEmailCheckmark: false));
     } else {
       final result = await checkEmailRegistrationUsecase(
           CredentialsParams(credentials: credentials));
 
       if (result is Left) {
-        state = state.copyWith(showEmailCheckmark: false);
+        emit(state.copyWith(showEmailCheckmark: false));
       }
       final isEmailAlreadyRegistered = (result as Right).value;
 
-      state = state.copyWith(showEmailCheckmark: !isEmailAlreadyRegistered);
+      emit(state.copyWith(showEmailCheckmark: !isEmailAlreadyRegistered));
     }
     emit(state);
-    _checkIfCredentialsFormIsValid();
+    _checkCredentialsFormValidity();
   }
 
   Future<void> checkIfPasswordIsValid(String value) async {
-    state = state.copyWith(passwordValue: value);
+    emit(state.copyWith(passwordValue: value));
 
     if (value.trim().isEmpty) {
-      state = state.copyWith(showPasswordWarning: false);
-      emit(state);
+      emit(state.copyWith(showPasswordWarning: false));
       return;
     }
 
     final isPasswordValid = checkPassword(value);
-    state = state.copyWith(
-        passwordValue: value, showPasswordWarning: !isPasswordValid);
-    emit(state);
+    emit(state.copyWith(
+        passwordValue: value, showPasswordWarning: !isPasswordValid));
 
     checkIfPasswordsMatch(state.confirmPasswordValue);
   }
 
   Future<void> checkIfPasswordsMatch(String value) async {
     if (value.trim().isEmpty) {
-      state = state.copyWith(showConfirmPasswordWarning: false);
-      emit(state);
+      emit(state.copyWith(showConfirmPasswordWarning: false));
       return;
     }
 
     final arePasswordsTheSame = state.passwordValue.compareTo(value) == 0;
-    state = state.copyWith(
+    emit(state.copyWith(
         confirmPasswordValue: value,
-        showConfirmPasswordWarning: !arePasswordsTheSame);
-    emit(state);
+        showConfirmPasswordWarning: !arePasswordsTheSame));
   }
 
   Future<void> setFirstName(String value) async {
-    state = state.copyWith(firstNameValue: value);
+    emit(state.copyWith(firstNameValue: value));
   }
 
   Future<void> setLastName(String value) async {
-    state = state.copyWith(lastNameValue: value);
+    emit(state.copyWith(lastNameValue: value));
   }
 
   Future<void> setSecondLastName(String value) async {
-    state = state.copyWith(secondLastNameValue: value);
+    emit(state.copyWith(secondLastNameValue: value));
   }
 
-  Future<void> goToNextStep() async {
-    if (state.status == RegisterPageStatus.validCredentials) {
-      state = state.copyWith(status: RegisterPageStatus.personalInfoInProgress);
-      emit(state);
-    }
-    if (state.status == RegisterPageStatus.personalInfoInProgress) {
-      //state = state.copyWith(status: RegisterPageStatus.credentialsInProgress);
-      //emit(state);
-    }
-    if (state.status == RegisterPageStatus.validPersonalInfo) {
-      //_registerUser
+  Future<void> goToNextStep(BuildContext context) async {
+    if (state.currentStep < 2) {
+      emit(state.copyWith(currentStep: state.currentStep + 1));
+    } else {
+      registerUser(context);
     }
   }
 
   Future<void> goToPreviousStep() async {
-    state = state.copyWith(status: RegisterPageStatus.validCredentials);
-    emit(state);
-  }
-
-  checkPersonalInfo() {
-    if (state.firstNameValue.isNotEmpty &&
-        state.lastNameValue.isNotEmpty &&
-        state.selectedFacultyId != '') {
-      state = state.copyWith(status: RegisterPageStatus.validPersonalInfo);
+    if (state.currentStep > 0) {
+      emit(state.copyWith(currentStep: state.currentStep - 1));
     }
   }
+
+  bool _checkPersonalInfoFormValidity() =>
+      state.firstNameValue.isNotEmpty &&
+      state.lastNameValue.isNotEmpty &&
+      state.selectedFacultyId != '';
 
   Future<void> onSelectImage() async {
     final ImagePicker picker = ImagePicker();
@@ -130,27 +121,16 @@ class RegisterViewBloc extends Cubit<RegisterViewState> {
 
     if (image != null) {
       final result = await image.readAsBytes();
-      state = state.copyWith(hasUploadedPhoto: true, avatarImage: result);
-      emit(state);
+      emit(state.copyWith(hasUploadedPhoto: true, avatarImage: result));
     }
   }
 
-  Future<void> onSelectFaculty(String id) async {
-    state = state.copyWith(selectedFacultyId: id);
-    checkPersonalInfo();
-    emit(state);
-  }
+  _checkCredentialsFormValidity() =>
+      state.showEmailCheckmark &&
+      checkPassword(state.passwordValue) &&
+      state.passwordValue == state.confirmPasswordValue;
 
-  _checkIfCredentialsFormIsValid() {
-    if (state.showEmailCheckmark &&
-        !state.showPasswordWarning &&
-        !state.showConfirmPasswordWarning) {
-      state = state.copyWith(status: RegisterPageStatus.validCredentials);
-      emit(state);
-    }
-  }
-
-  Future<void> registerUser() async {
+  Future<void> registerUser(BuildContext context) async {
     UserModel m = UserModel(
         email: state.emailValue,
         password: state.passwordValue,
@@ -163,10 +143,21 @@ class RegisterViewBloc extends Cubit<RegisterViewState> {
     final result = await signUpUsecase(UserParam(user: m));
 
     final success = result.getOrElse(() => false);
-    state = state.copyWith(
+    emit(state.copyWith(
         status: success
             ? RegisterPageStatus.submissionSuccessful
-            : RegisterPageStatus.submissionFailed);
-    emit(state);
+            : RegisterPageStatus.submissionFailed));
+    if (state.status == RegisterPageStatus.submissionSuccessful) {
+      emit(state.copyWith(currentStep: 0));
+      Navigator.of(context).pushReplacementNamed(PageNames.authenticationPage);
+    }
+  }
+
+  bool canGoToNextStep() {
+    if (state.currentStep == 0) return _checkCredentialsFormValidity();
+    if (state.currentStep == 1) return _checkPersonalInfoFormValidity();
+    if (state.currentStep == 2) return state.hasUploadedPhoto;
+
+    return false;
   }
 }

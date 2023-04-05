@@ -90,7 +90,7 @@ Future<void> init() async {
       getAllFacultiesUsecase: sl.call(),
       checkEmailRegistrationUsecase: sl.call()));
 
-  sl.registerFactory(() => HomeViewBloc(getOwnUserProfileUsecase: sl.call()));
+  sl.registerFactory(() => HomeViewBloc());
 
   sl.registerFactory(() => AccountViewBloc(
       getUserUsecase: sl.call(), deauthenticateUsecase: sl.call()));
@@ -99,8 +99,6 @@ Future<void> init() async {
       addToFavoritesUsecase: sl.call(),
       removeFromFavoritesUsecase: sl.call(),
       getAllPostsUsecase: sl.call(),
-      getCachedSessionUsecase: sl.call(),
-      getDetailedPostUsecase: sl.call(),
       getAllPostsByCategoryUsecase: sl.call(),
       getAllPostsByQueryUsecase: sl.call(),
       getAllCategoriesUsecase: sl.call()));
@@ -142,8 +140,8 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => SignUpUsecase(operations: sl.call()));
 
-  sl.registerLazySingleton(() =>
-      GetUserProfile(userRepository: sl.call(), authRepository: sl.call()));
+  sl.registerLazySingleton(() => GetUserProfileUsecase(
+      userRepository: sl.call(), authRepository: sl.call()));
 
   sl.registerLazySingleton(() =>
       GetAllPostsUsecase(postRepository: sl.call(), authRepository: sl.call()));
@@ -154,7 +152,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetAllPostsByOwnerUsecase(
       postRepository: sl.call(), authRepository: sl.call()));
 
-  sl.registerLazySingleton(() => GetAllPostsByCategory(
+  sl.registerLazySingleton(() => GetAllPostsByCategoryUsecase(
       postRepository: sl.call(), authRepository: sl.call()));
 
   sl.registerLazySingleton(() => GetAllPostsByQueryUsecase(

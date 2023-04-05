@@ -2,9 +2,12 @@ import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_page.dart';
+import 'package:student_marketplace_presentation/features/shared/empty_list_placeholder.dart';
 
 import '../../core/theme/colors.dart';
 import 'favorites_view_bloc.dart';
@@ -20,32 +23,45 @@ class FavoritesViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FavoritesViewBloc, FavoritesViewState>(
       builder: (context, state) {
-        return ListView.builder(
-            shrinkWrap: true,
-            itemCount: state.posts.length,
-            itemBuilder: (context, index) {
-              final post = state.posts.elementAt(index);
-              return Slidable(
-                  key: ValueKey(post.postId),
-                  endActionPane:
-                      ActionPane(motion: const ScrollMotion(), children: [
-                    SlidableAction(
-                      onPressed: (context) =>
-                          BlocProvider.of<FavoritesViewBloc>(context)
-                              .removeFromFavorites(context, post.postId!),
-                      autoClose: true,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      backgroundColor: const Color(0xFFFE4A49),
-                      foregroundColor: Colors.white,
-                      icon: CupertinoIcons.trash,
-                      label: 'Remove',
-                    ),
-                  ]),
-                  child: FavoriteListItem(
-                    post: post,
-                  ));
-            });
+        if (state.posts.isEmpty) {
+          return getEmptyListPlaceholder(state);
+        }
+        return getLoadedItemsList(state);
       },
     );
+  }
+
+  Widget getEmptyListPlaceholder(FavoritesViewState state) {
+    return const EmptyListPlaceholder(
+      message: 'You dont have any item added to favorites',
+    );
+  }
+
+  ListView getLoadedItemsList(FavoritesViewState state) {
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: state.posts.length,
+        itemBuilder: (context, index) {
+          final post = state.posts.elementAt(index);
+          return Slidable(
+              key: ValueKey(post.postId),
+              endActionPane:
+                  ActionPane(motion: const ScrollMotion(), children: [
+                SlidableAction(
+                  onPressed: (context) =>
+                      BlocProvider.of<FavoritesViewBloc>(context)
+                          .removeFromFavorites(context, post.postId!),
+                  autoClose: true,
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                  backgroundColor: const Color(0xFFFE4A49),
+                  foregroundColor: Colors.white,
+                  icon: CupertinoIcons.trash,
+                  label: 'Remove',
+                ),
+              ]),
+              child: FavoriteListItem(
+                post: post,
+              ));
+        });
   }
 }

@@ -8,6 +8,6 @@ enum FormStatus {
 
 enum ProfilePageStatus { initial, loading, loaded, editting }
 
-enum HomePageStatus { intial, home, search, addPost, favorites, profile }
+enum HomePageStatus { intial, home, orders, addPost, favorites, account }
 
 enum PostsViewStatus { initial, loading, loaded, fail }

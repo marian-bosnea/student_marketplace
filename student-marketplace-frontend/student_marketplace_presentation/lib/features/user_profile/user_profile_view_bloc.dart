@@ -9,7 +9,7 @@ import 'package:student_marketplace_presentation/features/user_profile/user_prof
 import '../../core/constants/enums.dart';
 
 class UserProfileViewBloc extends Cubit<UserProfileViewState> {
-  final GetUserProfile getUserUsecase;
+  final GetUserProfileUsecase getUserUsecase;
   final GetAllPostsByOwnerUsecase getAllPostsByOwnerUsecase;
 
   UserProfileViewBloc(

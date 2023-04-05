@@ -7,12 +7,12 @@ import '../../entities/sale_post_entity.dart';
 import '../../repositories/auth_session_repository.dart';
 import '../../repositories/sale_post_repository.dart';
 
-class GetAllPostsByCategory
+class GetAllPostsByCategoryUsecase
     implements Usecase<List<SalePostEntity>, CategoryParam> {
   final SalePostRepository postRepository;
   final AuthSessionRepository authRepository;
 
-  GetAllPostsByCategory(
+  GetAllPostsByCategoryUsecase(
       {required this.postRepository, required this.authRepository});
 
   @override

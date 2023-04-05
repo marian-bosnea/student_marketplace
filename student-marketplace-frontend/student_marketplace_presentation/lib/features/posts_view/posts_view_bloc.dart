@@ -16,24 +16,21 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/rem
 import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 
+import '../../core/config/injection_container.dart';
 import '../../core/constants/enums.dart';
 import 'posts_state.dart';
 
 class PostViewBloc extends Cubit<PostViewState> {
   final GetAllPostsUsecase getAllPostsUsecase;
-  final GetAllPostsByCategory getAllPostsByCategoryUsecase;
+  final GetAllPostsByCategoryUsecase getAllPostsByCategoryUsecase;
   final GetAllCategoriesUsecase getAllCategoriesUsecase;
-  final GetCachedSessionUsecase getCachedSessionUsecase;
-  final GetDetailedPostUsecase getDetailedPostUsecase;
   final AddToFavoritesUsecase addToFavoritesUsecase;
   final GetAllPostsByQueryUsecase getAllPostsByQueryUsecase;
   final RemoveFromFavoritesUsecase removeFromFavoritesUsecase;
 
   PostViewBloc(
       {required this.getAllPostsUsecase,
-      required this.getCachedSessionUsecase,
       required this.getAllCategoriesUsecase,
-      required this.getDetailedPostUsecase,
       required this.getAllPostsByCategoryUsecase,
       required this.addToFavoritesUsecase,
       required this.removeFromFavoritesUsecase,
@@ -47,8 +44,6 @@ class PostViewBloc extends Cubit<PostViewState> {
       final categories = (categoriesResult as Right).value;
       emit(state.copyWith(categories: categories));
     }
-
-    emit(state);
   }
 
   Future<void> selectCategory(int index) async {
@@ -56,6 +51,8 @@ class PostViewBloc extends Cubit<PostViewState> {
       emit(state.copyWith(selectedCategoryIndex: index));
 
       if (index != -1) {
+        notifyCategoryChanged();
+
         await fetchAllPostsOfSelectedCategory();
       } else {
         fetchAllPosts();
@@ -71,6 +68,7 @@ class PostViewBloc extends Cubit<PostViewState> {
 
     if (postsResult is Left) {
       emit(state.copyWith(status: PostsViewStatus.fail));
+      return;
     } else {
       final posts = (postsResult as Right).value;
       emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
@@ -88,6 +86,7 @@ class PostViewBloc extends Cubit<PostViewState> {
 
     if (result is Left) {
       emit(state.copyWith(status: PostsViewStatus.fail));
+      return;
     } else {
       final posts = (result as Right).value;
       if (state.selectedCategoryIndex != -1) {
@@ -148,6 +147,8 @@ class PostViewBloc extends Cubit<PostViewState> {
   }
 
   _getFeaturedItem() {
+    if (state.posts.isEmpty) return;
+
     SalePostEntity item = state.posts.first;
     int maxViewCount = 0;
 
@@ -161,9 +162,11 @@ class PostViewBloc extends Cubit<PostViewState> {
     emit(state.copyWith(featuredPost: item));
   }
 
-  String getSearchHint() {
-    return state.selectedCategoryIndex != -1
+  @visibleForTesting
+  notifyCategoryChanged() {
+    final hint = state.selectedCategoryIndex != -1
         ? 'Search in ${state.categories[state.selectedCategoryIndex - 1].name}'
         : 'Search';
+    sl.get<HomeViewBloc>().setSearchHint(hint);
   }
 }

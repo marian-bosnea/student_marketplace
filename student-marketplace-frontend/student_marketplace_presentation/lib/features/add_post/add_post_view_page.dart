@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_presentation/core/theme/colors.dart';
 import '../../core/config/injection_container.dart' as di;
@@ -29,6 +30,13 @@ class AddPostPage extends StatelessWidget {
 
   final titleStyle = TextStyle(fontSize: ScreenUtil().setSp(40));
   final singleLineFieldHeight = ScreenUtil().setWidth(70);
+  final _stepSvg = [
+    SvgPicture.asset('assets/images/sell_title_art.svg'),
+    SvgPicture.asset('assets/images/sell_details_art.svg'),
+    SvgPicture.asset('assets/images/sell_price_art.svg'),
+    SvgPicture.asset('assets/images/sell_category_art.svg'),
+    SvgPicture.asset('assets/images/sell_photos_art.svg'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +124,11 @@ class AddPostPage extends StatelessWidget {
                   content: Column(
                     children: [
                       Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          width: ScreenUtil().setWidth(300),
+                          height: ScreenUtil().setHeight(300),
+                          child: _stepSvg[0]),
+                      Container(
                         margin: const EdgeInsets.only(bottom: 10),
                         child: const Text(
                           'Try to include esential words that describe your item the best',
@@ -142,6 +155,11 @@ class AddPostPage extends StatelessWidget {
                   content: Column(
                     children: [
                       Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          width: ScreenUtil().setWidth(300),
+                          height: ScreenUtil().setHeight(300),
+                          child: _stepSvg[1]),
+                      Container(
                         margin: const EdgeInsets.only(bottom: 10),
                         child: const Text(
                           'Describe your product as detailed as you can. Include details about its condition, features, color, sizes, etc',
@@ -167,6 +185,11 @@ class AddPostPage extends StatelessWidget {
                   ),
                   content: Column(
                     children: [
+                      Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          width: ScreenUtil().setWidth(300),
+                          height: ScreenUtil().setHeight(300),
+                          child: _stepSvg[2]),
                       Container(
                         margin: const EdgeInsets.only(bottom: 10),
                         child: const Text(
@@ -198,6 +221,11 @@ class AddPostPage extends StatelessWidget {
                   content: Column(
                     children: [
                       Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          width: ScreenUtil().setWidth(300),
+                          height: ScreenUtil().setHeight(300),
+                          child: _stepSvg[3]),
+                      Container(
                         margin: const EdgeInsets.only(bottom: 10),
                         child: const Text(
                           'Select the most appropriate category for your item. This will help others find your product more easily.',
@@ -226,6 +254,11 @@ class AddPostPage extends StatelessWidget {
                   ),
                   content: Column(
                     children: [
+                      Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          width: ScreenUtil().setWidth(300),
+                          height: ScreenUtil().setHeight(300),
+                          child: _stepSvg[4]),
                       Container(
                         margin: const EdgeInsets.only(bottom: 10),
                         child: const Text(

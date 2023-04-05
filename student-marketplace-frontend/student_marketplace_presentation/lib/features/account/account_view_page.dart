@@ -90,8 +90,7 @@ class AccountViewPage extends StatelessWidget {
             ),
             color: Colors.red,
             label: 'Favorites',
-            onTap: () =>
-                BlocProvider.of<HomeViewBloc>(context).goToFavorites(context),
+            onTap: () => BlocProvider.of<HomeViewBloc>(context).goToFavorites(),
           ),
           ProfileMenuItem(
             icon: const Icon(

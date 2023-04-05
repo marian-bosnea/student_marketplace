@@ -6,6 +6,7 @@ import 'package:student_marketplace_business_logic/domain/entities/sale_post_ent
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_favorite_posts_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
 import 'favorites_view_state.dart';
@@ -24,7 +25,7 @@ class FavoritesViewBloc extends Cubit<FavoritesViewState> {
   Future<void> removeFromFavorites(BuildContext context, int postId) async {
     await removeFromFavoritesUsecase(IdParam(id: postId));
     fetchFavoritePosts();
-    BlocProvider.of<HomeViewBloc>(context).notifyPostItemChanged(context);
+    BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
   }
 
   Future<void> goToDetailedPostPage(

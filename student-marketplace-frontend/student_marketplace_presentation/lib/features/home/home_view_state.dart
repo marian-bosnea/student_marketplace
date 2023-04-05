@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../core/constants/enums.dart';
 
-class HomePageState extends Equatable {
+class HomeViewState extends Equatable {
   final HomePageStatus status;
   final String title;
   final bool hasLoadedPosts;
@@ -13,26 +13,30 @@ class HomePageState extends Equatable {
   final Uint8List? profileIcon;
 
   final bool shouldRefreshPosts;
+  final String searchHint;
 
-  const HomePageState(
+  const HomeViewState(
       {this.status = HomePageStatus.home,
       this.hasLoadedPosts = false,
       this.hasLoadedProfile = false,
       this.title = 'Discover',
+      this.searchHint = 'Search',
       this.profileIcon,
       this.shouldRefreshPosts = false});
 
-  HomePageState copyWith(
+  HomeViewState copyWith(
       {String? title,
       HomePageStatus? status,
       Uint8List? profileIcon,
       bool? hasLoadedPosts,
       bool? hasLoadedProfile,
+      String? searchHint,
       bool? shouldRefreshPosts}) {
-    return HomePageState(
+    return HomeViewState(
         status: status ?? this.status,
         title: title ?? this.title,
         profileIcon: profileIcon,
+        searchHint: searchHint ?? this.searchHint,
         hasLoadedPosts: hasLoadedPosts ?? this.hasLoadedPosts,
         hasLoadedProfile: hasLoadedProfile ?? this.hasLoadedProfile,
         shouldRefreshPosts: shouldRefreshPosts ?? this.shouldRefreshPosts);
@@ -45,6 +49,7 @@ class HomePageState extends Equatable {
         profileIcon,
         hasLoadedPosts,
         hasLoadedProfile,
-        shouldRefreshPosts
+        shouldRefreshPosts,
+        searchHint
       ];
 }

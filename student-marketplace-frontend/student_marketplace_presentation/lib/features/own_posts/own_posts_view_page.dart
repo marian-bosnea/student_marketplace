@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_state.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_state.dart';
 import 'package:student_marketplace_presentation/features/shared/own_post_list_item.dart';
+
+import '../shared/empty_list_placeholder.dart';
 
 class OwnPostsViewPage extends StatelessWidget {
   final sl = GetIt.instance;
@@ -35,6 +39,11 @@ class OwnPostsViewPage extends StatelessWidget {
   }
 
   Widget _getBodyWidget(BuildContext context, OwnPostsViewState state) {
+    if (state.posts.isEmpty) {
+      return const EmptyListPlaceholder(
+        message: 'You havent post anything on marketplace',
+      );
+    }
     return Material(
       child: ListView.builder(
           itemCount: state.posts.length,
