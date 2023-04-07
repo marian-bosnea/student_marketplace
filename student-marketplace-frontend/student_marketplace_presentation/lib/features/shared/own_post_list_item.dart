@@ -48,7 +48,6 @@ class OwnPostListItem extends StatelessWidget {
                               fontSize: 20, fontWeight: FontWeight.w600),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(top: 10, bottom: 10),
                           padding: const EdgeInsets.all(5),
                           decoration: const BoxDecoration(
                               color: primaryColor,
@@ -58,7 +57,7 @@ class OwnPostListItem extends StatelessWidget {
                             child: Text(
                               post.categoryName!,
                               style:
-                                  TextStyle(fontSize: ScreenUtil().setSp(30)),
+                                  TextStyle(fontSize: ScreenUtil().setSp(25)),
                             ),
                           ),
                         ),

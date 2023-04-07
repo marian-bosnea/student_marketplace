@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:student_marketplace_presentation/core/theme/colors.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/address_list_view/own_addresses_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_bloc.dart';
 
 import 'core/config/routes.dart';
 import 'features/authentication/auth_bloc.dart';
@@ -32,10 +35,15 @@ class StudentMarketPlace extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<AuthBloc>()..onAppStarted(context)),
         BlocProvider(create: (_) => di.sl<LoginViewBloc>()),
         BlocProvider(create: (_) => di.sl<RegisterViewBloc>()),
-        BlocProvider(create: (_) => di.sl<PostViewBloc>()),
-        BlocProvider(create: (_) => di.sl<FavoritesViewBloc>()),
+        BlocProvider(create: (_) => di.sl<PostViewBloc>()..fetchAllPosts()),
+        BlocProvider(
+            create: (_) => di.sl<FavoritesViewBloc>()..fetchFavoritePosts()),
         BlocProvider(create: (_) => di.sl<AccountViewBloc>()),
         BlocProvider(create: (_) => di.sl<HomeViewBloc>()),
+        BlocProvider(create: (_) => di.sl<OwnPostsViewBloc>()..fetchOwnPosts()),
+        BlocProvider(
+          create: (_) => OwnAddressesViewBloc()..fetchAllAddresses(),
+        )
       ],
       child: ScreenUtilInit(
         designSize: const Size(828, 1792),
@@ -46,7 +54,9 @@ class StudentMarketPlace extends StatelessWidget {
             title: 'Student Marketplace',
             debugShowCheckedModeBanner: false,
             onGenerateRoute: OnGenerateRoute.route,
-            theme: ThemeData(textTheme: GoogleFonts.varelaRoundTextTheme()),
+            theme: ThemeData(
+                textTheme: GoogleFonts.varelaRoundTextTheme(),
+                navigationBarTheme: const NavigationBarThemeData()),
             initialRoute: '/',
             routes: appRoutes,
           );

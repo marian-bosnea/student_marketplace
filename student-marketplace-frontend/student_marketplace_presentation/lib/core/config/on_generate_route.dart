@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
+import 'package:student_marketplace_presentation/features/create_adress/create_address_view_page.dart';
 import 'package:student_marketplace_presentation/features/edit_post/edit_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_page.dart';
 
+import '../../features/address_list_view/own_addresses_view_page.dart';
 import '../../features/login/login_view_page.dart';
 import '../../features/register/register_view_page.dart';
 import '../../features/account/account_view_page.dart';
@@ -25,6 +28,12 @@ class OnGenerateRoute {
         return routeBuilder(EditPostViewPage(
           post: args as SalePostEntity,
         ));
+      case PageNames.createAddress:
+        return routeBuilder(CreateAddressViewPage(
+          addressToEdit: args as AddressEntity?,
+        ));
+      case PageNames.addressView:
+        return routeBuilder(const OwnAddressesViewPage());
       default:
         return routeBuilder(const NoPage());
     }
@@ -41,6 +50,8 @@ class PageNames {
   static const registerPage = 'registerPage';
   static const userProfilePage = 'userProfilePage';
   static const editPostPage = 'editPostPage';
+  static const createAddress = 'createAddressPage';
+  static const addressView = 'addressesViewPage';
 }
 
 class NoPage extends StatelessWidget {

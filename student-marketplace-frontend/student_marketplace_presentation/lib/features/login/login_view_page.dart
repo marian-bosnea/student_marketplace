@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:mockito/mockito.dart';
 import '../../core/config/on_generate_route.dart';
 import '../../core/theme/colors.dart';
 import '../authentication/auth_bloc.dart';
@@ -53,134 +54,157 @@ class LoginViewPage extends StatelessWidget {
 
   Widget _bodyWidget(BuildContext context, LoginViewState state) {
     return Material(
-      child: Container(
-        height: ScreenUtil().setHeight(1792),
-        padding: EdgeInsets.only(
-            top: ScreenUtil().setHeight(200),
-            left: ScreenUtil().setWidth(100),
-            right: ScreenUtil().setWidth(100)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-                width: ScreenUtil().setWidth(400),
-                height: ScreenUtil().setHeight(500),
-                child:
-                    SvgPicture.asset('assets/images/authentication_art.svg')),
-            SizedBox(
-              height: ScreenUtil().setHeight(700),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 5, bottom: 10),
-                      child: Text(
-                        "Let's log you in",
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: ScreenUtil().setSp(50),
-                            fontWeight: FontWeight.w600),
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.only(
+              top: ScreenUtil().setHeight(200),
+              left: ScreenUtil().setWidth(100),
+              right: ScreenUtil().setWidth(100)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                  width: ScreenUtil().setWidth(400),
+                  height: ScreenUtil().setHeight(500),
+                  child:
+                      SvgPicture.asset('assets/images/authentication_art.svg')),
+              SizedBox(
+                height: ScreenUtil().setHeight(700),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 5, bottom: 10),
+                        child: Text(
+                          "Let's log you in",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              fontSize: ScreenUtil().setSp(50),
+                              fontWeight: FontWeight.w600),
+                        ),
                       ),
-                    ),
-                    PlatformTextField(
-                      hintText: "E-mail",
-                      controller: _emailTextfieldController,
-                      autocorrect: false,
-                      onChanged: (text) =>
-                          BlocProvider.of<LoginViewBloc>(context)
-                              .onEmailInputChanged(text),
-                      onSubmitted: state.isEmailPrefixActive
-                          ? (text) => BlocProvider.of<LoginViewBloc>(context)
-                              .checkIfEmailIsRegistered(CredentialsModel(
-                                  email: _emailTextfieldController.text,
-                                  password: ''))
-                          : null,
-                      cupertino: (context, target) =>
-                          _emailCupertinoTextFieldData(context, state),
-                    ),
-                    PlatformTextField(
-                      focusNode: _passwordFieldFocusNode,
-                      hintText: "Password",
-                      autocorrect: false,
-                      onChanged: (text) =>
-                          BlocProvider.of<LoginViewBloc>(context)
-                              .onPasswordInputChanged(text),
-                      onSubmitted: state.isEmailPrefixActive
-                          ? (text) => BlocProvider.of<LoginViewBloc>(context)
-                                  .signInUser(
-                                CredentialsModel(
-                                    email: _emailTextfieldController.text,
-                                    password: _passwordTextfielController.text),
-                              )
-                          : null,
-                      cupertino: (context, target) =>
-                          _passwordCupertinoTextFieldData(context, state),
-                      controller: _passwordTextfielController,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: ScreenUtil().setWidth(50),
-                          child: PlatformIconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () =>
+                      SizedBox(
+                        width: ScreenUtil().setWidth(600),
+                        child: PlatformTextField(
+                          hintText: "E-mail",
+                          controller: _emailTextfieldController,
+                          autocorrect: false,
+                          onChanged: (text) =>
+                              BlocProvider.of<LoginViewBloc>(context)
+                                  .onEmailInputChanged(text),
+                          onSubmitted: state.isEmailPrefixActive
+                              ? (text) => BlocProvider.of<LoginViewBloc>(
+                                      context)
+                                  .checkIfEmailIsRegistered(CredentialsModel(
+                                      email: _emailTextfieldController.text,
+                                      password: ''))
+                              : null,
+                          cupertino: (context, target) =>
+                              _emailCupertinoTextFieldData(context, state),
+                        ),
+                      ),
+                      SizedBox(
+                        width: ScreenUtil().setWidth(600),
+                        child: PlatformTextField(
+                          focusNode: _passwordFieldFocusNode,
+                          hintText: "Password",
+                          autocorrect: false,
+                          onChanged: (text) =>
+                              BlocProvider.of<LoginViewBloc>(context)
+                                  .onPasswordInputChanged(text),
+                          onSubmitted: state.isEmailPrefixActive
+                              ? (text) =>
                                   BlocProvider.of<LoginViewBloc>(context)
-                                      .changeKeepSignedIn(),
-                              icon: Icon(
-                                state.keepSignedIn
-                                    ? Icons.check_box
-                                    : Icons.check_box_outline_blank,
-                                color: state.keepSignedIn
-                                    ? accentColor
-                                    : Colors.black12,
-                              )),
+                                      .signInUser(
+                                    CredentialsModel(
+                                        email: _emailTextfieldController.text,
+                                        password:
+                                            _passwordTextfielController.text),
+                                  )
+                              : null,
+                          cupertino: (context, target) =>
+                              _passwordCupertinoTextFieldData(context, state),
+                          controller: _passwordTextfielController,
                         ),
-                        Text("Keep me signed in",
-                            style: TextStyle(
-                              fontSize: ScreenUtil().setSp(40),
-                            ))
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Don't have an account?",
-                          style: TextStyle(fontSize: ScreenUtil().setSp(40)),
-                        ),
-                        SizedBox(
-                          child: PlatformTextButton(
-                            onPressed: () => Navigator.of(context)
-                                .pushNamed(PageNames.registerPage),
-                            child: Text("Register",
+                      ),
+                      SizedBox(
+                        width: ScreenUtil().setWidth(600),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: ScreenUtil().setWidth(50),
+                              child: PlatformIconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () =>
+                                      BlocProvider.of<LoginViewBloc>(context)
+                                          .changeKeepSignedIn(),
+                                  icon: Icon(
+                                    state.keepSignedIn
+                                        ? Icons.check_box
+                                        : Icons.check_box_outline_blank,
+                                    color: state.keepSignedIn
+                                        ? accentColor
+                                        : Colors.black12,
+                                  )),
+                            ),
+                            Text("Keep me signed in",
                                 style: TextStyle(
-                                    fontSize: ScreenUtil().setSp(40),
-                                    color: accentColor)),
-                          ),
-                        )
-                      ],
-                    ),
-                    GestureDetector(
-                        onTap: () => BlocProvider.of<LoginViewBloc>(context)
-                            .signInUser(CredentialsModel(
-                                email: _emailTextfieldController.text,
-                                password: _passwordTextfielController.text)),
-                        child: Container(
-                            height: 40,
-                            width: 100,
-                            decoration: const BoxDecoration(
-                                color: accentColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            child: const Center(
-                                child: Text(
-                              'Log In',
-                              style: TextStyle(color: Colors.white),
-                            )))),
-                  ]),
-            ),
-          ],
+                                  fontSize: ScreenUtil().setSp(40),
+                                ))
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: ScreenUtil().setWidth(600),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              "Don't have an account?",
+                              style:
+                                  TextStyle(fontSize: ScreenUtil().setSp(30)),
+                            ),
+                            GestureDetector(
+                                onTap: () => Navigator.of(context)
+                                    .pushNamed(PageNames.registerPage),
+                                child: Container(
+                                    height: 40,
+                                    width: 100,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(color: accentColor),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20))),
+                                    child: const Center(
+                                        child: Text(
+                                      'Register',
+                                      style: TextStyle(color: accentColor),
+                                    ))))
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                          onTap: () => BlocProvider.of<LoginViewBloc>(context)
+                              .signInUser(CredentialsModel(
+                                  email: _emailTextfieldController.text,
+                                  password: _passwordTextfielController.text)),
+                          child: Container(
+                              height: 40,
+                              width: 100,
+                              decoration: const BoxDecoration(
+                                  color: accentColor,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              child: const Center(
+                                  child: Text(
+                                'Log In',
+                                style: TextStyle(color: Colors.white),
+                              )))),
+                    ]),
+              ),
+            ],
+          ),
         ),
       ),
     );

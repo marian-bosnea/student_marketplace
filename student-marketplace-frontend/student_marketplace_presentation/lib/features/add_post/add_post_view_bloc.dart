@@ -14,19 +14,21 @@ import 'package:student_marketplace_presentation/core/config/on_generate_route.d
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
+import '../../core/config/injection_container.dart';
 import 'add_post_view_state.dart';
 
 class AddPostViewBloc extends Cubit<AddPostState> {
   final GetAllCategoriesUsecase getAllCategoriesUsecase;
   final UploadPostUsecase uploadPostUsecase;
-  final UpdatePostUsecase updatePostUsecase;
+  late UpdatePostUsecase updatePostUsecase;
 
-  AddPostViewBloc(
-      {required this.uploadPostUsecase,
-      required this.getAllCategoriesUsecase,
-      required this.updatePostUsecase})
-      : super(const AddPostState());
-
+  AddPostViewBloc({
+    required this.uploadPostUsecase,
+    required this.getAllCategoriesUsecase,
+  }) : super(const AddPostState()) {
+    updatePostUsecase =
+        UpdatePostUsecase(operations: sl.call(), authRepository: sl.call());
+  }
   Future<void> init(SalePostEntity? post) async {
     await fetchAllCategories();
     if (post != null) {
@@ -161,7 +163,7 @@ class AddPostViewBloc extends Cubit<AddPostState> {
       return true;
     }
 
-    if (state.currentStep == 4 && state.images.length > 0) {
+    if (state.currentStep == 4 && state.images.isNotEmpty) {
       return true;
     }
 

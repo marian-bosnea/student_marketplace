@@ -43,7 +43,6 @@ class AddPostPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => AddPostViewBloc(
           uploadPostUsecase: di.sl.call(),
-          updatePostUsecase: di.sl.call(),
           getAllCategoriesUsecase: di.sl.call())
         ..init(postToEdit),
       child: BlocBuilder<AddPostViewBloc, AddPostState>(

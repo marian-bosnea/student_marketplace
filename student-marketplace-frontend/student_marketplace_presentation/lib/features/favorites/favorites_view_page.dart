@@ -1,15 +1,10 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/shared/empty_list_placeholder.dart';
 
-import '../../core/theme/colors.dart';
 import 'favorites_view_bloc.dart';
 import 'favorites_view_state.dart';
 import '../shared/favorite_list_item.dart';

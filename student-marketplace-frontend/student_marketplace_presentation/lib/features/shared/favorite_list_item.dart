@@ -54,6 +54,7 @@ class FavoriteListItem extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(top: 5, bottom: 5),
                             height: ScreenUtil().setHeight(70),
+                            width: ScreenUtil().setWidth(300),
                             padding: const EdgeInsets.all(2),
                             decoration: const BoxDecoration(
                                 color: primaryColor,
@@ -65,7 +66,7 @@ class FavoriteListItem extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                                 style:
-                                    TextStyle(fontSize: ScreenUtil().setSp(30)),
+                                    TextStyle(fontSize: ScreenUtil().setSp(25)),
                               ),
                             ),
                           ),

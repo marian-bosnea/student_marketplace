@@ -5,7 +5,6 @@ import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_favorite_posts_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
-import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
@@ -18,9 +17,7 @@ class FavoritesViewBloc extends Cubit<FavoritesViewState> {
   FavoritesViewBloc(
       {required this.getFavoritePostsUsecase,
       required this.removeFromFavoritesUsecase})
-      : super(const FavoritesViewState()) {
-    fetchFavoritePosts();
-  }
+      : super(const FavoritesViewState());
 
   Future<void> removeFromFavorites(BuildContext context, int postId) async {
     await removeFromFavoritesUsecase(IdParam(id: postId));

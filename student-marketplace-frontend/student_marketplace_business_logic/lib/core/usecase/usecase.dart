@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
 
 import '../../domain/entities/auth_session_entity.dart';
 import '../../domain/entities/credentials_entity.dart';
@@ -16,6 +17,14 @@ abstract class Usecase<Type, Params> {
 class NoParams extends Equatable {
   @override
   List<Object?> get props => [];
+}
+
+class AddressParam extends Equatable {
+  final AddressEntity address;
+  AddressParam({required this.address});
+
+  @override
+  List<Object?> get props => [address];
 }
 
 class OptionalIdParam extends Equatable {

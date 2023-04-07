@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_state.dart';
@@ -15,6 +16,11 @@ class UserProfileViewPage extends StatelessWidget {
   final sl = GetIt.instance;
 
   UserProfileViewPage({super.key, required this.userId});
+
+  final nameTextStyle = TextStyle(
+      fontSize: ScreenUtil().setSp(40),
+      color: Colors.black,
+      fontWeight: FontWeight.w600);
 
   @override
   Widget build(BuildContext context) {
@@ -46,59 +52,54 @@ class UserProfileViewPage extends StatelessWidget {
             (context, index) {
       if (index == 0) {
         return Material(
-          child: Container(
-            color: primaryColor,
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                color: accentColor,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (state.avatarBytes != null)
-                          SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: CircleAvatar(
-                                foregroundImage:
-                                    Image.memory(state.avatarBytes!).image),
-                          ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        PlatformText(
-                          '${state.firstName} ',
-                          style: const TextStyle(
-                              fontSize: 20, color: primaryColor),
-                        ),
-                        PlatformText('${state.lastName} ',
-                            style: const TextStyle(
-                                fontSize: 20, color: primaryColor)),
-                        if (state.secondLastName != 'null')
-                          PlatformText(state.secondLastName,
-                              style: const TextStyle(
-                                  fontSize: 20, color: primaryColor)),
-                      ],
-                    ),
-                    PlatformText(state.emailAdress,
-                        style:
-                            const TextStyle(fontSize: 20, color: primaryColor)),
-                    PlatformText(
-                      state.facultyName,
-                      style: const TextStyle(color: primaryColor),
-                    ),
-                  ],
+            child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (state.avatarBytes != null)
+                SizedBox(
+                  width: ScreenUtil().setWidth(200),
+                  height: ScreenUtil().setHeight(200),
+                  child: CircleAvatar(
+                      foregroundImage: Image.memory(
+                    state.avatarBytes!,
+                  ).image),
                 ),
-              ),
-            ]),
+              Container(
+                margin: const EdgeInsets.only(left: 20),
+                width: ScreenUtil().setWidth(500),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          PlatformText(
+                            '${state.firstName} ',
+                            style: nameTextStyle,
+                          ),
+                          PlatformText('${state.lastName} ',
+                              style: nameTextStyle),
+                          if (state.secondLastName != 'null')
+                            PlatformText(state.secondLastName,
+                                style: nameTextStyle),
+                        ],
+                      ),
+                      PlatformText(state.facultyName,
+                          style: TextStyle(
+                              fontSize: ScreenUtil().setSp(30),
+                              color: Colors.black45)),
+                      PlatformText(state.emailAdress,
+                          style: TextStyle(
+                              fontSize: ScreenUtil().setSp(50),
+                              color: Colors.white)),
+                    ]),
+              )
+            ],
           ),
-        );
+        ));
       }
 
       return OwnPostListItem(post: state.posts.elementAt(index - 1));

@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:student_marketplace_business_logic/data/models/address_model.dart';
+import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
 
 import '../../data/models/faculty_model.dart';
 import '../../data/models/product_category_model.dart';
@@ -551,6 +553,74 @@ class HttpInterface {
           'authorization': 'Bearer $token'
         },
         body: jsonEncode(<String, dynamic>{'postId': postId}));
+
+    return response.statusCode == postSuccessCode;
+  }
+
+  Future<bool> createAddress(
+      {required String token, required AddressEntity address}) async {
+    final requestUrl = "$baseUrl/address/insert";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': address.name,
+          'county': address.county,
+          'city': address.city,
+          'description': address.description
+        }));
+
+    return response.statusCode == postSuccessCode;
+  }
+
+  Future<List<AddressEntity>> readAddresses({required String token}) async {
+    final requestUrl = "$baseUrl/address/read";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{}));
+
+    final bodyJson =
+        json.decode(response.body); // as List<Map<String, dynamic>>;
+
+    List<AddressModel> addresses = [];
+
+    for (var json in bodyJson) {
+      addresses.add(AddressModel.fromJson(json));
+    }
+
+    return addresses;
+  }
+
+  Future<bool> updateAddress(
+      {required String token, required AddressEntity address}) async {
+    assert(address is AddressModel);
+    final model = address as AddressModel;
+
+    final requestUrl = "$baseUrl/address/update";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(model.toJson()));
+
+    return response.statusCode == postSuccessCode;
+  }
+
+  Future<bool> deleteAddress(
+      {required String token, required AddressEntity address}) async {
+    final requestUrl = "$baseUrl/address/delete";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{'id': address.id}));
 
     return response.statusCode == postSuccessCode;
   }

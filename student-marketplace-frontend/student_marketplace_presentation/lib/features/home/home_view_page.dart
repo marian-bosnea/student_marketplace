@@ -79,7 +79,7 @@ class HomeViewPage extends StatelessWidget {
                         : Colors.black38,
                   )),
               BottomNavigationBarItem(
-                  label: 'Account',
+                  label: 'Profile',
                   icon: Icon(
                     Icons.account_circle,
                     color: state.status == HomePageStatus.account

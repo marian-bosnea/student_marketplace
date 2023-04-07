@@ -1,11 +1,6 @@
-import 'package:dartz/dartz.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
-import 'package:student_marketplace_business_logic/domain/usecases/user/get_user_usecase.dart';
 
 import '../../core/constants/enums.dart';
-import '../posts_view/posts_view_bloc.dart';
 import 'home_view_state.dart';
 
 class HomeViewBloc extends Cubit<HomeViewState> {
@@ -33,7 +28,7 @@ class HomeViewBloc extends Cubit<HomeViewState> {
 
   void goToAccount() {
     if (state.status != HomePageStatus.account) {
-      emit(state.copyWith(status: HomePageStatus.account, title: 'Account'));
+      emit(state.copyWith(status: HomePageStatus.account, title: 'Profile'));
     }
   }
 

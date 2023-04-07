@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:student_marketplace_business_logic/data/data_sources/contracts/address_remote_data_source.dart';
 
 import 'package:student_marketplace_business_logic/data/data_sources/contracts/auth_session_local_data_source.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/contracts/auth_session_remote_data_source.dart';
@@ -8,6 +9,7 @@ import 'package:student_marketplace_business_logic/data/data_sources/contracts/p
 import 'package:student_marketplace_business_logic/data/data_sources/contracts/sale_post_remote_data_source.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/contracts/user_repository_remote_data_source.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/contracts/user_services_remote_data_source.dart';
+import 'package:student_marketplace_business_logic/data/data_sources/implementations/address_remote_data_source_impl.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/implementations/auth_session_local_data_source_impl.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/implementations/auth_session_remote_data_source_impl.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/implementations/credentials_remote_data_source_impl.dart';
@@ -16,19 +18,23 @@ import 'package:student_marketplace_business_logic/data/data_sources/implementat
 import 'package:student_marketplace_business_logic/data/data_sources/implementations/sale_post_remote_data_source_impl.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/implementations/user_operations_remote_data_source_impl.dart';
 import 'package:student_marketplace_business_logic/data/data_sources/implementations/user_repository_remote_data_source_impl.dart';
+import 'package:student_marketplace_business_logic/data/operations/address_operations_impl.dart';
 import 'package:student_marketplace_business_logic/data/operations/auth_session_operations_impl.dart';
 import 'package:student_marketplace_business_logic/data/operations/credentials_operations_impl.dart';
 import 'package:student_marketplace_business_logic/data/operations/sale_post_operations_impl.dart';
 import 'package:student_marketplace_business_logic/data/operations/user_operations_impl.dart';
+import 'package:student_marketplace_business_logic/data/repositories/address_repository_impl.dart';
 import 'package:student_marketplace_business_logic/data/repositories/auth_repository_impl.dart';
 import 'package:student_marketplace_business_logic/data/repositories/faculty_repository_impl.dart';
 import 'package:student_marketplace_business_logic/data/repositories/product_category_repistory_impl.dart';
 import 'package:student_marketplace_business_logic/data/repositories/sale_post_repository_impl.dart';
 import 'package:student_marketplace_business_logic/data/repositories/user_repository_impl.dart';
+import 'package:student_marketplace_business_logic/domain/operations/address_operations.dart';
 import 'package:student_marketplace_business_logic/domain/operations/auth_session_operations.dart';
 import 'package:student_marketplace_business_logic/domain/operations/credentials_operations.dart';
 import 'package:student_marketplace_business_logic/domain/operations/sale_post_operations.dart';
 import 'package:student_marketplace_business_logic/domain/operations/user_operations.dart';
+import 'package:student_marketplace_business_logic/domain/repositories/address_repository.dart';
 import 'package:student_marketplace_business_logic/domain/repositories/auth_session_repository.dart';
 import 'package:student_marketplace_business_logic/domain/repositories/faculty_repository.dart';
 import 'package:student_marketplace_business_logic/domain/repositories/product_category_repository.dart';
@@ -41,6 +47,10 @@ import 'package:student_marketplace_business_logic/domain/usecases/authenticatio
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/credentials/check_email_availability_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/faculty/get_all_faculties_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/orders/create_address_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/orders/delete_address_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/orders/get_addresses_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/orders/update_address_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/product_category/get_all_categories_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/add_to_favorites_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/check_if_favorite_usecase.dart';
@@ -51,7 +61,6 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_favorite_posts_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
-import 'package:student_marketplace_business_logic/domain/usecases/sale_post/update_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/get_user_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/sign_up_usecase.dart';
@@ -110,9 +119,7 @@ Future<void> init() async {
       removeFromFavoritesUsecase: sl.call()));
 
   sl.registerFactory(() => AddPostViewBloc(
-      updatePostUsecase: sl.call(),
-      getAllCategoriesUsecase: sl.call(),
-      uploadPostUsecase: sl.call()));
+      getAllCategoriesUsecase: sl.call(), uploadPostUsecase: sl.call()));
 
   sl.registerFactory(() => FavoritesViewBloc(
       getFavoritePostsUsecase: sl.call(),
@@ -176,8 +183,17 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UploadPostUsecase(
       salePostOperations: sl.call(), authRepository: sl.call()));
 
-  sl.registerLazySingleton(() =>
-      UpdatePostUsecase(operations: sl.call(), authRepository: sl.call()));
+  sl.registerLazySingleton(() => CreateAddressUsecase(
+      addressOperations: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => GetAddressesUsecase(
+      addressRepository: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => UpdateAddressUsecase(
+      addressOperations: sl.call(), authRepository: sl.call()));
+
+  sl.registerLazySingleton(() => DeleteAddressUsecase(
+      addressOperations: sl.call(), authRepository: sl.call()));
 
   // Repositories
 
@@ -208,6 +224,13 @@ Future<void> init() async {
 
   sl.registerLazySingleton<ProductCategoryRepository>(
       () => ProductCategoryRepositoryImpl(remoteDataSource: sl.call()));
+
+  sl.registerLazySingleton<AddressRepository>(
+      () => AddressRepositoryImpl(remoteDataSource: sl.call()));
+
+  sl.registerLazySingleton<AddressOperations>(
+      () => AddressOperationsImpl(remoteDataSource: sl.call()));
+
 // Remote Data Source
 
   sl.registerLazySingleton<AuthSessionLocalDataSource>(
@@ -233,5 +256,9 @@ Future<void> init() async {
 
   sl.registerLazySingleton<ProductCategoryRemoteDataSource>(
       () => ProductCategoryRemoteDataSourceImpl());
+
+  sl.registerLazySingleton<AddressRemoteDataSource>(
+      () => AddressRemoteDataSourceImpl());
+
   // Externals
 }
