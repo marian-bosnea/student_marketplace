@@ -17,7 +17,8 @@ const bodyParser = require('body-parser');
 
 const authRouter = require('./routes/auth');
 const productRouter = require('./routes/products');
-const userRouter = require('./routes/user')
+const userRouter = require('./routes/user');
+const addressRouter = require('./routes/address');
 
 // Middleware
 app.use(bodyParser.urlencoded({
@@ -39,6 +40,7 @@ app.use(passport.session());
 app.use(authRouter);
 app.use(productRouter);
 app.use(userRouter);
+app.use(addressRouter);
 
 // WebSocket
 wss.on('connection', (ws) => {
@@ -48,7 +50,6 @@ wss.on('connection', (ws) => {
    wss.on('message', (message) => {
       console.log(`Received ${message}`);
    });
-
 });
 
 app.get('/', (req, res) => res.send("Connected to server!"));

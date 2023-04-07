@@ -47,3 +47,11 @@ module.exports.SALE_OBJECT_ADD_TO_FAVORITE = 'INSERT INTO favorite_post (user_id
 module.exports.SALE_OBJECT_REMOVE_FROM_FAVORITES = 'DELETE FROM favorite_post WHERE user_id = $1 AND post_id = $2';
 module.exports.SALE_OBJECT_READ_ALL_FAVORITES = 'SELECT s.id, d.title, d.price, s.views_count, c.name as category_name, u.id as owner_id, p.last_name as owner_name FROM sale_object s INNER JOIN favorite_post f ON f.post_id = s.id  INNER JOIN object_category c ON s.category_id = c.id INNER JOIN user_centralized u ON s.owner_id = u.id INNER JOIN user_profile p ON u.profile_id  = p.id INNER JOIN object_description d ON s.description_id = d.id  WHERE f.user_id = $1';
 module.exports.SALE_OBJECT_CHECK_IF_FAVORITE = 'SELECT post_id FROM favorite_post WHERE user_id = $1 AND post_id = $2';
+
+
+// Adress
+
+module.exports.ADDRESS_INSERT = 'INSERT INTO address (owner_id, name, county, city, description)  VALUES ($1, $2, $3, $4, $5)';
+module.exports.ADDRESS_READ = 'SELECT * FROM address WHERE owner_id = $1'
+module.exports.ADDRESS_UPDATE = 'UPDATE address SET name = $1 , county = $2, city = $3, description = $4 WHERE owner_id = $5';
+module.exports.ADDRESS_DELETE = 'DELETE FROM address WHERE id = $1';
