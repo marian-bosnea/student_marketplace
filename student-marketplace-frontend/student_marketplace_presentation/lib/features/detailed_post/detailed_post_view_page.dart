@@ -6,12 +6,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:like_button/like_button.dart';
 import 'package:photo_view/photo_view.dart';
+
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_page.dart';
 
 import '../../core/constants/enums.dart';
 import '../../core/theme/colors.dart';
-import '../favorites/favorites_view_bloc.dart';
 import 'detailed_post_view_bloc.dart';
 import 'detailed_post_view_state.dart';
 
@@ -31,10 +31,13 @@ class DetailedPostViewPage extends StatelessWidget {
           }
           if (state.status == PostsViewStatus.loading ||
               state.status == PostsViewStatus.initial) {
-            return Center(
-              child: isCupertino(context)
-                  ? const CupertinoActivityIndicator()
-                  : const CircularProgressIndicator(),
+            return Container(
+              color: Colors.white,
+              child: Center(
+                child: isCupertino(context)
+                    ? const CupertinoActivityIndicator()
+                    : const CircularProgressIndicator(),
+              ),
             );
           }
           return PlatformScaffold(

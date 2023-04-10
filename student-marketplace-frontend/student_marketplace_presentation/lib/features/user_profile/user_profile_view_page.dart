@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,8 +7,6 @@ import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_state.dart';
 import 'package:student_marketplace_presentation/features/shared/own_post_list_item.dart';
-
-import '../../core/theme/colors.dart';
 
 class UserProfileViewPage extends StatelessWidget {
   final int userId;

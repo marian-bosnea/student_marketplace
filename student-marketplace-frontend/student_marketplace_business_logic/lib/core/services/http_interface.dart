@@ -5,7 +5,9 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:student_marketplace_business_logic/data/models/address_model.dart';
+import 'package:student_marketplace_business_logic/data/models/order_model.dart';
 import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
+import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
 
 import '../../data/models/faculty_model.dart';
 import '../../data/models/product_category_model.dart';
@@ -623,5 +625,65 @@ class HttpInterface {
         body: jsonEncode(<String, dynamic>{'id': address.id}));
 
     return response.statusCode == postSuccessCode;
+  }
+
+  Future<bool> createOrder(
+      {required String token, required OrderEntity order}) async {
+    final requestUrl = "$baseUrl/order/insert";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{
+          'object_id': order.objectId,
+          'address_id': order.addressId,
+          'notes': order.notes,
+          'date': order.lastModifiedDate
+        }));
+
+    return response.statusCode == postSuccessCode;
+  }
+
+  Future<List<OrderEntity>> readOrderByBuyer({required String token}) async {
+    final requestUrl = "$baseUrl/order/read/buyer";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{}));
+
+    final bodyJson =
+        json.decode(response.body); // as List<Map<String, dynamic>>;
+
+    List<OrderEntity> orders = [];
+
+    for (var json in bodyJson) {
+      orders.add(OrderModel.fromJson(json));
+    }
+
+    return orders;
+  }
+
+  Future<List<OrderEntity>> readOrderBySeller({required String token}) async {
+    final requestUrl = "$baseUrl/order/read/seller";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{}));
+
+    final bodyJson =
+        json.decode(response.body); // as List<Map<String, dynamic>>;
+
+    List<OrderEntity> orders = [];
+
+    for (var json in bodyJson) {
+      orders.add(OrderModel.fromJson(json));
+    }
+
+    return orders;
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
+import 'package:student_marketplace_presentation/features/orders_view/orders_view_page.dart';
 
 import '../../core/constants/enums.dart';
 import '../../core/theme/colors.dart';
@@ -192,7 +193,7 @@ class HomeViewPage extends StatelessWidget {
       case HomePageStatus.home:
         return const PostViewPage();
       case HomePageStatus.orders:
-        return Container();
+        return OrdersViewPage();
       case HomePageStatus.addPost:
         return AddPostPage();
       case HomePageStatus.favorites:
