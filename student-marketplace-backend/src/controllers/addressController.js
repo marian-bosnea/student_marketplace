@@ -3,9 +3,7 @@ const bcrypt = require('bcrypt');
 const sharp = require('sharp');
 
 const sql = require('../db/sqlQuerries');
-const errMsg = require('../constants/errMessages');
 const codes = require('../constants/statusCodes');
-const authorization = require('../authorization');
 
 insert = async (req, res) => {
 

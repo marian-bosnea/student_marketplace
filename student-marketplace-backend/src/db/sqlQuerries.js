@@ -55,3 +55,19 @@ module.exports.ADDRESS_INSERT = 'INSERT INTO address (owner_id, name, county, ci
 module.exports.ADDRESS_READ = 'SELECT * FROM address WHERE owner_id = $1'
 module.exports.ADDRESS_UPDATE = 'UPDATE address SET name = $1 , county = $2, city = $3, description = $4 WHERE owner_id = $5';
 module.exports.ADDRESS_DELETE = 'DELETE FROM address WHERE id = $1';
+
+// Order
+
+module.exports.ORDER_INSERT = 'INSERT INTO orders (buyer_id, object_id, address_id, notes, date, awb, status) VALUES($1, $2, $3, $4, $5, $6, $7)';
+module.exports.ORDER_READ_BUYER = 'SELECT o.id, o.object_id, d.title as object_title, u.id as owner_id, p.last_name as owner_name, a.name as address_name, o.notes, o.awb, o.status, o.date FROM orders o INNER JOIN address a ON a.id = o.address_id INNER JOIN sale_object s ON o.object_id = s.id INNER JOIN object_description d ON s.description_id = d.id INNER JOIN user_centralized u ON s.owner_id = u.id INNER JOIN user_profile p ON u.profile_id = p.id WHERE buyer_id = $1';
+module.exports.ORDER_READ_SELLER = `
+SELECT o.id, o.object_id, d.title as object_title, o.buyer_id as buyer_id, p.last_name as buyer_name, concat(\'Jud. \', a.county, \', Loc.\', a.city, \', Adresa: \', a.description) as address_name, o.notes, o.awb, o.status, o.date
+FROM orders o
+INNER JOIN address a ON a.id = o.address_id 
+INNER JOIN sale_object s ON o.object_id = s.id 
+INNER JOIN object_description d ON s.description_id = d.id 
+INNER JOIN user_centralized u ON o.buyer_id = u.id
+INNER JOIN user_profile p ON u.profile_id = p.id
+WHERE s.owner_id = $1`
+module.exports.ORDER_UPDATE = 'UPDATE orders SET status = $1, awb = $2 WHERE id = $3';
+module.exports.ORDER_DELETE = 'DELETE FROM orders WHERE id = $1';

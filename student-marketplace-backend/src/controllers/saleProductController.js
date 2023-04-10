@@ -106,7 +106,7 @@ update = async (req, res) => {
 getDetailedSalePost = async (req, res) => {
    const postId = req.body.postId;
    const userId = res.locals.decryptedId;
-1
+
    const client = await pool.connect()
 
    await client.query(sql.SALE_OBJECT_INCREMENT_VIEWS_COUNT, [postId]);

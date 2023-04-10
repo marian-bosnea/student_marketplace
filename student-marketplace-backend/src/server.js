@@ -19,6 +19,7 @@ const authRouter = require('./routes/auth');
 const productRouter = require('./routes/products');
 const userRouter = require('./routes/user');
 const addressRouter = require('./routes/address');
+const orderRouter = require('./routes/orders');
 
 // Middleware
 app.use(bodyParser.urlencoded({
@@ -41,6 +42,7 @@ app.use(authRouter);
 app.use(productRouter);
 app.use(userRouter);
 app.use(addressRouter);
+app.use(orderRouter);
 
 // WebSocket
 wss.on('connection', (ws) => {
