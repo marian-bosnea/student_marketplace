@@ -21,8 +21,8 @@ class CreateAddressViewPage extends StatelessWidget {
   CreateAddressViewPage({super.key, this.addressToEdit}) {
     if (addressToEdit != null) {
       _nameController.text = addressToEdit!.name;
-      _cityController.text = addressToEdit!.county;
-      _countyController.text = addressToEdit!.city;
+      _cityController.text = addressToEdit!.city;
+      _countyController.text = addressToEdit!.county;
       _descriptionController.text = addressToEdit!.description;
     }
   }

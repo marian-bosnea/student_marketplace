@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
+import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
 
 import '../../domain/entities/auth_session_entity.dart';
 import '../../domain/entities/credentials_entity.dart';
@@ -17,6 +18,15 @@ abstract class Usecase<Type, Params> {
 class NoParams extends Equatable {
   @override
   List<Object?> get props => [];
+}
+
+class OrderParam extends Equatable {
+  final OrderEntity order;
+
+  OrderParam({required this.order});
+
+  @override
+  List<Object?> get props => [order];
 }
 
 class AddressParam extends Equatable {

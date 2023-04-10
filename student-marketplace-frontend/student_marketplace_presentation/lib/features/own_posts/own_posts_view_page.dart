@@ -17,6 +17,15 @@ class OwnPostsViewPage extends StatelessWidget {
 
   OwnPostsViewPage({super.key});
 
+  final cupertinoSliverNavBar = const CupertinoSliverNavigationBar(
+    automaticallyImplyLeading: true,
+    previousPageTitle: 'Account',
+    largeTitle: Text(
+      'My Posts',
+      style: TextStyle(color: accentColor),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -48,11 +57,6 @@ class OwnPostsViewPage extends StatelessWidget {
             : const CupertinoActivityIndicator(),
       );
     }
-    if (state.posts.isEmpty) {
-      return const EmptyListPlaceholder(
-        message: 'You havent post anything on marketplace',
-      );
-    }
     return isMaterial(context)
         ? Material(
             child: ListView.builder(
@@ -64,21 +68,22 @@ class OwnPostsViewPage extends StatelessWidget {
           )
         : CustomScrollView(
             slivers: [
-              const CupertinoSliverNavigationBar(
-                automaticallyImplyLeading: true,
-                previousPageTitle: 'Account',
-                largeTitle: Text(
-                  'My Posts',
-                  style: TextStyle(color: accentColor),
+              cupertinoSliverNavBar,
+              if (state.posts.isEmpty)
+                const SliverToBoxAdapter(
+                  child: EmptyListPlaceholder(
+                    message: 'You havent post anything on marketplace',
+                  ),
                 ),
-              ),
-              SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                      childCount: state.posts.length, (context, index) {
-                return SizedBox(
-                    height: 150,
-                    child: OwnPostListItem(post: state.posts.elementAt(index)));
-              }))
+              if (state.posts.isNotEmpty)
+                SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                        childCount: state.posts.length, (context, index) {
+                  return SizedBox(
+                      height: 150,
+                      child:
+                          OwnPostListItem(post: state.posts.elementAt(index)));
+                }))
             ],
           );
   }
