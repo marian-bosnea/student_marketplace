@@ -1,5 +1,4 @@
 import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
-import 'package:student_marketplace_business_logic/domain/repositories/order_repository.dart';
 
 class OrderModel extends OrderEntity {
   OrderModel({
@@ -26,9 +25,23 @@ class OrderModel extends OrderEntity {
         return OrderStatus.toCourier;
       case 3:
         return OrderStatus.delivered;
-
       default:
         return OrderStatus.pending;
+    }
+  }
+
+  static int statusToId(OrderStatus status) {
+    switch (status) {
+      case OrderStatus.pending:
+        return 0;
+      case OrderStatus.accepted:
+        return 1;
+      case OrderStatus.declined:
+        return -1;
+      case OrderStatus.toCourier:
+        return 2;
+      case OrderStatus.delivered:
+        return 3;
     }
   }
 
@@ -37,6 +50,13 @@ class OrderModel extends OrderEntity {
         'address_id': addressId,
         'notes': notes,
         'date': lastModifiedDate,
+      };
+
+  Map<String, dynamic> toUpdateJson() => {
+        'id': id,
+        'awb': awb,
+        'status': statusToId(status),
+        'date': lastModifiedDate
       };
 
   static OrderModel fromJson(Map<String, dynamic> json) {

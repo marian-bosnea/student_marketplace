@@ -12,7 +12,7 @@ class HomeViewBloc extends Cubit<HomeViewState> {
   }
 
   void goToOrders() {
-    emit(state.copyWith(status: HomePageStatus.orders, title: "My Orders"));
+    emit(state.copyWith(status: HomePageStatus.messages, title: "Messages"));
   }
 
   void goToAddPost() {

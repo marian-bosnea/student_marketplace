@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
+import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_presentation/features/create_adress/create_address_view_page.dart';
+import 'package:student_marketplace_presentation/features/detailed_order/received_detailed_order_view_page.dart';
+import 'package:student_marketplace_presentation/features/detailed_order/sent_detailed_order_view_page.dart';
 import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/edit_post/edit_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_page.dart';
@@ -44,7 +47,15 @@ class OnGenerateRoute {
       case PageNames.detailedPostPage:
         return routeBuilder(DetailedPostViewPage(postId: args as int));
       case PageNames.ordersView:
-        return routeBuilder(OrdersViewPage());
+        return routeBuilder(const OrdersViewPage());
+      case PageNames.detailedReceivedOrderPage:
+        return routeBuilder(DetailedReceivedOrderViewPage(
+          order: args as OrderEntity,
+        ));
+      case PageNames.detailedSentOrderPage:
+        return routeBuilder(DetailedSentOrderViewPage(
+          order: args as OrderEntity,
+        ));
       default:
         return routeBuilder(const NoPage());
     }
@@ -66,6 +77,8 @@ class PageNames {
   static const ordersView = 'ordersView';
   static const userProfilePage = 'userProfilePage';
   static const detailedPostPage = 'detailedPostPage';
+  static const detailedReceivedOrderPage = 'detailedReceivedOrderPage';
+  static const detailedSentOrderPage = 'detailedSentOrderPage';
 }
 
 class NoPage extends StatelessWidget {

@@ -28,25 +28,20 @@ class OwnPostsViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          OwnPostsViewBloc(getAllPostsByOwnerUsecase: sl.call())
-            ..fetchOwnPosts(),
-      child: BlocBuilder<OwnPostsViewBloc, OwnPostsViewState>(
-          builder: (context, state) {
-        return PlatformScaffold(
-          appBar: isMaterial(context)
-              ? PlatformAppBar(
-                  backgroundColor: Colors.white,
-                  automaticallyImplyLeading: true,
-                  cupertino: (context, platform) =>
-                      CupertinoNavigationBarData(previousPageTitle: 'Account'),
-                )
-              : null,
-          body: _getBodyWidget(context, state),
-        );
-      }),
-    );
+    return BlocBuilder<OwnPostsViewBloc, OwnPostsViewState>(
+        builder: (context, state) {
+      return PlatformScaffold(
+        appBar: isMaterial(context)
+            ? PlatformAppBar(
+                backgroundColor: Colors.white,
+                automaticallyImplyLeading: true,
+                cupertino: (context, platform) =>
+                    CupertinoNavigationBarData(previousPageTitle: 'Account'),
+              )
+            : null,
+        body: _getBodyWidget(context, state),
+      );
+    });
   }
 
   Widget _getBodyWidget(BuildContext context, OwnPostsViewState state) {

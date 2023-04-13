@@ -686,4 +686,19 @@ class HttpInterface {
 
     return orders;
   }
+
+  Future<bool> updateOrder(
+      {required String token, required OrderEntity order}) async {
+    assert(order is OrderModel);
+
+    final requestUrl = "$baseUrl/order/update";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode((order as OrderModel).toUpdateJson()));
+
+    return response.statusCode == postSuccessCode;
+  }
 }

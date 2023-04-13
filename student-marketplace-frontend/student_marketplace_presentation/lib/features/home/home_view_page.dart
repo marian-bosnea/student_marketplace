@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
-import 'package:student_marketplace_presentation/features/orders_view/orders_view_page.dart';
 
 import '../../core/constants/enums.dart';
 import '../../core/theme/colors.dart';
@@ -18,7 +18,7 @@ import 'home_view_bloc.dart';
 
 class HomeViewPage extends StatelessWidget {
   final sl = GetIt.instance;
-
+  final navBarIconSize = 25.0;
   HomeViewPage({super.key});
   @override
   Widget build(BuildContext context) {
@@ -50,23 +50,26 @@ class HomeViewPage extends StatelessWidget {
               BottomNavigationBarItem(
                   label: 'Discover',
                   icon: Icon(
-                    Icons.explore,
+                    size: navBarIconSize,
+                    FontAwesomeIcons.solidCompass,
                     color: state.status == HomePageStatus.home
                         ? accentColor
                         : Colors.black38,
                   )),
               BottomNavigationBarItem(
-                  label: 'Orders',
+                  label: 'Messages',
                   icon: Icon(
-                    Icons.receipt,
-                    color: state.status == HomePageStatus.orders
+                    FontAwesomeIcons.solidMessage,
+                    size: navBarIconSize,
+                    color: state.status == HomePageStatus.messages
                         ? accentColor
                         : Colors.black38,
                   )),
               BottomNavigationBarItem(
                   label: 'Sell',
                   icon: Icon(
-                    Icons.sell,
+                    FontAwesomeIcons.plus,
+                    size: navBarIconSize,
                     color: state.status == HomePageStatus.addPost
                         ? accentColor
                         : Colors.black38,
@@ -74,7 +77,8 @@ class HomeViewPage extends StatelessWidget {
               BottomNavigationBarItem(
                   label: 'Favorites',
                   icon: Icon(
-                    Icons.favorite_sharp,
+                    FontAwesomeIcons.solidHeart,
+                    size: navBarIconSize,
                     color: state.status == HomePageStatus.favorites
                         ? accentColor
                         : Colors.black38,
@@ -82,7 +86,8 @@ class HomeViewPage extends StatelessWidget {
               BottomNavigationBarItem(
                   label: 'Profile',
                   icon: Icon(
-                    Icons.account_circle,
+                    FontAwesomeIcons.solidUser,
+                    size: navBarIconSize,
                     color: state.status == HomePageStatus.account
                         ? accentColor
                         : Colors.black38,
@@ -107,37 +112,42 @@ class HomeViewPage extends StatelessWidget {
             )
           : null,
       largeTitle: state.status == HomePageStatus.home
-          ? Row(
+          ? Column(
               children: [
-                Container(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    height: ScreenUtil().setHeight(80),
-                    width: ScreenUtil().setWidth(690),
-                    child: PlatformTextField(
-                        hintText: state.searchHint,
-                        onChanged: (text) =>
-                            postsBloc.onSearchQueryChanged(text),
-                        cupertino: (context, target) =>
-                            _searchCupertinoTextFieldData(context),
-                        onSubmitted: (text) =>
-                            postsBloc.fetchAllPostsByTextQuery(text))),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.only(right: 10),
-                  decoration: BoxDecoration(
-                      color: accentColor,
-                      border: Border.all(color: Colors.black12),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
-                  height: ScreenUtil().setHeight(80),
-                  width: ScreenUtil().setWidth(80),
-                  child: Center(
-                    child: Icon(
-                      Icons.category,
-                      color: Colors.white,
-                      size: ScreenUtil().setHeight(50),
+                const Text('Discover'),
+                Row(
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        height: ScreenUtil().setHeight(80),
+                        width: ScreenUtil().setWidth(690),
+                        child: PlatformTextField(
+                            hintText: state.searchHint,
+                            onChanged: (text) =>
+                                postsBloc.onSearchQueryChanged(text),
+                            cupertino: (context, target) =>
+                                _searchCupertinoTextFieldData(context),
+                            onSubmitted: (text) =>
+                                postsBloc.fetchAllPostsByTextQuery(text))),
+                    Container(
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: BoxDecoration(
+                          color: accentColor,
+                          border: Border.all(color: Colors.black12),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
+                      height: ScreenUtil().setHeight(80),
+                      width: ScreenUtil().setWidth(80),
+                      child: Center(
+                        child: Icon(
+                          Icons.category,
+                          color: Colors.white,
+                          size: ScreenUtil().setHeight(50),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             )
@@ -192,8 +202,8 @@ class HomeViewPage extends StatelessWidget {
         return Container();
       case HomePageStatus.home:
         return const PostViewPage();
-      case HomePageStatus.orders:
-        return OrdersViewPage();
+      case HomePageStatus.messages:
+        return Container();
       case HomePageStatus.addPost:
         return AddPostPage();
       case HomePageStatus.favorites:

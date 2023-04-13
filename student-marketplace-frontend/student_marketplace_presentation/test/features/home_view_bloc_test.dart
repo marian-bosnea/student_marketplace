@@ -31,7 +31,7 @@ void main() {
     build: () => bloc,
     act: (bloc) => bloc.goToOrders(),
     expect: () =>
-        [state.copyWith(status: HomePageStatus.orders, title: 'Orders')],
+        [state.copyWith(status: HomePageStatus.messages, title: 'Orders')],
   );
 
   blocTest(

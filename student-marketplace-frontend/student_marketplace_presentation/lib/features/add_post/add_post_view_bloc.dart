@@ -11,6 +11,7 @@ import 'package:student_marketplace_business_logic/domain/usecases/product_categ
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/update_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
+import 'package:student_marketplace_presentation/core/utils/date_formater.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
@@ -96,10 +97,6 @@ class AddPostViewBloc extends Cubit<AddPostState> {
       return;
     }
 
-    DateTime today = DateTime.now();
-    String dateSlug =
-        "${today.year.toString()}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
-
     uploadPostUsecase(PostParam(
         post: SalePostModel(
             categoryId: state.categoryId,
@@ -108,7 +105,7 @@ class AddPostViewBloc extends Cubit<AddPostState> {
             ownerId: 0,
             price: state.price,
             postId: state.postId,
-            postingDate: dateSlug,
+            postingDate: getCurrentDateFormatted(),
             title: state.title)));
   }
 

@@ -9,14 +9,16 @@ import 'package:student_marketplace_presentation/core/config/on_generate_route.d
 import 'package:student_marketplace_presentation/core/theme/colors.dart';
 import 'package:student_marketplace_presentation/features/orders_view/utils/status_data.dart';
 
-class DetailedOrderViewPage extends StatelessWidget {
-  final labelStyle =
-      TextStyle(fontSize: ScreenUtil().setSp(35), fontWeight: FontWeight.w600);
+class DetailedSentOrderViewPage extends StatelessWidget {
+  final labelStyle = TextStyle(
+      fontSize: ScreenUtil().setSp(35),
+      fontWeight: FontWeight.w500,
+      color: Colors.black54);
 
   final groupLabelStyle =
       TextStyle(fontSize: ScreenUtil().setSp(30), color: Colors.black45);
 
-  final infoStyle = TextStyle(fontSize: ScreenUtil().setSp(35));
+  final infoStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
 
   final divider = const Divider(
     thickness: 0,
@@ -39,15 +41,15 @@ class DetailedOrderViewPage extends StatelessWidget {
         message: 'Your order has been declined by the seller',
         image: SvgPicture.asset('assets/images/order_declined_art.svg')),
     OrderStatus.toCourier: StatusData(
-        message: 'Your product is in the possesion of the shipping company',
-        image: SvgPicture.asset('assets/images/order_delivering_art.svg')),
-    OrderStatus.delivered: StatusData(
         message:
             'Your product is being delivered to you. Check the AWB for more details',
+        image: SvgPicture.asset('assets/images/order_delivering_art.svg')),
+    OrderStatus.delivered: StatusData(
+        message: 'Your product has been delivered to you',
         image: SvgPicture.asset('assets/images/order_delivered_art.svg'))
   };
 
-  DetailedOrderViewPage({super.key, required this.order});
+  DetailedSentOrderViewPage({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -90,85 +92,7 @@ class DetailedOrderViewPage extends StatelessWidget {
           SliverList(
               delegate: SliverChildListDelegate([
             Text(
-              "Product",
-              style: groupLabelStyle,
-            ),
-            Material(
-              color: Colors.white,
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Product: ',
-                          style: labelStyle,
-                          maxLines: 2,
-                        ),
-                        Text(order.objectTitle!, style: infoStyle),
-                      ],
-                    ),
-                    PlatformTextButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () => Navigator.of(context).pushNamed(
-                            PageNames.detailedPostPage,
-                            arguments: order.objectId),
-                        child: Text(
-                          'View on Marketplace',
-                          style: TextStyle(
-                              fontSize: ScreenUtil().setSp(35),
-                              color: accentColor),
-                        )),
-                  ],
-                ),
-              ),
-            ),
-            divider,
-            Text(
-              "Seller",
-              style: groupLabelStyle,
-            ),
-            Material(
-              color: Colors.white,
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Name: ',
-                          style: labelStyle,
-                          maxLines: 2,
-                        ),
-                        Text(order.partnerName!, style: infoStyle),
-                      ],
-                    ),
-                    PlatformTextButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () => Navigator.of(context).pushNamed(
-                            PageNames.userProfilePage,
-                            arguments: order.partnerId),
-                        child: Text(
-                          'View Profile',
-                          style: TextStyle(
-                              fontSize: ScreenUtil().setSp(35),
-                              color: accentColor),
-                        ))
-                  ],
-                ),
-              ),
-            ),
-            divider,
-            Text(
-              "Delivery",
+              "Shipping",
               style: groupLabelStyle,
             ),
             Material(
@@ -219,6 +143,64 @@ class DetailedOrderViewPage extends StatelessWidget {
             ),
             divider,
             Text(
+              "Product",
+              style: groupLabelStyle,
+            ),
+            Material(
+              color: Colors.white,
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pushNamed(
+                          PageNames.detailedPostPage,
+                          arguments: order.objectId),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(order.objectTitle!, style: infoStyle),
+                          const Icon(Icons.chevron_right)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            divider,
+            Text(
+              "Seller",
+              style: groupLabelStyle,
+            ),
+            Material(
+              color: Colors.white,
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pushNamed(
+                          PageNames.userProfilePage,
+                          arguments: order.partnerId),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(order.partnerName!, style: infoStyle),
+                          const Icon(Icons.chevron_right)
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            divider,
+            Text(
               "Notes",
               style: groupLabelStyle,
             ),
@@ -227,7 +209,7 @@ class DetailedOrderViewPage extends StatelessWidget {
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: Text(order.notes, style: infoStyle),
+                child: Text(order.notes),
               ),
             ),
           ]))
@@ -258,7 +240,7 @@ class DetailedOrderViewPage extends StatelessWidget {
   Color _getStatusLabelColor(OrderStatus status) {
     switch (status) {
       case OrderStatus.pending:
-        return Colors.yellow;
+        return Colors.orange;
 
       case OrderStatus.accepted:
         return Colors.green;

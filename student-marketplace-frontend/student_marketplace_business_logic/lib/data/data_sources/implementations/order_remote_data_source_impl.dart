@@ -40,9 +40,13 @@ class OrderRemoteDataSourceImpl extends OrderRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, bool>> update(String token, OrderEntity order) {
-    // TODO: implement update
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> update(String token, OrderEntity order) async {
+    try {
+      final result = await http.updateOrder(token: token, order: order);
+      return Right(result);
+    } catch (e) {
+      return Left(NetworkFailure());
+    }
   }
 
   @override

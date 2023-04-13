@@ -1,10 +1,7 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
-import 'package:student_marketplace_presentation/features/detailed_order/detailed_order_view_page.dart';
+import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
 
 class SentOrderListItem extends StatelessWidget {
   final OrderEntity order;
@@ -17,76 +14,54 @@ class SentOrderListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OpenContainer(
-      transitionType: ContainerTransitionType.fadeThrough,
-      transitionDuration: const Duration(milliseconds: 500),
-      openShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      closedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      closedBuilder: (BuildContext context, void Function() action) {
-        return Material(
-          elevation: 1,
-          color: Colors.white,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            height: ScreenUtil().setHeight(200),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        "Order: ",
+    return GestureDetector(
+      onTap: () => Navigator.of(context)
+          .pushNamed(PageNames.detailedSentOrderPage, arguments: order),
+      child: Material(
+        elevation: 1,
+        color: Colors.white,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        child: Container(
+          decoration: BoxDecoration(
+              border: Border.all(width: 2, color: Colors.black12),
+              borderRadius: const BorderRadius.all(Radius.circular(10))),
+          padding: const EdgeInsets.all(10),
+          height: ScreenUtil().setHeight(200),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      order.objectTitle!,
+                      style: TextStyle(
+                          fontSize: ScreenUtil().setSp(40),
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                Text(_getStatusLabel(order.status),
+                    style: TextStyle(
+                        fontSize: ScreenUtil().setSp(30),
+                        color: _getStatusLabelColor(order.status))),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('Last modified: ',
                         style: TextStyle(
                             fontSize: ScreenUtil().setSp(30),
-                            color: Colors.black,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        order.objectTitle!,
+                            color: Colors.black54)),
+                    Text(order.lastModifiedDate,
                         style: TextStyle(
                             fontSize: ScreenUtil().setSp(30),
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Last modified: ',
-                          style: TextStyle(
-                              fontSize: ScreenUtil().setSp(30),
-                              color: Colors.black54)),
-                      Text(order.lastModifiedDate,
-                          style: TextStyle(
-                              fontSize: ScreenUtil().setSp(30),
-                              color: Colors.black54)),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Status: ', style: labelStyle),
-                      Text(_getStatusLabel(order.status),
-                          style: TextStyle(
-                              fontSize: ScreenUtil().setSp(30),
-                              color: _getStatusLabelColor(order.status))),
-                    ],
-                  ),
-                ]),
-          ),
-        );
-      },
-      openBuilder:
-          (BuildContext context, void Function({Object? returnValue}) action) {
-        return DetailedOrderViewPage(
-          order: order,
-        );
-      },
+                            color: Colors.black54)),
+                  ],
+                ),
+              ]),
+        ),
+      ),
     );
   }
 
@@ -112,7 +87,7 @@ class SentOrderListItem extends StatelessWidget {
   Color _getStatusLabelColor(OrderStatus status) {
     switch (status) {
       case OrderStatus.pending:
-        return Colors.yellow;
+        return Colors.orange;
 
       case OrderStatus.accepted:
         return Colors.green;

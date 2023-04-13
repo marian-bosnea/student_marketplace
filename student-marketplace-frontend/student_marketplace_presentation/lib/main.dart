@@ -44,7 +44,7 @@ class StudentMarketPlace extends StatelessWidget {
         BlocProvider(
             create: (_) => OwnAddressesViewBloc()..fetchAllAddresses()),
         BlocProvider(
-          create: (_) => OrdersViewBloc()..fetchSentOrders(),
+          create: (_) => di.sl<OrdersViewBloc>()..fetchSentOrders(),
         )
       ],
       child: ScreenUtilInit(

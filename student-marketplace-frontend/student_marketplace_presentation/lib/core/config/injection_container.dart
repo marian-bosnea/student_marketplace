@@ -60,6 +60,7 @@ import 'package:student_marketplace_business_logic/domain/usecases/orders/get_ad
 import 'package:student_marketplace_business_logic/domain/usecases/orders/get_orders_by_buyer_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/orders/get_orders_by_seller_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/orders/update_address_usecase.dart';
+import 'package:student_marketplace_business_logic/domain/usecases/orders/update_order_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/product_category/get_all_categories_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/add_to_favorites_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/check_if_favorite_usecase.dart';
@@ -73,6 +74,8 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/rem
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/get_user_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/user/sign_up_usecase.dart';
+import 'package:student_marketplace_presentation/features/orders_view/orders_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_bloc.dart';
 
 import '../../features/add_post/add_post_view_bloc.dart';
 import '../../features/authentication/auth_bloc.dart';
@@ -133,6 +136,11 @@ Future<void> init() async {
   sl.registerFactory(() => FavoritesViewBloc(
       getFavoritePostsUsecase: sl.call(),
       removeFromFavoritesUsecase: sl.call()));
+
+  sl.registerFactory(
+      () => OwnPostsViewBloc(getAllPostsByOwnerUsecase: sl.call()));
+
+  sl.registerFactory(() => OrdersViewBloc());
   // Usecases
 
   sl.registerLazySingleton(() => AuthenticateUsecase(repository: sl.call()));
@@ -213,6 +221,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetOrdersBySellerUsecase(
       orderRepository: sl.call(), authRepository: sl.call()));
 
+  sl.registerLazySingleton(() => UpdateOrderUsecase(
+      authRepository: sl.call(), orderOperations: sl.call()));
   // Repositories
 
   sl.registerLazySingleton<AuthSessionOperations>(() =>
