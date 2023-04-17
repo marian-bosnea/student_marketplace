@@ -107,12 +107,6 @@ class HomeViewPage extends StatelessWidget {
     return CupertinoSliverNavigationBar(
       alwaysShowMiddle: false,
       backgroundColor: Colors.white,
-      middle: state.status == HomePageStatus.home
-          ? const Text(
-              'Discover',
-              style: TextStyle(color: accentColor),
-            )
-          : null,
       largeTitle: state.status == HomePageStatus.home
           ? Column(
               children: [

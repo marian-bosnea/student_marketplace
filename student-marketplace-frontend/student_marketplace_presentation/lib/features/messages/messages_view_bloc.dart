@@ -15,6 +15,8 @@ class MessagesViewBloc extends Cubit<MessagesViewState> {
   late SendMessageUsecase sendMessageUsecase;
   late OnMessageReceivedUsecase onMessageReceivedUsecase;
 
+  late bool _isClosed = false;
+
   MessagesViewBloc() : super(const MessagesViewState()) {
     getMessagesUsecase = sl.call();
     sendMessageUsecase = sl.call();
@@ -37,12 +39,18 @@ class MessagesViewBloc extends Cubit<MessagesViewState> {
       prevMessages.addAll(state.messages);
 
       prevMessages.add(message);
-      emit(state.copyWith(messages: prevMessages));
+      if (!_isClosed) emit(state.copyWith(messages: prevMessages));
     }));
   }
 
   Future<void> sendMessage(String message) async {
     await sendMessageUsecase(
         MessageParam(roomId: state.room!.id, content: message));
+  }
+
+  @override
+  Future<void> close() {
+    _isClosed = true;
+    return super.close();
   }
 }
