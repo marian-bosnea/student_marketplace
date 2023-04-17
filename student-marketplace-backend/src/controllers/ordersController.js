@@ -36,23 +36,22 @@ insert = async (req, res) => {
 readByBuyer = async (req, res) => {
     const owner_id = res.locals.decryptedId;
     const client = await pool.connect();
-    console.log(`Requested sent orders for ${owner_id}`);
     try {
         const result = await client.query(sql.ORDER_READ_BUYER, [owner_id]);
         var orders = [];
         for (var i = 0; i < result.rows.length; i++) {
             const ord = result.rows[i];
             orders.push({
-              id: ord.id,
-              object_id: ord.object_id,
-              object_title: ord.object_title,
-              partner_id : ord.owner_id,
-              partner_name: ord.owner_name,
-              address_name: ord.address_name,
-              notes: ord.notes,
-              awb: ord.awb,
-              status: ord.status,
-              date: ord.date
+                id: ord.id,
+                object_id: ord.object_id,
+                object_title: ord.object_title,
+                partner_id: ord.owner_id,
+                partner_name: ord.owner_name,
+                address_name: ord.address_name,
+                notes: ord.notes,
+                awb: ord.awb,
+                status: ord.status,
+                date: ord.date
             });
         }
         console.log(orders);
@@ -69,8 +68,7 @@ readByBuyer = async (req, res) => {
 readBySeller = async (req, res) => {
     const owner_id = res.locals.decryptedId;
     const client = await pool.connect();
-  
-    console.log(`Requested received orders for ${owner_id}`);
+
     try {
         const result = await client.query(sql.ORDER_READ_SELLER, [owner_id]);
         var orders = [];
@@ -89,7 +87,6 @@ readBySeller = async (req, res) => {
                 date: ord.date
             });
         }
-     console.log(orders);
         res.status(codes.POST_SUCCESS_CODE).send(orders);
     } catch (e) {
         res.status(codes.INVALID_INPUT_CODE)
@@ -104,13 +101,15 @@ update = async (req, res) => {
     const id = req.body.id;
     const awb = req.body.awb;
     const status = req.body.status;
-
+    const date = req.body.date;
+    console.log(`Requested order update with ${id} ${awb} ${status} ${date}`);
     const client = await pool.connect();
 
     try {
-        await client.query(sql.ORDER_UPDATE, [status, awb, id]);
+        await client.query(sql.ORDER_UPDATE, [status, awb, date, id]);
         res.status(codes.POST_SUCCESS_CODE).send();
     } catch (e) {
+        console.log(e.message);
         res.status(codes.INVALID_INPUT_CODE)
         res.send({ message: e.message });
     } finally {

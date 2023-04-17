@@ -26,7 +26,18 @@ function generateNewAccessToken(userId) {
     return  jwt.sign({ userId: userId }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 }
 
+function getId(token) {
+    var id;
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, userId) => {
+        if (!err) ;
+       id =  userId;
+    });
+
+    return id;
+}
+
 module.exports = {
     generateAccessToken,
-    authenticateToken
+    authenticateToken,
+    getId
 }

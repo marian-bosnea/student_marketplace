@@ -69,5 +69,44 @@ INNER JOIN object_description d ON s.description_id = d.id
 INNER JOIN user_centralized u ON o.buyer_id = u.id
 INNER JOIN user_profile p ON u.profile_id = p.id
 WHERE s.owner_id = $1`
-module.exports.ORDER_UPDATE = 'UPDATE orders SET status = $1, awb = $2 WHERE id = $3';
+module.exports.ORDER_UPDATE = 'UPDATE orders SET status = $1, awb = $2, date = $3 WHERE id = $4';
 module.exports.ORDER_DELETE = 'DELETE FROM orders WHERE id = $1';
+
+
+// Room
+module.exports.ROOM_INSERT = "INSERT INTO room (first_user_id, second_user_id, last_message, last_message_time) VALUES ($1, $2, $3, $4) RETURNING id";
+
+module.exports.ROOM_READ_PARTICIPANT1 = `
+SELECT r.id, r.last_message, r.last_message_time, r.second_user_id as partner_id ,CONCAT(p.first_name, ' ', p.last_name) as partner_name 
+FROM room r
+INNER JOIN user_centralized u ON u.id = r.second_user_id 
+INNER JOIN user_profile p ON u.profile_id = p.id
+WHERE first_user_id = $1
+AND r.last_message IS NOT NULL
+`;
+
+module.exports.ROOM_READ_PARTICIPANT2 = `
+SELECT r.id, r.last_message, r.last_message_time, r.first_user_id as partner_id ,CONCAT(p.first_name, ' ', p.last_name) as partner_name 
+FROM room r
+INNER JOIN user_centralized u ON u.id = r.first_user_id 
+INNER JOIN user_profile p ON u.profile_id = p.id
+WHERE second_user_id = $1
+AND r.last_message IS NOT NULL
+`;
+
+
+
+module.exports.ROOM_READ_PARTICIPANTS = `
+SELECT * FROM room 
+WHERE(first_user_id = $1 AND second_user_id =  $2) OR (first_user_id =  $2 AND second_user_id =  $1) `;
+module.exports.ROOM_MODIFY = "UPDATE room SET last_message = $1, last_message_time = $2 WHERE id = $3";
+
+// Messages
+module.exports.MESSAGE_INSERT = "INSERT INTO message (room_id, content, time, sender_id) VALUES ($1, $2, $3, $4) RETURNING id";
+module.exports.MESSAGES_READ_ROOM = `
+SELECT m.content, m.time, p.last_name as sender_name, m.sender_id
+FROM  message m 
+INNER JOIN user_centralized u ON u.id = m.sender_id
+INNER JOIN user_profile p ON u.profile_id = p.id
+WHERE room_id = $1
+`;
