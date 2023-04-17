@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/address_list_view/own_addresses_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_bloc.dart';
@@ -45,6 +46,9 @@ class StudentMarketPlace extends StatelessWidget {
             create: (_) => OwnAddressesViewBloc()..fetchAllAddresses()),
         BlocProvider(
           create: (_) => di.sl<OrdersViewBloc>()..fetchSentOrders(),
+        ),
+        BlocProvider(
+          create: (_) => di.sl<ChatRoomsViewBloc>()..init(),
         )
       ],
       child: ScreenUtilInit(

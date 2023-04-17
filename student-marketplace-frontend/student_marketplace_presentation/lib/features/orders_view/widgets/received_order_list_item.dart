@@ -18,6 +18,7 @@ class ReceivedOrderListItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: const EdgeInsets.only(top: 5, bottom: 5),
         decoration: BoxDecoration(
             border: Border.all(width: 2, color: Colors.black12),
             borderRadius: const BorderRadius.all(Radius.circular(10))),

@@ -17,49 +17,52 @@ class SentOrderListItem extends StatelessWidget {
     return GestureDetector(
       onTap: () => Navigator.of(context)
           .pushNamed(PageNames.detailedSentOrderPage, arguments: order),
-      child: Material(
-        elevation: 1,
-        color: Colors.white,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        child: Container(
-          decoration: BoxDecoration(
-              border: Border.all(width: 2, color: Colors.black12),
-              borderRadius: const BorderRadius.all(Radius.circular(10))),
-          padding: const EdgeInsets.all(10),
-          height: ScreenUtil().setHeight(200),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      order.objectTitle!,
+      child: Container(
+        margin: const EdgeInsets.only(top: 5, bottom: 5),
+        child: Material(
+          elevation: 1,
+          color: Colors.white,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(width: 2, color: Colors.black12),
+                borderRadius: const BorderRadius.all(Radius.circular(10))),
+            padding: const EdgeInsets.all(10),
+            height: ScreenUtil().setHeight(200),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        order.objectTitle!,
+                        style: TextStyle(
+                            fontSize: ScreenUtil().setSp(40),
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  Text(_getStatusLabel(order.status),
                       style: TextStyle(
-                          fontSize: ScreenUtil().setSp(40),
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-                Text(_getStatusLabel(order.status),
-                    style: TextStyle(
-                        fontSize: ScreenUtil().setSp(30),
-                        color: _getStatusLabelColor(order.status))),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('Last modified: ',
-                        style: TextStyle(
-                            fontSize: ScreenUtil().setSp(30),
-                            color: Colors.black54)),
-                    Text(order.lastModifiedDate,
-                        style: TextStyle(
-                            fontSize: ScreenUtil().setSp(30),
-                            color: Colors.black54)),
-                  ],
-                ),
-              ]),
+                          fontSize: ScreenUtil().setSp(30),
+                          color: _getStatusLabelColor(order.status))),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Last modified: ',
+                          style: TextStyle(
+                              fontSize: ScreenUtil().setSp(30),
+                              color: Colors.black54)),
+                      Text(order.lastModifiedDate,
+                          style: TextStyle(
+                              fontSize: ScreenUtil().setSp(30),
+                              color: Colors.black54)),
+                    ],
+                  ),
+                ]),
+          ),
         ),
       ),
     );

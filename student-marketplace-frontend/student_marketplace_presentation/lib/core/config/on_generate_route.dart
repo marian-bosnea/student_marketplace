@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
+import 'package:student_marketplace_business_logic/domain/entities/chat_room_entity.dart';
 import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_presentation/features/create_adress/create_address_view_page.dart';
+import 'package:student_marketplace_presentation/features/create_order/create_order_view_page.dart';
+import 'package:student_marketplace_presentation/features/detailed_order/awb_form_view_page.dart';
 import 'package:student_marketplace_presentation/features/detailed_order/received_detailed_order_view_page.dart';
 import 'package:student_marketplace_presentation/features/detailed_order/sent_detailed_order_view_page.dart';
 import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/edit_post/edit_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_page.dart';
+import 'package:student_marketplace_presentation/features/messages/messages_view_page.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_page.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_page.dart';
 
@@ -56,6 +60,16 @@ class OnGenerateRoute {
         return routeBuilder(DetailedSentOrderViewPage(
           order: args as OrderEntity,
         ));
+      case PageNames.createOrderPage:
+        return routeBuilder(CreateOrderViewPage(
+          post: args as SalePostEntity,
+        ));
+      case PageNames.messagesPage:
+        return routeBuilder(MessagesViewPage(
+          room: args as ChatRoomEntity,
+        ));
+      case PageNames.awbFormPage:
+        return routeBuilder(AwbFormViewPage());
       default:
         return routeBuilder(const NoPage());
     }
@@ -79,6 +93,9 @@ class PageNames {
   static const detailedPostPage = 'detailedPostPage';
   static const detailedReceivedOrderPage = 'detailedReceivedOrderPage';
   static const detailedSentOrderPage = 'detailedSentOrderPage';
+  static const awbFormPage = 'awbFormPage';
+  static const createOrderPage = 'createOrderPage';
+  static const messagesPage = 'messagesPage';
 }
 
 class NoPage extends StatelessWidget {

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:like_button/like_button.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:student_marketplace_business_logic/data/models/sale_post_model.dart';
 
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_page.dart';
@@ -369,12 +370,19 @@ class DetailedPostViewPage extends StatelessWidget {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(10))),
                                 child: Center(
-                                  child: Text(
-                                    '✉️ Message',
-                                    style: TextStyle(
-                                        fontSize: ScreenUtil().setSp(40),
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pushNamed(
+                                          PageNames.createOrderPage,
+                                          arguments: state.post);
+                                    },
+                                    child: Text(
+                                      'Order',
+                                      style: TextStyle(
+                                          fontSize: ScreenUtil().setSp(40),
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600),
+                                    ),
                                   ),
                                 ),
                               )

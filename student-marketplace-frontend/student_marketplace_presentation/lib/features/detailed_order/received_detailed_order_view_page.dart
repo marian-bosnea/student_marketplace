@@ -233,6 +233,7 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
       case OrderStatus.declined:
         return _getDeclinedAction(context);
       case OrderStatus.toCourier:
+        return _getDeliveringAction(context);
         break;
       case OrderStatus.delivered:
         // TODO: Handle this case.
@@ -306,8 +307,11 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
               hasTrailing: true,
               isLast: true,
               label: 'Enter AWB',
-              onTap: () {
-                pageBloc.setAWB('');
+              onTap: () async {
+                final awb = await Navigator.of(context)
+                    .pushNamed(PageNames.awbFormPage);
+
+                pageBloc.setAWB(awb as String);
               }),
         ],
       ),
@@ -327,6 +331,26 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
         children: const [
           Text(
             "You have declined this order",
+            style: TextStyle(color: Colors.black54),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _getDeliveringAction(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: const [
+          Text(
+            "No action needed",
             style: TextStyle(color: Colors.black54),
           ),
         ],

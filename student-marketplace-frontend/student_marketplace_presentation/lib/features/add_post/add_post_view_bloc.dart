@@ -97,7 +97,7 @@ class AddPostViewBloc extends Cubit<AddPostState> {
       return;
     }
 
-    uploadPostUsecase(PostParam(
+    await uploadPostUsecase(PostParam(
         post: SalePostModel(
             categoryId: state.categoryId,
             description: state.description,
@@ -107,6 +107,8 @@ class AddPostViewBloc extends Cubit<AddPostState> {
             postId: state.postId,
             postingDate: getCurrentDateFormatted(),
             title: state.title)));
+
+    Navigator.of(context).pushReplacementNamed(PageNames.homePage);
   }
 
   Future<void> setCategoryValue(int categoryId) async {

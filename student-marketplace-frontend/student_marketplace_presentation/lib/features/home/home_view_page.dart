@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
+import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_page.dart';
 
 import '../../core/constants/enums.dart';
 import '../../core/theme/colors.dart';
@@ -203,7 +205,8 @@ class HomeViewPage extends StatelessWidget {
       case HomePageStatus.home:
         return const PostViewPage();
       case HomePageStatus.messages:
-        return Container();
+        BlocProvider.of<ChatRoomsViewBloc>(context).init();
+        return ChatRoomsViewPage();
       case HomePageStatus.addPost:
         return AddPostPage();
       case HomePageStatus.favorites:

@@ -6,8 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:student_marketplace_business_logic/data/models/address_model.dart';
 import 'package:student_marketplace_business_logic/data/models/order_model.dart';
+import 'package:student_marketplace_business_logic/data/models/room_model.dart';
 import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
 import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
+import 'package:student_marketplace_business_logic/domain/entities/chat_room_entity.dart';
 
 import '../../data/models/faculty_model.dart';
 import '../../data/models/product_category_model.dart';
@@ -700,5 +702,35 @@ class HttpInterface {
         body: jsonEncode((order as OrderModel).toUpdateJson()));
 
     return response.statusCode == postSuccessCode;
+  }
+
+  Future<List<ChatRoomEntity>> readRooms({required String token}) async {
+    final requestUrl = "$baseUrl/rooms/read";
+    final response = await http.post(Uri.parse(requestUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{}));
+
+    final bodyJson =
+        json.decode(response.body); // as List<Map<String, dynamic>>;
+
+    List<ChatRoomEntity> rooms = [];
+
+    for (var json in bodyJson) {
+      final partnerId = json['partner_id'];
+      final avatarResponse = await getUserAvatar(token, partnerId);
+
+      rooms.add(ChatRoomModel(
+          id: json['id'],
+          partnerId: partnerId,
+          partnerAvatar: avatarResponse,
+          partnerName: json['partner_name'],
+          lastMessage: json['last_message'],
+          lastMessageTime: json['last_message_time']));
+    }
+
+    return rooms;
   }
 }

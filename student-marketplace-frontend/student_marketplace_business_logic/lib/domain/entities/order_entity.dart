@@ -4,7 +4,7 @@ enum OrderStatus { pending, accepted, declined, toCourier, delivered }
 
 abstract class OrderEntity extends Equatable {
   final int? id;
-  final int partnerId;
+  final int? partnerId;
   final int objectId;
   final int? addressId;
   final String? partnerName;
@@ -18,7 +18,7 @@ abstract class OrderEntity extends Equatable {
 
   OrderEntity(
       {this.id,
-      required this.partnerId,
+      this.partnerId,
       this.partnerName,
       this.objectTitle,
       this.addressDescription,

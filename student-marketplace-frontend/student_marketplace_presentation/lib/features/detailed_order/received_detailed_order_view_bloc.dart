@@ -31,7 +31,10 @@ class ReceivedDetailedOrderViewBloc
   }
 
   void setAWB(String awb) {
-    emit(state.copyWith(awb: awb, lastModifiedDate: getCurrentDateFormatted()));
+    emit(state.copyWith(
+        awb: awb,
+        lastModifiedDate: getCurrentDateFormatted(),
+        orderStatus: OrderStatus.toCourier));
     updateOrder();
   }
 
