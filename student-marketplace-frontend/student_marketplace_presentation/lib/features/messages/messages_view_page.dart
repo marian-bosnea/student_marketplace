@@ -39,7 +39,11 @@ class MessagesViewPage extends StatelessWidget {
             cupertino: (context, platform) =>
                 CupertinoPageScaffoldData(resizeToAvoidBottomInset: true),
             appBar: PlatformAppBar(
-              title: Text(room.partnerName),
+              backgroundColor: Theme.of(context).highlightColor,
+              title: Text(
+                room.partnerName,
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
               trailingActions: [
                 if (state.room != null)
                   CircleAvatar(
@@ -52,66 +56,82 @@ class MessagesViewPage extends StatelessWidget {
                   previousPageTitle: 'Messages'),
             ),
             body: Material(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                          height: MediaQuery.of(context).size.height - 100,
-                          child: _getBodyWidget(context, state)),
+              color: Theme.of(context).primaryColor,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                              height: MediaQuery.of(context).size.height - 100,
+                              child: _getBodyWidget(context, state)),
+                        ),
+                      ],
                     ),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 80,
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width - 80,
-                              height: 40,
-                              child: PlatformTextField(
-                                  controller: _textController,
-                                  cupertino: (context, platform) =>
-                                      CupertinoTextFieldData(
-                                          padding: const EdgeInsets.only(
-                                              left: 10, right: 10),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                      Radius.circular(20)),
-                                              border: Border.all(
-                                                  color: Colors.black12))),
-                                  hintText: 'Message',
-                                  onSubmitted: (text) =>
-                                      _onSubmited(context, text)),
-                            ),
-                            Container(
-                              decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50)),
-                                  color: accentColor),
-                              width: 45,
-                              height: 45,
-                              child: PlatformIconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: () =>
-                                    _onSubmited(context, _textController.text),
-                                icon: const Center(
-                                  child: Icon(
-                                    FontAwesomeIcons.solidPaperPlane,
-                                    color: Colors.white,
-                                  ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: Container(
+                      color: Theme.of(context).primaryColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      height: 80,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width - 80,
+                            height: 40,
+                            child: PlatformTextField(
+                                controller: _textController,
+                                cupertino: (context, platform) =>
+                                    CupertinoTextFieldData(
+                                        placeholderStyle: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium,
+                                        padding: const EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(20)),
+                                            border: Border.all(
+                                                color: Theme.of(context)
+                                                    .highlightColor))),
+                                hintText: 'Message',
+                                onSubmitted: (text) =>
+                                    _onSubmited(context, text)),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(50)),
+                                color: Theme.of(context).splashColor),
+                            width: 45,
+                            height: 45,
+                            child: PlatformIconButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () =>
+                                  _onSubmited(context, _textController.text),
+                              icon: const Center(
+                                child: Icon(
+                                  FontAwesomeIcons.solidPaperPlane,
+                                  color: Colors.white,
                                 ),
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );

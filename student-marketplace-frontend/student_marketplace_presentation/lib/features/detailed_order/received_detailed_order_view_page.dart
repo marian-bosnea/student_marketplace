@@ -15,20 +15,6 @@ import 'package:student_marketplace_presentation/features/shared/list_action_ite
 import '../../core/config/injection_container.dart';
 
 class DetailedReceivedOrderViewPage extends StatelessWidget {
-  final labelStyle =
-      TextStyle(fontSize: ScreenUtil().setSp(35), fontWeight: FontWeight.w600);
-
-  final groupLabelStyle =
-      TextStyle(fontSize: ScreenUtil().setSp(30), color: Colors.black45);
-
-  final infoStyle = TextStyle(fontSize: ScreenUtil().setSp(35));
-
-  final divider = const Divider(
-    thickness: 0,
-    color: Colors.white,
-    height: 20,
-  );
-
   final OrderEntity order;
   final ordersViewBloc = sl<OrdersViewBloc>();
   DetailedReceivedOrderViewPage({super.key, required this.order});
@@ -43,9 +29,10 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
         builder: (context, state) {
           return Material(
             child: PlatformScaffold(
+              backgroundColor: Theme.of(context).primaryColor,
               appBar: isMaterial(context)
                   ? PlatformAppBar(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).primaryColor,
                       automaticallyImplyLeading: true,
                       cupertino: ((context, platform) =>
                           CupertinoNavigationBarData(
@@ -53,170 +40,186 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                               previousPageTitle: 'Orders')),
                     )
                   : null,
-              body: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: CustomScrollView(slivers: [
-                  if (isCupertino(context))
-                    const CupertinoSliverNavigationBar(
-                      automaticallyImplyLeading: true,
-                      previousPageTitle: 'Orders',
-                      largeTitle:
-                          Text("Order", style: TextStyle(color: accentColor)),
+              body: CustomScrollView(slivers: [
+                if (isCupertino(context))
+                  CupertinoSliverNavigationBar(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    automaticallyImplyLeading: true,
+                    previousPageTitle: 'Orders',
+                    largeTitle: Text("Order",
+                        style: TextStyle(color: Theme.of(context).splashColor)),
+                  ),
+                SliverToBoxAdapter(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).highlightColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    margin: const EdgeInsets.all(5),
+                    child: Text(
+                      "Number #${order.id}",
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
-                  SliverToBoxAdapter(
-                    child: Container(
-                      margin: const EdgeInsets.all(5),
-                      child: Text(
-                        "Number #${order.id}",
-                        style: const TextStyle(fontSize: 30),
+                  ),
+                ),
+                SliverList(
+                    delegate: SliverChildListDelegate([
+                  Text(
+                    "Shipping",
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                  Material(
+                    color: Theme.of(context).highlightColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: SizedBox(
+                        height: ScreenUtil().setHeight(200),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Address: ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium,
+                                    maxLines: 2,
+                                  ),
+                                  SizedBox(
+                                      width: ScreenUtil().setWidth(600),
+                                      child: Text(order.addressDescription!,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium)),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Status: ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium,
+                                  ),
+                                  Text(_getStatusLabel(state.orderStatus),
+                                      style: TextStyle(
+                                          fontSize: ScreenUtil().setSp(35),
+                                          color: _getStatusLabelColor(
+                                              state.orderStatus))),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Last modified: ',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium,
+                                    maxLines: 2,
+                                  ),
+                                  Text(state.lastModifiedDate,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium),
+                                ],
+                              ),
+                            ]),
                       ),
                     ),
                   ),
-                  SliverList(
-                      delegate: SliverChildListDelegate([
-                    Text(
-                      "Shipping",
-                      style: groupLabelStyle,
-                    ),
-                    Material(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: SizedBox(
-                          height: ScreenUtil().setHeight(200),
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  Text(
+                    "Product",
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                  Material(
+                    color: Theme.of(context).highlightColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pushNamed(
+                                RouteNames.detailedPost,
+                                arguments: order.objectId),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Address: ',
-                                      style: labelStyle,
-                                      maxLines: 2,
-                                    ),
-                                    SizedBox(
-                                        width: ScreenUtil().setWidth(600),
-                                        child: Text(order.addressDescription!,
-                                            style: infoStyle)),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text('Status: ', style: labelStyle),
-                                    Text(_getStatusLabel(state.orderStatus),
-                                        style: TextStyle(
-                                            fontSize: ScreenUtil().setSp(35),
-                                            color: _getStatusLabelColor(
-                                                state.orderStatus))),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Last modified: ',
-                                      style: labelStyle,
-                                      maxLines: 2,
-                                    ),
-                                    Text(state.lastModifiedDate,
-                                        style: infoStyle),
-                                  ],
-                                ),
-                              ]),
-                        ),
-                      ),
-                    ),
-                    divider,
-                    Text(
-                      "Product",
-                      style: groupLabelStyle,
-                    ),
-                    Material(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () => Navigator.of(context).pushNamed(
-                                  PageNames.detailedPostPage,
-                                  arguments: order.objectId),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(order.objectTitle!, style: infoStyle),
-                                  const Icon(Icons.chevron_right)
-                                ],
-                              ),
+                                Text(order.objectTitle!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium),
+                                const Icon(Icons.chevron_right)
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    divider,
-                    Text(
-                      "Buyer",
-                      style: groupLabelStyle,
-                    ),
-                    Material(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () => Navigator.of(context).pushNamed(
-                                  PageNames.userProfilePage,
-                                  arguments: order.partnerId),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(order.partnerName!, style: infoStyle),
-                                  const Icon(Icons.chevron_right)
-                                ],
-                              ),
+                  ),
+                  Text(
+                    "Buyer",
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                  Material(
+                    color: Theme.of(context).highlightColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () => Navigator.of(context).pushNamed(
+                                RouteNames.userProfile,
+                                arguments: order.partnerId),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(order.partnerName!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium),
+                                const Icon(Icons.chevron_right)
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    divider,
-                    Text(
-                      "Notes",
-                      style: groupLabelStyle,
+                  ),
+                  Text(
+                    "Notes",
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                  Material(
+                    color: Theme.of(context).highlightColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Text(order.notes),
                     ),
-                    Material(
-                      color: Colors.white,
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(order.notes),
-                      ),
+                  ),
+                  Text(
+                    "Action",
+                    style: Theme.of(context).textTheme.displayMedium,
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                      child: _getAction(context, state.orderStatus),
                     ),
-                    divider,
-                    Text(
-                      "Action",
-                      style: groupLabelStyle,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: _getAction(context, state.orderStatus),
-                      ),
-                    )
-                  ])),
-                ]),
-              ),
+                  )
+                ])),
+              ]),
             ),
           );
         },
@@ -234,7 +237,7 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
         return _getDeclinedAction(context);
       case OrderStatus.toCourier:
         return _getDeliveringAction(context);
-        break;
+
       case OrderStatus.delivered:
         // TODO: Handle this case.
         break;
@@ -245,9 +248,9 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
     final pageBloc = BlocProvider.of<ReceivedDetailedOrderViewBloc>(context);
     return Container(
       padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+      decoration: BoxDecoration(
+          color: Theme.of(context).highlightColor,
+          borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -288,8 +291,8 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(10),
-      decoration: const BoxDecoration(
-          color: Colors.white,
+      decoration: BoxDecoration(
+          color: Theme.of(context).highlightColor,
           borderRadius: BorderRadius.all(Radius.circular(10))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -308,8 +311,8 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
               isLast: true,
               label: 'Enter AWB',
               onTap: () async {
-                final awb = await Navigator.of(context)
-                    .pushNamed(PageNames.awbFormPage);
+                final awb =
+                    await Navigator.of(context).pushNamed(RouteNames.awbForm);
 
                 pageBloc.setAWB(awb as String);
               }),
@@ -322,9 +325,9 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width,
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+      decoration: BoxDecoration(
+          color: Theme.of(context).highlightColor,
+          borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -342,9 +345,9 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width,
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+      decoration: BoxDecoration(
+          color: Theme.of(context).highlightColor,
+          borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceAround,

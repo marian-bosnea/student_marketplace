@@ -50,7 +50,7 @@ class CreateOrderViewBloc extends Cubit<CreateOrderViewState> {
         notes: state.notes,
         lastModifiedDate: getCurrentDateFormatted(),
       )));
-      Navigator.of(context).pushReplacementNamed(PageNames.homePage);
+      Navigator.of(context).pushReplacementNamed(RouteNames.home);
     }
   }
 

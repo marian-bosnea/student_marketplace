@@ -10,6 +10,7 @@ class EmptyListPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Theme.of(context).primaryColor,
       child: SizedBox(
           height: ScreenUtil().setHeight(1000),
           child: Center(
@@ -22,7 +23,10 @@ class EmptyListPlaceholder extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 20),
                 child: SvgPicture.asset('assets/images/empty_list_art.svg'),
               ),
-              Text(message),
+              Text(
+                message,
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
             ],
           ))),
     );

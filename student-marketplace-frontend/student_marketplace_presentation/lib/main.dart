@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:student_marketplace_presentation/core/theme/colors.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_bloc.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_state.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/address_list_view/own_addresses_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_bloc.dart';
@@ -49,22 +52,27 @@ class StudentMarketPlace extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => di.sl<ChatRoomsViewBloc>()..init(),
-        )
+        ),
+        BlocProvider(create: (_) => ThemeBloc())
       ],
       child: ScreenUtilInit(
         designSize: const Size(828, 1792),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return MaterialApp(
-            title: 'Student Marketplace',
-            debugShowCheckedModeBanner: false,
-            onGenerateRoute: OnGenerateRoute.route,
-            theme: ThemeData(
-                textTheme: GoogleFonts.varelaRoundTextTheme(),
-                navigationBarTheme: const NavigationBarThemeData()),
-            initialRoute: '/',
-            routes: appRoutes,
+          return BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (context, state) {
+              return MaterialApp(
+                title: 'Student Marketplace',
+                debugShowCheckedModeBanner: false,
+                onGenerateRoute: OnGenerateRoute.route,
+                theme: lightTheme(),
+                darkTheme: darkTheme(),
+                themeMode: state.themeMode,
+                initialRoute: '/',
+                routes: appRoutes,
+              );
+            },
           );
         },
       ),

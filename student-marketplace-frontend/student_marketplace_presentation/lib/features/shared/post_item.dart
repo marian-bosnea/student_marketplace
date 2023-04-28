@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:like_button/like_button.dart';
 import 'package:animations/animations.dart';
@@ -10,7 +9,6 @@ import 'package:student_marketplace_presentation/features/detailed_post/detailed
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/theme/colors.dart';
-import '../detailed_post/detailed_post_view_bloc.dart';
 
 class PostItem extends StatelessWidget {
   final SalePostEntity post;
@@ -28,17 +26,18 @@ class PostItem extends StatelessWidget {
     return OpenContainer(
       transitionType: ContainerTransitionType.fadeThrough,
       transitionDuration: const Duration(milliseconds: 500),
+      closedColor: Theme.of(context).highlightColor,
       openShape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
       closedShape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+          borderRadius: BorderRadius.all(Radius.circular(20))),
       closedBuilder: (BuildContext context, void Function() action) {
         return Stack(
           children: [
             Container(
               decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: const BorderRadius.all(Radius.circular(30))),
+                color: Theme.of(context).highlightColor,
+              ),
               padding: const EdgeInsets.only(
                   left: 10, right: 10, top: 10, bottom: 10),
               child: Column(
@@ -65,15 +64,12 @@ class PostItem extends StatelessWidget {
                     Text(
                       post.title,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: Colors.black38,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.labelMedium,
                     ),
                     Text('${post.price} RON',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                            color: accentColor,
+                        style: TextStyle(
+                            color: Theme.of(context).splashColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w700)),
                   ])
@@ -86,8 +82,8 @@ class PostItem extends StatelessWidget {
                 right: 5,
                 child: Container(
                   padding: const EdgeInsets.all(5),
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).highlightColor,
                       borderRadius: BorderRadius.all(Radius.circular(5))),
                   child: Center(
                     child: LikeButton(

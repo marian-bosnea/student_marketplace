@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,11 +17,15 @@ class OwnAddressesViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OwnAddressesViewBloc, OwnAddressesViewState>(
+    return BlocConsumer<OwnAddressesViewBloc, OwnAddressesViewState>(
+      listener: (context, state) =>
+          BlocProvider.of<OwnAddressesViewBloc>(context).fetchAllAddresses(),
       builder: (context, state) {
         final bloc = BlocProvider.of<OwnAddressesViewBloc>(context);
         return PlatformScaffold(
+          backgroundColor: Theme.of(context).primaryColor,
           appBar: PlatformAppBar(
+            backgroundColor: Theme.of(context).highlightColor,
             trailingActions: [
               PlatformTextButton(
                 padding: EdgeInsets.zero,
@@ -29,7 +34,7 @@ class OwnAddressesViewPage extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 onPressed: () =>
-                    Navigator.of(context).pushNamed(PageNames.createAddress),
+                    Navigator.of(context).pushNamed(RouteNames.createAddress),
               )
             ],
             cupertino: ((context, platform) => CupertinoNavigationBarData(
@@ -53,7 +58,7 @@ class OwnAddressesViewPage extends StatelessWidget {
                               children: [
                                 SlidableAction(
                                   onPressed: (context) => Navigator.of(context)
-                                      .pushNamed(PageNames.createAddress,
+                                      .pushNamed(RouteNames.createAddress,
                                           arguments:
                                               state.addresses.elementAt(index)),
                                   autoClose: true,

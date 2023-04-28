@@ -48,7 +48,7 @@ dependencies:
   bloc_test: ^9.1.1
   test: ^1.22.0
   chat_bubbles: ^1.4.1
-
+  animated_toggle_switch: ^0.6.2
 
 dev_dependencies:
   flutter_test:

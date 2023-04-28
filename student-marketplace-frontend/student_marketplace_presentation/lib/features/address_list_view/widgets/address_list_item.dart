@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
 
 class AddressListItem extends StatelessWidget {
@@ -11,10 +10,9 @@ class AddressListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 5, top: 5),
-      height: ScreenUtil().setHeight(300),
-      //width: ScreenUtil().setWidth(500),
+      height: 100,
       child: Material(
-        color: Colors.white,
+        color: Theme.of(context).highlightColor,
         elevation: 1,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         child: Padding(
@@ -22,23 +20,17 @@ class AddressListItem extends StatelessWidget {
           child: Column(children: [
             Text(
               address.name,
-              style: TextStyle(
-                  fontSize: ScreenUtil().setSp(50),
-                  fontWeight: FontWeight.w600),
+              style: Theme.of(context).textTheme.labelLarge,
             ),
             Row(
               children: [
                 Text(
                   'County: ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: ScreenUtil().setSp(35)),
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
                 Text(
                   address.county,
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: ScreenUtil().setHeight(35)),
+                  style: Theme.of(context).textTheme.labelMedium,
                 )
               ],
             ),
@@ -46,15 +38,11 @@ class AddressListItem extends StatelessWidget {
               children: [
                 Text(
                   'City: ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: ScreenUtil().setSp(35)),
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
                 Text(
                   address.city,
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: ScreenUtil().setHeight(35)),
+                  style: Theme.of(context).textTheme.labelMedium,
                 )
               ],
             ),
@@ -62,16 +50,12 @@ class AddressListItem extends StatelessWidget {
               children: [
                 Text(
                   'Address: ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: ScreenUtil().setSp(35)),
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
                 Text(
                   address.description,
                   maxLines: 3,
-                  style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: ScreenUtil().setHeight(35)),
+                  style: Theme.of(context).textTheme.labelMedium,
                 )
               ],
             )

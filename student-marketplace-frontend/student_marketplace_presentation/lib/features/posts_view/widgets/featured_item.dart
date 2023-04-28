@@ -20,11 +20,12 @@ class FeaturedItem extends StatelessWidget {
       padding: const EdgeInsets.only(top: 0, bottom: 20, left: 10, right: 10),
       child: Material(
         elevation: 1,
+        type: MaterialType.transparency,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-              color: secondaryColor,
+              color: Theme.of(context).highlightColor,
               borderRadius: const BorderRadius.all(Radius.circular(10))),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -38,17 +39,15 @@ class FeaturedItem extends StatelessWidget {
                       style: TextStyle(
                           fontSize: ScreenUtil().setSp(50),
                           fontWeight: FontWeight.w500,
-                          color: accentColor),
+                          color: Theme.of(context).splashColor),
                     ),
                     Text(
                       post.title,
-                      style: TextStyle(
-                          fontSize: ScreenUtil().setSp(40),
-                          fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       '${post.price} RON',
-                      style: TextStyle(fontSize: ScreenUtil().setSp(40)),
+                      style: Theme.of(context).textTheme.labelMedium,
                     ),
                     OpenContainer(
                       transitionDuration: const Duration(milliseconds: 500),
@@ -61,7 +60,8 @@ class FeaturedItem extends StatelessWidget {
                         return Container(
                             width: ScreenUtil().setWidth(180),
                             height: ScreenUtil().setHeight(70),
-                            decoration: const BoxDecoration(color: accentColor),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).splashColor),
                             child: Center(
                               child: Text(
                                 'View',

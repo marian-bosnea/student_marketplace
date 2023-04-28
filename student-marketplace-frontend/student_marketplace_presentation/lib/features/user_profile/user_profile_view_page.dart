@@ -17,11 +17,6 @@ class UserProfileViewPage extends StatelessWidget {
 
   UserProfileViewPage({super.key, required this.userId});
 
-  final nameTextStyle = TextStyle(
-      fontSize: ScreenUtil().setSp(40),
-      color: Colors.black,
-      fontWeight: FontWeight.w600);
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -31,9 +26,10 @@ class UserProfileViewPage extends StatelessWidget {
       child: BlocBuilder<UserProfileViewBloc, UserProfileViewState>(
           builder: (context, state) {
         return PlatformScaffold(
+          backgroundColor: Theme.of(context).primaryColor,
           appBar: isMaterial(context)
               ? PlatformAppBar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(context).highlightColor,
                   automaticallyImplyLeading: true,
                   cupertino: (context, platform) =>
                       CupertinoNavigationBarData(previousPageTitle: 'Posts'),
@@ -41,11 +37,12 @@ class UserProfileViewPage extends StatelessWidget {
               : null,
           body: CustomScrollView(slivers: [
             if (isCupertino(context))
-              const CupertinoSliverNavigationBar(
+              CupertinoSliverNavigationBar(
                 previousPageTitle: 'Posts',
+                backgroundColor: Theme.of(context).highlightColor,
                 largeTitle: Text(
                   'Profile',
-                  style: TextStyle(color: accentColor),
+                  style: TextStyle(color: Theme.of(context).splashColor),
                 ),
               ),
             _getBodyWidget(context, state),
@@ -65,57 +62,63 @@ class UserProfileViewPage extends StatelessWidget {
         delegate: SliverChildBuilderDelegate(childCount: state.posts.length + 1,
             (context, index) {
       if (index == 0) {
-        return Material(
-            child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (state.avatarBytes != null)
-                SizedBox(
-                  width: ScreenUtil().setWidth(200),
-                  height: ScreenUtil().setHeight(200),
-                  child: CircleAvatar(
-                      foregroundImage: Image.memory(
-                    state.avatarBytes!,
-                  ).image),
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: Material(
+              color: Theme.of(context).highlightColor,
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (state.avatarBytes != null)
+                      SizedBox(
+                        width: ScreenUtil().setWidth(200),
+                        height: ScreenUtil().setHeight(200),
+                        child: CircleAvatar(
+                            foregroundImage: Image.memory(
+                          state.avatarBytes!,
+                        ).image),
+                      ),
+                    Center(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 20),
+                        width: ScreenUtil().setWidth(500),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  PlatformText(
+                                    '${state.firstName} ',
+                                    style:
+                                        Theme.of(context).textTheme.labelMedium,
+                                  ),
+                                  PlatformText('${state.lastName} ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium),
+                                  if (state.secondLastName != 'null')
+                                    PlatformText(state.secondLastName,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium),
+                                ],
+                              ),
+                              PlatformText(state.facultyName,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium),
+                            ]),
+                      ),
+                    )
+                  ],
                 ),
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  width: ScreenUtil().setWidth(500),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            PlatformText(
-                              '${state.firstName} ',
-                              style: nameTextStyle,
-                            ),
-                            PlatformText('${state.lastName} ',
-                                style: nameTextStyle),
-                            if (state.secondLastName != 'null')
-                              PlatformText(state.secondLastName,
-                                  style: nameTextStyle),
-                          ],
-                        ),
-                        PlatformText(state.facultyName,
-                            style: TextStyle(
-                                fontSize: ScreenUtil().setSp(30),
-                                color: Colors.black45)),
-                        PlatformText(state.emailAdress,
-                            style: TextStyle(
-                                fontSize: ScreenUtil().setSp(50),
-                                color: Colors.white)),
-                      ]),
-                ),
-              )
-            ],
-          ),
-        ));
+              )),
+        );
       }
 
       return OwnPostListItem(post: state.posts.elementAt(index - 1));

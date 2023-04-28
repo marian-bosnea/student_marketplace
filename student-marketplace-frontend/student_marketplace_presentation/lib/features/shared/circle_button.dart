@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../core/theme/colors.dart';
 
 class CircleButton extends StatelessWidget {
   final Icon icon;
@@ -19,9 +16,9 @@ class CircleButton extends StatelessWidget {
         child: Container(
           width: 70,
           height: 70,
-          decoration: const BoxDecoration(
-              color: accentColor,
-              borderRadius: BorderRadius.all(Radius.circular(50))),
+          decoration: BoxDecoration(
+              color: Theme.of(context).splashColor,
+              borderRadius: const BorderRadius.all(Radius.circular(50))),
           child: icon,
         ),
       ),

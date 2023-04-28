@@ -34,7 +34,7 @@ class HomeViewPage extends StatelessWidget {
                     state.title,
                     style: const TextStyle(color: Colors.white),
                   ),
-                  backgroundColor: Colors.black,
+                  backgroundColor: Theme.of(context).highlightColor,
                 )
               : null,
           body: isCupertino(context)
@@ -46,44 +46,39 @@ class HomeViewPage extends StatelessWidget {
               : _getCurrentPage(context, state),
           bottomNavBar: PlatformNavBar(
             cupertino: (context, platform) =>
-                CupertinoTabBarData(activeColor: accentColor),
-            backgroundColor: Colors.white,
+                CupertinoTabBarData(activeColor: Theme.of(context).splashColor),
+            backgroundColor: Theme.of(context).primaryColor,
             items: [
               BottomNavigationBarItem(
                   label: 'Discover',
                   icon: Icon(
-                    size: navBarIconSize,
-                    FontAwesomeIcons.solidCompass,
-                    color: state.status == HomePageStatus.home
-                        ? accentColor
-                        : Colors.black38,
-                  )),
+                      size: navBarIconSize,
+                      FontAwesomeIcons.solidCompass,
+                      color: state.status == HomePageStatus.home
+                          ? Theme.of(context).splashColor
+                          : Theme.of(context).textTheme.displayMedium!.color)),
               BottomNavigationBarItem(
                   label: 'Messages',
-                  icon: Icon(
-                    FontAwesomeIcons.solidMessage,
-                    size: navBarIconSize,
-                    color: state.status == HomePageStatus.messages
-                        ? accentColor
-                        : Colors.black38,
-                  )),
+                  icon: Icon(FontAwesomeIcons.solidMessage,
+                      size: navBarIconSize,
+                      color: state.status == HomePageStatus.messages
+                          ? Theme.of(context).splashColor
+                          : Theme.of(context).textTheme.displayMedium!.color)),
               BottomNavigationBarItem(
                   label: 'Sell',
-                  icon: Icon(
-                    FontAwesomeIcons.plus,
-                    size: navBarIconSize,
-                    color: state.status == HomePageStatus.addPost
-                        ? accentColor
-                        : Colors.black38,
-                  )),
+                  icon: Icon(FontAwesomeIcons.plus,
+                      size: navBarIconSize,
+                      color: state.status == HomePageStatus.addPost
+                          ? Theme.of(context).splashColor
+                          : Theme.of(context).textTheme.displayMedium!.color)),
               BottomNavigationBarItem(
                   label: 'Favorites',
                   icon: Icon(
                     FontAwesomeIcons.solidHeart,
                     size: navBarIconSize,
                     color: state.status == HomePageStatus.favorites
-                        ? accentColor
-                        : Colors.black38,
+                        ? Theme.of(context).splashColor
+                        : Theme.of(context).textTheme.displayMedium!.color,
                   )),
               BottomNavigationBarItem(
                   label: 'Profile',
@@ -91,8 +86,8 @@ class HomeViewPage extends StatelessWidget {
                     FontAwesomeIcons.solidUser,
                     size: navBarIconSize,
                     color: state.status == HomePageStatus.account
-                        ? accentColor
-                        : Colors.black38,
+                        ? Theme.of(context).splashColor
+                        : Theme.of(context).textTheme.displayMedium!.color,
                   ))
             ],
             itemChanged: (index) => onBottomNavbarItemTap(context, index),
@@ -106,50 +101,46 @@ class HomeViewPage extends StatelessWidget {
     final postsBloc = BlocProvider.of<PostViewBloc>(context);
     return CupertinoSliverNavigationBar(
       alwaysShowMiddle: false,
-      backgroundColor: Colors.white,
+      automaticallyImplyLeading: false,
+      backgroundColor: Theme.of(context).highlightColor,
       largeTitle: state.status == HomePageStatus.home
-          ? Column(
+          ? Row(
               children: [
-                const Text('Discover'),
-                Row(
-                  children: [
-                    Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        height: ScreenUtil().setHeight(80),
-                        width: ScreenUtil().setWidth(690),
-                        child: PlatformTextField(
-                            hintText: state.searchHint,
-                            onChanged: (text) =>
-                                postsBloc.onSearchQueryChanged(text),
-                            cupertino: (context, target) =>
-                                _searchCupertinoTextFieldData(context),
-                            onSubmitted: (text) =>
-                                postsBloc.fetchAllPostsByTextQuery(text))),
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                          color: accentColor,
-                          border: Border.all(color: Colors.black12),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10))),
-                      height: ScreenUtil().setHeight(80),
-                      width: ScreenUtil().setWidth(80),
-                      child: Center(
-                        child: Icon(
-                          Icons.category,
-                          color: Colors.white,
-                          size: ScreenUtil().setHeight(50),
-                        ),
-                      ),
+                Container(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    height: ScreenUtil().setHeight(80),
+                    width: ScreenUtil().setWidth(690),
+                    child: PlatformTextField(
+                        hintText: state.searchHint,
+                        onChanged: (text) =>
+                            postsBloc.onSearchQueryChanged(text),
+                        cupertino: (context, target) =>
+                            _searchCupertinoTextFieldData(context),
+                        onSubmitted: (text) =>
+                            postsBloc.fetchAllPostsByTextQuery(text))),
+                Container(
+                  padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).splashColor,
+                      border: Border.all(color: Colors.black12),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
+                  height: ScreenUtil().setHeight(80),
+                  width: ScreenUtil().setWidth(80),
+                  child: Center(
+                    child: Icon(
+                      Icons.category,
+                      color: Colors.white,
+                      size: ScreenUtil().setHeight(50),
                     ),
-                  ],
+                  ),
                 ),
               ],
             )
           : Text(
               state.title,
-              style: const TextStyle(color: accentColor),
+              style: TextStyle(color: Theme.of(context).splashColor),
             ),
     );
   }
@@ -157,12 +148,12 @@ class HomeViewPage extends StatelessWidget {
   CupertinoTextFieldData _searchCupertinoTextFieldData(BuildContext context) {
     return CupertinoTextFieldData(
       padding: const EdgeInsets.only(left: 10),
-      prefix: const SizedBox(
+      prefix: SizedBox(
         width: 30,
         height: 30,
         child: Icon(
           CupertinoIcons.search,
-          color: accentColor,
+          color: Theme.of(context).splashColor,
         ),
       ),
       decoration: BoxDecoration(

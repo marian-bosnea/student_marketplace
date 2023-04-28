@@ -20,21 +20,20 @@ class CategoryItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(left: 5, right: 5, bottom: 10),
         child: Material(
+          type: MaterialType.transparency,
           elevation: isSelected ? 0 : 1,
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
           child: Container(
             padding: const EdgeInsets.all(10),
             height: 40,
             decoration: BoxDecoration(
-                //color: isSelected ? accentColor : null,
-                color: secondaryColor,
-                // border: !isSelected ? Border.all(color: textColor) : null,
+                color: Theme.of(context).highlightColor,
+                border: isSelected
+                    ? Border.all(color: Theme.of(context).splashColor)
+                    : null,
                 borderRadius: const BorderRadius.all(Radius.circular(15))),
             child: Center(
-              child: Text(label,
-                  style: TextStyle(
-                      color: isSelected ? accentColor : Colors.black,
-                      fontWeight: FontWeight.w600)),
+              child:
+                  Text(label, style: Theme.of(context).textTheme.labelMedium),
             ),
           ),
         ),

@@ -30,7 +30,6 @@ class RegisterViewPage extends StatelessWidget {
   final double textFieldHeight = 40;
   final double textFieldBorderRadius = 20;
 
-  final titleStyle = TextStyle(fontSize: ScreenUtil().setSp(40));
   final _stepSvg = [
     SvgPicture.asset(
       'assets/images/credentials_art.svg',
@@ -51,8 +50,9 @@ class RegisterViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: PlatformAppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).highlightColor,
         automaticallyImplyLeading: true,
         cupertino: ((context, platform) =>
             CupertinoNavigationBarData(previousPageTitle: 'Login')),
@@ -75,13 +75,14 @@ class RegisterViewPage extends StatelessWidget {
     }
     final bloc = BlocProvider.of<RegisterViewBloc>(context);
     return Material(
+      color: Theme.of(context).primaryColor,
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Theme(
           data: ThemeData(
-            primaryColor: accentColor,
+            primaryColor: Theme.of(context).splashColor,
             colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: accentColor,
+                  primary: Theme.of(context).splashColor,
                 ),
           ),
           child: Stepper(
@@ -97,7 +98,7 @@ class RegisterViewPage extends StatelessWidget {
                       children: [
                         if (bloc.canGoToNextStep())
                           PlatformElevatedButton(
-                            color: accentColor,
+                            color: Theme.of(context).splashColor,
                             padding: const EdgeInsets.only(
                                 left: 15, right: 15, bottom: 5, top: 5),
                             cupertino: ((context, platform) =>
@@ -107,7 +108,7 @@ class RegisterViewPage extends StatelessWidget {
                             onPressed: details.onStepContinue,
                             child: Text(
                               state.currentStep == 2 ? 'Register' : 'Next',
-                              style: TextStyle(color: Colors.white),
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ),
                         if (state.currentStep != 0)
@@ -120,9 +121,10 @@ class RegisterViewPage extends StatelessWidget {
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(15)))),
                             onPressed: details.onStepCancel,
-                            child: const Text(
+                            child: Text(
                               'Back',
-                              style: TextStyle(color: accentColor),
+                              style: TextStyle(
+                                  color: Theme.of(context).splashColor),
                             ),
                           )
                       ],
@@ -132,7 +134,7 @@ class RegisterViewPage extends StatelessWidget {
                 Step(
                     title: Text(
                       'Credentials',
-                      style: titleStyle,
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     content: Column(
                       children: [
@@ -147,7 +149,7 @@ class RegisterViewPage extends StatelessWidget {
                 Step(
                     title: Text(
                       'Personal Info',
-                      style: titleStyle,
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     content: Column(
                       children: [
@@ -162,7 +164,7 @@ class RegisterViewPage extends StatelessWidget {
                 Step(
                     title: Text(
                       'Profile Photo',
-                      style: titleStyle,
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     content: Column(
                       children: [

@@ -21,7 +21,7 @@ class FavoritesViewPage extends StatelessWidget {
         if (state.posts.isEmpty) {
           return getEmptyListPlaceholder(state);
         }
-        return getLoadedItemsList(state);
+        return getLoadedItemsList(context, state);
       },
     );
   }
@@ -32,31 +32,38 @@ class FavoritesViewPage extends StatelessWidget {
     );
   }
 
-  ListView getLoadedItemsList(FavoritesViewState state) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: state.posts.length,
-        itemBuilder: (context, index) {
-          final post = state.posts.elementAt(index);
-          return Slidable(
-              key: ValueKey(post.postId),
-              endActionPane:
-                  ActionPane(motion: const ScrollMotion(), children: [
-                SlidableAction(
-                  onPressed: (context) =>
-                      BlocProvider.of<FavoritesViewBloc>(context)
-                          .removeFromFavorites(context, post.postId!),
-                  autoClose: true,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  backgroundColor: const Color(0xFFFE4A49),
-                  foregroundColor: Colors.white,
-                  icon: CupertinoIcons.trash,
-                  label: 'Remove',
-                ),
-              ]),
-              child: FavoriteListItem(
-                post: post,
-              ));
-        });
+  Widget getLoadedItemsList(BuildContext context, FavoritesViewState state) {
+    return Container(
+      color: Theme.of(context).primaryColor,
+      child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: state.posts.length,
+          itemBuilder: (context, index) {
+            final post = state.posts.elementAt(index);
+            return Slidable(
+                key: ValueKey(post.postId),
+                endActionPane:
+                    ActionPane(motion: const ScrollMotion(), children: [
+                  SizedBox(
+                    height: 150,
+                    width: 200,
+                    child: SlidableAction(
+                      onPressed: (context) =>
+                          BlocProvider.of<FavoritesViewBloc>(context)
+                              .removeFromFavorites(context, post.postId!),
+                      autoClose: true,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      backgroundColor: const Color(0xFFFE4A49),
+                      foregroundColor: Colors.white,
+                      icon: CupertinoIcons.trash,
+                      label: 'Remove',
+                    ),
+                  ),
+                ]),
+                child: FavoriteListItem(
+                  post: post,
+                ));
+          }),
+    );
   }
 }

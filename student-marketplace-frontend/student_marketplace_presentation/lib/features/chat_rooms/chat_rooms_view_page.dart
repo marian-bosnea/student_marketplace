@@ -10,6 +10,8 @@ import 'package:student_marketplace_presentation/features/shared/empty_list_plac
 import '../../core/config/on_generate_route.dart';
 
 class ChatRoomsViewPage extends StatelessWidget {
+  const ChatRoomsViewPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatRoomsViewBloc, ChatRoomsViewState>(
@@ -18,19 +20,23 @@ class ChatRoomsViewPage extends StatelessWidget {
           ? const EmptyListPlaceholder(
               message: "You don't have any active conversations")
           : Material(
+              color: Theme.of(context).primaryColor,
               child: ListView.builder(
                   itemCount: state.rooms.length,
-                  itemBuilder: (context, index) => SizedBox(
-                        width: ScreenUtil().setHeight(200),
-                        child: GestureDetector(
-                          onTap: () => Navigator.of(context).pushNamed(
-                              PageNames.messagesPage,
-                              arguments: state.rooms.elementAt(index)),
-                          child: ChatRoomItem(
-                            room: state.rooms.elementAt(index),
-                          ),
-                        ),
-                      )),
+                  itemBuilder: (context, index) =>
+                      state.rooms.elementAt(index).lastMessage.isEmpty
+                          ? Container()
+                          : SizedBox(
+                              width: ScreenUtil().setHeight(200),
+                              child: GestureDetector(
+                                onTap: () => Navigator.of(context).pushNamed(
+                                    RouteNames.messages,
+                                    arguments: state.rooms.elementAt(index)),
+                                child: ChatRoomItem(
+                                  room: state.rooms.elementAt(index),
+                                ),
+                              ),
+                            )),
             );
     });
   }
@@ -43,35 +49,55 @@ class ChatRoomItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      height: 90,
+      child: Column(
         children: [
-          SizedBox(
-            width: 60,
-            child: CircleAvatar(
-                foregroundImage: Image.memory(
-              room.partnerAvatar,
-            ).image),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 60,
+                  child: CircleAvatar(
+                      foregroundImage: Image.memory(
+                    room.partnerAvatar,
+                  ).image),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 100,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          room.partnerName,
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        Text(
+                          room.lastMessage,
+                          style: Theme.of(context).textTheme.displayMedium,
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                      ]),
+                ),
+                SizedBox(
+                  width: 20,
+                  child: Icon(
+                    Icons.chevron_right,
+                    color: Theme.of(context).textTheme.displayMedium!.color,
+                  ),
+                )
+              ],
+            ),
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width - 60,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(
-                room.partnerName,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
-              ),
-              Text(
-                room.lastMessage,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Divider()
-            ]),
-          ),
+          Divider(
+            height: 1,
+            thickness: 0.2,
+            indent: 60,
+            color: Theme.of(context).dividerColor,
+          )
         ],
       ),
     );

@@ -14,6 +14,7 @@ import 'package:student_marketplace_presentation/features/edit_post/edit_post_vi
 import 'package:student_marketplace_presentation/features/home/home_view_page.dart';
 import 'package:student_marketplace_presentation/features/messages/messages_view_page.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_page.dart';
+import 'package:student_marketplace_presentation/features/settings_view/settings_view_page.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_page.dart';
 
 import '../../features/address_list_view/own_addresses_view_page.dart';
@@ -25,51 +26,53 @@ class OnGenerateRoute {
   static Route<dynamic> route(RouteSettings settings) {
     final args = settings.arguments;
     switch (settings.name) {
-      case PageNames.authenticationPage:
+      case RouteNames.authentication:
         return routeBuilder(LoginViewPage());
-      case PageNames.registerPage:
+      case RouteNames.register:
         return routeBuilder(RegisterViewPage());
-      case PageNames.homePage:
+      case RouteNames.home:
         return routeBuilder(HomeViewPage());
-      case PageNames.accountPage:
+      case RouteNames.account:
         return routeBuilder(AccountViewPage());
-      case PageNames.editPostPage:
+      case RouteNames.editPost:
         assert(args is SalePostEntity);
         return routeBuilder(EditPostViewPage(
           post: args as SalePostEntity,
         ));
-      case PageNames.createAddress:
+      case RouteNames.createAddress:
         return routeBuilder(CreateAddressViewPage(
           addressToEdit: args as AddressEntity?,
         ));
-      case PageNames.userProfilePage:
+      case RouteNames.userProfile:
         return routeBuilder(UserProfileViewPage(
           userId: args as int,
         ));
-      case PageNames.addressView:
+      case RouteNames.addressView:
         return routeBuilder(const OwnAddressesViewPage());
-      case PageNames.detailedPostPage:
+      case RouteNames.detailedPost:
         return routeBuilder(DetailedPostViewPage(postId: args as int));
-      case PageNames.ordersView:
+      case RouteNames.ordersView:
         return routeBuilder(const OrdersViewPage());
-      case PageNames.detailedReceivedOrderPage:
+      case RouteNames.detailedReceivedOrder:
         return routeBuilder(DetailedReceivedOrderViewPage(
           order: args as OrderEntity,
         ));
-      case PageNames.detailedSentOrderPage:
+      case RouteNames.detailedSentOrder:
         return routeBuilder(DetailedSentOrderViewPage(
           order: args as OrderEntity,
         ));
-      case PageNames.createOrderPage:
+      case RouteNames.createOrder:
         return routeBuilder(CreateOrderViewPage(
           post: args as SalePostEntity,
         ));
-      case PageNames.messagesPage:
+      case RouteNames.messages:
         return routeBuilder(MessagesViewPage(
           room: args as ChatRoomEntity,
         ));
-      case PageNames.awbFormPage:
+      case RouteNames.awbForm:
         return routeBuilder(AwbFormViewPage());
+      case RouteNames.settings:
+        return routeBuilder(const SettingsViewPage());
       default:
         return routeBuilder(const NoPage());
     }
@@ -80,22 +83,23 @@ dynamic routeBuilder(Widget page) {
   return MaterialPageRoute(builder: (context) => page);
 }
 
-class PageNames {
-  static const homePage = 'homePage';
-  static const authenticationPage = 'authenticationPage';
-  static const registerPage = 'registerPage';
-  static const accountPage = 'accountPage';
-  static const editPostPage = 'editPostPage';
-  static const createAddress = 'createAddressPage';
-  static const addressView = 'addressesViewPage';
-  static const ordersView = 'ordersView';
-  static const userProfilePage = 'userProfilePage';
-  static const detailedPostPage = 'detailedPostPage';
-  static const detailedReceivedOrderPage = 'detailedReceivedOrderPage';
-  static const detailedSentOrderPage = 'detailedSentOrderPage';
-  static const awbFormPage = 'awbFormPage';
-  static const createOrderPage = 'createOrderPage';
-  static const messagesPage = 'messagesPage';
+class RouteNames {
+  static const authentication = '/';
+  static const register = '/register_page';
+  static const home = '/home_page';
+  static const account = '/account_page';
+  static const editPost = '/edit_post_page';
+  static const createAddress = '/create_address_page';
+  static const addressView = '/addresses_view_page';
+  static const ordersView = '/orders_view';
+  static const userProfile = '/user_profile_page';
+  static const detailedPost = '/detailed_post_page';
+  static const detailedReceivedOrder = '/detailed_received_order_page';
+  static const detailedSentOrder = '/detailed_sent_order_page';
+  static const awbForm = '/awb_form_page';
+  static const createOrder = '/create_order_page';
+  static const messages = '/messages_page';
+  static const settings = '/settings';
 }
 
 class NoPage extends StatelessWidget {

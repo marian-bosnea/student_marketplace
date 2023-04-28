@@ -12,22 +12,6 @@ import 'package:student_marketplace_presentation/core/theme/colors.dart';
 import 'package:student_marketplace_presentation/features/orders_view/utils/status_data.dart';
 
 class DetailedSentOrderViewPage extends StatelessWidget {
-  final labelStyle = TextStyle(
-      fontSize: ScreenUtil().setSp(35),
-      fontWeight: FontWeight.w500,
-      color: Colors.black54);
-
-  final groupLabelStyle =
-      TextStyle(fontSize: ScreenUtil().setSp(30), color: Colors.black45);
-
-  final infoStyle = const TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
-
-  final divider = const Divider(
-    thickness: 0,
-    color: Colors.white,
-    height: 20,
-  );
-
   final OrderEntity order;
 
   final statusesData = {
@@ -58,7 +42,7 @@ class DetailedSentOrderViewPage extends StatelessWidget {
     return PlatformScaffold(
       appBar: isMaterial(context)
           ? PlatformAppBar(
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).primaryColor,
               automaticallyImplyLeading: true,
               cupertino: ((context, platform) => CupertinoNavigationBarData(
                   automaticallyImplyLeading: true,
@@ -66,40 +50,43 @@ class DetailedSentOrderViewPage extends StatelessWidget {
             )
           : null,
       body: Material(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: CustomScrollView(slivers: [
-            if (isCupertino(context))
-              const CupertinoSliverNavigationBar(
-                automaticallyImplyLeading: true,
-                previousPageTitle: 'Orders',
-                largeTitle: Text("Order", style: TextStyle(color: accentColor)),
-              ),
-            SliverToBoxAdapter(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                height: ScreenUtil().setHeight(500),
-                child: Column(children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 20),
-                    height: ScreenUtil().setHeight(300),
-                    child: statusesData[order.status]!.image,
-                  ),
-                  Text(
-                    statusesData[order.status]!.message,
-                    style: const TextStyle(color: Colors.black54),
-                  )
-                ]),
-              ),
+        color: Theme.of(context).primaryColor,
+        child: CustomScrollView(slivers: [
+          if (isCupertino(context))
+            CupertinoSliverNavigationBar(
+              backgroundColor: Theme.of(context).primaryColor,
+              automaticallyImplyLeading: true,
+              previousPageTitle: 'Orders',
+              largeTitle: Text("Order",
+                  style: TextStyle(color: Theme.of(context).splashColor)),
             ),
-            SliverList(
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              height: ScreenUtil().setHeight(500),
+              child: Column(children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  height: ScreenUtil().setHeight(300),
+                  child: statusesData[order.status]!.image,
+                ),
+                Text(
+                  statusesData[order.status]!.message,
+                  style: Theme.of(context).textTheme.displayMedium,
+                )
+              ]),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.all(10),
+            sliver: SliverList(
                 delegate: SliverChildListDelegate([
               Text(
                 "Shipping",
-                style: groupLabelStyle,
+                style: Theme.of(context).textTheme.displayMedium,
               ),
               Material(
-                color: Colors.white,
+                color: Theme.of(context).highlightColor,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
@@ -113,16 +100,23 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 'Address: ',
-                                style: labelStyle,
+                                style:
+                                    Theme.of(context).textTheme.displayMedium,
                                 maxLines: 2,
                               ),
-                              Text(order.addressDescription!, style: infoStyle),
+                              Text(order.addressDescription!,
+                                  style:
+                                      Theme.of(context).textTheme.labelMedium),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('Status: ', style: labelStyle),
+                              Text(
+                                'Status: ',
+                                style:
+                                    Theme.of(context).textTheme.displayMedium,
+                              ),
                               Text(_getStatusLabel(order.status),
                                   style: TextStyle(
                                       fontSize: ScreenUtil().setSp(35),
@@ -135,10 +129,15 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 'Last modified: ',
-                                style: labelStyle,
+                                style:
+                                    Theme.of(context).textTheme.displayMedium,
                                 maxLines: 2,
                               ),
-                              Text(order.lastModifiedDate, style: infoStyle),
+                              Text(
+                                order.lastModifiedDate,
+                                style:
+                                    Theme.of(context).textTheme.displayMedium,
+                              ),
                             ],
                           ),
                           if (order.awb!.isNotEmpty)
@@ -147,15 +146,20 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                               children: [
                                 Text(
                                   'AWB: ',
-                                  style: labelStyle,
+                                  style:
+                                      Theme.of(context).textTheme.displayMedium,
                                   maxLines: 2,
                                 ),
-                                Text(order.awb!, style: infoStyle),
+                                Text(
+                                  order.awb!,
+                                  style:
+                                      Theme.of(context).textTheme.labelMedium,
+                                ),
                                 PlatformIconButton(
                                     padding: EdgeInsets.zero,
-                                    icon: const Icon(
+                                    icon: Icon(
                                       FontAwesomeIcons.copy,
-                                      color: accentColor,
+                                      color: Theme.of(context).splashColor,
                                       size: 20,
                                     ),
                                     onPressed: () async {
@@ -168,13 +172,15 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                   ),
                 ),
               ),
-              divider,
+              const SizedBox(
+                height: 20,
+              ),
               Text(
                 "Product",
-                style: groupLabelStyle,
+                style: Theme.of(context).textTheme.displayMedium,
               ),
               Material(
-                color: Colors.white,
+                color: Theme.of(context).highlightColor,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -183,12 +189,15 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () => Navigator.of(context).pushNamed(
-                            PageNames.detailedPostPage,
+                            RouteNames.detailedPost,
                             arguments: order.objectId),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(order.objectTitle!, style: infoStyle),
+                            Text(
+                              order.objectTitle!,
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
                             const Icon(Icons.chevron_right)
                           ],
                         ),
@@ -197,13 +206,15 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                   ),
                 ),
               ),
-              divider,
+              const SizedBox(
+                height: 20,
+              ),
               Text(
                 "Seller",
-                style: groupLabelStyle,
+                style: Theme.of(context).textTheme.displayMedium,
               ),
               Material(
-                color: Colors.white,
+                color: Theme.of(context).highlightColor,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -212,12 +223,15 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () => Navigator.of(context).pushNamed(
-                            PageNames.userProfilePage,
+                            RouteNames.userProfile,
                             arguments: order.partnerId),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(order.partnerName!, style: infoStyle),
+                            Text(
+                              order.partnerName!,
+                              style: Theme.of(context).textTheme.labelMedium,
+                            ),
                             const Icon(Icons.chevron_right)
                           ],
                         ),
@@ -226,22 +240,24 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                   ),
                 ),
               ),
-              divider,
+              const SizedBox(
+                height: 20,
+              ),
               Text(
                 "Notes",
-                style: groupLabelStyle,
+                style: Theme.of(context).textTheme.displayMedium,
               ),
               Material(
-                color: Colors.white,
+                color: Theme.of(context).highlightColor,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Text(order.notes),
                 ),
               ),
-            ]))
-          ]),
-        ),
+            ])),
+          )
+        ]),
       ),
     );
   }

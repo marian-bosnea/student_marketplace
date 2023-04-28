@@ -10,7 +10,6 @@ import 'package:student_marketplace_presentation/features/shared/empty_list_plac
 import 'package:student_marketplace_presentation/features/shared/post_item.dart';
 
 import '../../core/constants/enums.dart';
-import '../../core/theme/colors.dart';
 import 'widgets/category_item.dart';
 
 class PostViewPage extends StatelessWidget {
@@ -19,12 +18,12 @@ class PostViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: primaryColor,
+      color: Theme.of(context).primaryColor,
       child:
           BlocBuilder<PostViewBloc, PostViewState>(builder: (context, state) {
         return RefreshIndicator(
-          color: accentColor,
-          backgroundColor: primaryColor,
+          color: Theme.of(context).splashColor,
+          backgroundColor: Theme.of(context).primaryColor,
           onRefresh: () async => _onRefresh(context, state),
           child: CustomScrollView(
               reverse: false,
@@ -44,7 +43,7 @@ class PostViewPage extends StatelessWidget {
       case PostsViewStatus.loading:
         return [
           SliverToBoxAdapter(
-            child: _buildShimmerWidget(),
+            child: _buildShimmerWidget(context),
           )
         ];
       case PostsViewStatus.loaded:
@@ -65,12 +64,12 @@ class PostViewPage extends StatelessWidget {
     }
   }
 
-  SizedBox _buildShimmerWidget() {
+  SizedBox _buildShimmerWidget(BuildContext context) {
     return SizedBox(
         height: ScreenUtil().setHeight(1500),
         child: Shimmer.fromColors(
-            baseColor: secondaryColor,
-            highlightColor: primaryColor,
+            baseColor: Theme.of(context).highlightColor,
+            highlightColor: Theme.of(context).primaryColor,
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: GridView(
@@ -79,32 +78,7 @@ class PostViewPage extends StatelessWidget {
                     childAspectRatio: 2 / 3,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10),
-                children: [
-                  Container(
-                    width: ScreenUtil().setWidth(200),
-                    decoration: const BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                  ),
-                  Container(
-                    width: ScreenUtil().setWidth(200),
-                    decoration: const BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                  ),
-                  Container(
-                    width: ScreenUtil().setWidth(200),
-                    decoration: const BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                  ),
-                  Container(
-                    width: ScreenUtil().setWidth(200),
-                    decoration: const BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                  )
-                ],
+                children: shimmerChildren(context),
               ),
             )));
   }
@@ -162,13 +136,46 @@ class PostViewPage extends StatelessWidget {
           },
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
-              childAspectRatio: 2 / 2.5,
+              childAspectRatio: 2 / 3,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10),
         ),
       )
     ];
   }
+
+  shimmerChildren(BuildContext context) => [
+        Container(
+          width: ScreenUtil().setWidth(200),
+          decoration: BoxDecoration(
+              color: Theme.of(context).splashColor,
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+        ),
+        Container(
+          width: ScreenUtil().setWidth(200),
+          decoration: BoxDecoration(
+              color: Theme.of(context).splashColor,
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+        ),
+        Container(
+          width: ScreenUtil().setWidth(200),
+          decoration: BoxDecoration(
+              color: Theme.of(context).splashColor,
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+        ),
+        Container(
+          width: ScreenUtil().setWidth(200),
+          decoration: BoxDecoration(
+              color: Theme.of(context).splashColor,
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+        ),
+        Container(
+          width: ScreenUtil().setWidth(200),
+          decoration: BoxDecoration(
+              color: Theme.of(context).splashColor,
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+        ),
+      ];
 
   @pragma('UI callback handlers')
   _onRefresh(BuildContext context, PostViewState state) {

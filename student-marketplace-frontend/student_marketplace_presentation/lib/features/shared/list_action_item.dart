@@ -50,9 +50,7 @@ class ListActionItem extends StatelessWidget {
                           children: [
                             Text(
                               label,
-                              style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(35),
-                                  fontWeight: FontWeight.w600),
+                              style: Theme.of(context).textTheme.labelMedium,
                             ),
                           ],
                         ),

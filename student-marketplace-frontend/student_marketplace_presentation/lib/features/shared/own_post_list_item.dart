@@ -17,6 +17,7 @@ class OwnPostListItem extends StatelessWidget {
       margin: const EdgeInsets.only(right: 5, left: 5, bottom: 5),
       height: ScreenUtil().setHeight(450),
       child: OpenContainer(
+        closedColor: Theme.of(context).highlightColor,
         transitionType: ContainerTransitionType.fadeThrough,
         transitionDuration: const Duration(milliseconds: 500),
         openShape: const RoundedRectangleBorder(
@@ -44,15 +45,14 @@ class OwnPostListItem extends StatelessWidget {
                       children: [
                         Text(
                           post.title,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Container(
                           padding: const EdgeInsets.all(5),
-                          decoration: const BoxDecoration(
-                              color: primaryColor,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).splashColor,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
+                                  const BorderRadius.all(Radius.circular(5))),
                           child: Center(
                             child: Text(
                               post.categoryName!,
@@ -63,31 +63,29 @@ class OwnPostListItem extends StatelessWidget {
                         ),
                         Text(
                           '${post.price} RON',
-                          style: TextStyle(
-                              fontSize: ScreenUtil().setSp(30),
-                              color: accentColor),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Row(
                           children: [
-                            const Text(
+                            Text(
                               'Posted on: ',
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: Theme.of(context).textTheme.displayMedium,
                             ),
                             Text(
                               post.postingDate!.toString(),
-                              style: const TextStyle(color: Colors.black45),
+                              style: Theme.of(context).textTheme.labelMedium,
                             ),
                           ],
                         ),
                         Row(
                           children: [
-                            const Text(
+                            Text(
                               'Views: ',
-                              style: TextStyle(fontWeight: FontWeight.w600),
+                              style: Theme.of(context).textTheme.displayMedium,
                             ),
                             Text(
                               post.viewsCount!.toString(),
-                              style: const TextStyle(color: Colors.black45),
+                              style: Theme.of(context).textTheme.labelMedium,
                             ),
                           ],
                         ),

@@ -33,14 +33,14 @@ class AccountViewPage extends StatelessWidget {
 
   Widget _getBodyWidget(BuildContext context, AccountViewState state) {
     return Material(
-      color: Colors.white,
+      color: Theme.of(context).primaryColor,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: ListView(children: [
           Container(
             padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(
-                color: primaryColor,
+            decoration: BoxDecoration(
+                color: Theme.of(context).highlightColor,
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -70,19 +70,24 @@ class AccountViewPage extends StatelessWidget {
                                 children: [
                                   PlatformText(
                                     '${state.firstName} ',
-                                    style: nameTextStyle,
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge,
                                   ),
                                   PlatformText('${state.lastName} ',
-                                      style: nameTextStyle),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge),
                                   if (state.secondLastName != 'null')
                                     PlatformText(state.secondLastName,
-                                        style: nameTextStyle),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelLarge),
                                 ],
                               ),
                               PlatformText(state.facultyName,
-                                  style: TextStyle(
-                                      fontSize: ScreenUtil().setSp(30),
-                                      color: Colors.black45)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium),
                               PlatformText(state.emailAdress,
                                   style: TextStyle(
                                       fontSize: ScreenUtil().setSp(50),
@@ -99,16 +104,16 @@ class AccountViewPage extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 20),
               padding: const EdgeInsets.only(left: 10),
-              child: const Text(
+              child: Text(
                 'Dashboard',
-                style: TextStyle(color: Colors.black45),
+                style: Theme.of(context).textTheme.displayMedium,
               ),
             ),
             Container(
               padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: primaryColor),
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  color: Theme.of(context).highlightColor),
               child: Column(
                 children: [
                   ListActionItem(
@@ -120,7 +125,7 @@ class AccountViewPage extends StatelessWidget {
                     label: 'Orders',
                     hasTrailing: true,
                     onTap: () =>
-                        Navigator.of(context).pushNamed(PageNames.ordersView),
+                        Navigator.of(context).pushNamed(RouteNames.ordersView),
                   ),
                   ListActionItem(
                     icon: const Icon(
@@ -131,14 +136,14 @@ class AccountViewPage extends StatelessWidget {
                     label: 'Adresses',
                     hasTrailing: true,
                     onTap: () =>
-                        Navigator.of(context).pushNamed(PageNames.addressView),
+                        Navigator.of(context).pushNamed(RouteNames.addressView),
                   ),
                   ListActionItem(
                     icon: const Icon(
                       FontAwesomeIcons.tags,
                       color: Colors.white,
                     ),
-                    color: accentColor,
+                    color: Theme.of(context).splashColor,
                     label: 'Posts',
                     hasTrailing: true,
                     onTap: () => Navigator.of(context).pushNamed('/own_posts'),
@@ -161,17 +166,29 @@ class AccountViewPage extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 10),
               padding: const EdgeInsets.only(left: 10),
-              child: const Text(
+              child: Text(
                 'My Account',
-                style: TextStyle(color: Colors.black45),
+                style: Theme.of(context).textTheme.displayMedium,
               ),
             ),
             Container(
               padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: primaryColor),
+              decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  color: Theme.of(context).highlightColor),
               child: Column(children: [
+                ListActionItem(
+                  isLast: false,
+                  icon: const Icon(
+                    FontAwesomeIcons.gear,
+                    color: Colors.white,
+                  ),
+                  color: Colors.grey,
+                  hasTrailing: true,
+                  label: 'Settings',
+                  onTap: () =>
+                      Navigator.of(context).pushNamed(RouteNames.settings),
+                ),
                 ListActionItem(
                   isLast: true,
                   icon: const Icon(

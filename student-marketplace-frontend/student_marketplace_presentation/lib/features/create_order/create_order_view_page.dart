@@ -22,11 +22,13 @@ class CreateOrderViewPage extends StatelessWidget {
 
           return Material(
             child: PlatformScaffold(
+              backgroundColor: Theme.of(context).primaryColor,
               appBar: PlatformAppBar(
+                backgroundColor: Theme.of(context).highlightColor,
                 cupertino: ((context, platform) =>
                     CupertinoNavigationBarData(previousPageTitle: 'Post')),
               ),
-              body: Container(
+              body: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Stepper(
                   onStepContinue: () => bloc.goToNextStep(context),
@@ -36,11 +38,11 @@ class CreateOrderViewPage extends StatelessWidget {
                     margin: const EdgeInsets.only(top: 20),
                     width: ScreenUtil().setWidth(400),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (bloc.canGoToNextStep())
                           PlatformElevatedButton(
-                            color: accentColor,
+                            color: Theme.of(context).splashColor,
                             padding: const EdgeInsets.only(
                                 left: 15, right: 15, bottom: 5, top: 5),
                             cupertino: ((context, platform) =>
@@ -63,9 +65,10 @@ class CreateOrderViewPage extends StatelessWidget {
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(15)))),
                             onPressed: details.onStepCancel,
-                            child: const Text(
+                            child: Text(
                               'Back',
-                              style: TextStyle(color: accentColor),
+                              style: TextStyle(
+                                  color: Theme.of(context).splashColor),
                             ),
                           )
                       ],
@@ -98,12 +101,13 @@ class CreateOrderViewPage extends StatelessWidget {
       BuildContext context, CreateOrderViewState state) {
     return state.post != null
         ? Material(
+            color: Theme.of(context).highlightColor,
             borderRadius: const BorderRadius.all(Radius.circular(20)),
             elevation: 2,
             child: Container(
               padding: const EdgeInsets.all(10),
               width: MediaQuery.of(context).size.width,
-              height: ScreenUtil().setHeight(500),
+              height: ScreenUtil().setHeight(550),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -116,19 +120,19 @@ class CreateOrderViewPage extends StatelessWidget {
                     width: ScreenUtil().setWidth(400),
                     child: Text(
                       state.post!.title,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ),
                   SizedBox(
                     width: ScreenUtil().setWidth(400),
-                    child: Text(state.post!.categoryName!),
+                    child: Text(state.post!.categoryName!,
+                        style: Theme.of(context).textTheme.labelMedium),
                   ),
                   SizedBox(
                     width: ScreenUtil().setWidth(400),
                     child: Text(
                       "Price: ${state.post!.price} RON",
-                      style: const TextStyle(fontSize: 15),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                   ),
                 ],
@@ -149,24 +153,40 @@ class CreateOrderViewPage extends StatelessWidget {
           itemBuilder: (context, index) => GestureDetector(
                 onTap: () => BlocProvider.of<CreateOrderViewBloc>(context)
                     .setAddressId(state.addresses.elementAt(index).id!),
-                child: Material(
-                  elevation: 2,
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    height: ScreenUtil().setHeight(250),
-                    width: ScreenUtil().setWidth(300),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            state.addresses.elementAt(index).name,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          Text(state.addresses.elementAt(index).county),
-                          Text(state.addresses.elementAt(index).city),
-                          Text(state.addresses.elementAt(index).description),
-                        ],
+                child: Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10),
+                  child: Material(
+                    color: Theme.of(context).highlightColor,
+                    elevation: state.selectedAddressId ==
+                            state.addresses.elementAt(index).id
+                        ? 0
+                        : 1,
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      height: ScreenUtil().setHeight(250),
+                      width: ScreenUtil().setWidth(300),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              state.addresses.elementAt(index).name,
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            Text(
+                              state.addresses.elementAt(index).county,
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                            Text(
+                              state.addresses.elementAt(index).city,
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                            Text(
+                              state.addresses.elementAt(index).description,
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -177,12 +197,14 @@ class CreateOrderViewPage extends StatelessWidget {
 
   Widget getAdditionalInfoStepContent(
       BuildContext context, CreateOrderViewState state) {
-    return Container(
-      child: PlatformTextField(
-        maxLines: 10,
-        onSubmitted: (text) =>
-            BlocProvider.of<CreateOrderViewBloc>(context).setNotes(text),
-      ),
+    return PlatformTextField(
+      maxLines: 10,
+      cupertino: (context, platform) => CupertinoTextFieldData(
+          decoration: BoxDecoration(
+              color: Theme.of(context).highlightColor,
+              borderRadius: const BorderRadius.all(Radius.circular(10)))),
+      onSubmitted: (text) =>
+          BlocProvider.of<CreateOrderViewBloc>(context).setNotes(text),
     );
   }
 }

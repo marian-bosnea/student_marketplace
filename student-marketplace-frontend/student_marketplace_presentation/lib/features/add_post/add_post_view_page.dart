@@ -28,7 +28,6 @@ class AddPostPage extends StatelessWidget {
     }
   }
 
-  final titleStyle = TextStyle(fontSize: ScreenUtil().setSp(40));
   final singleLineFieldHeight = ScreenUtil().setWidth(70);
   final _stepSvg = [
     SvgPicture.asset('assets/images/sell_title_art.svg'),
@@ -57,11 +56,12 @@ class AddPostPage extends StatelessWidget {
     final bloc = BlocProvider.of<AddPostViewBloc>(context);
 
     return Material(
+      color: Theme.of(context).primaryColor,
       child: Theme(
         data: ThemeData(
-          primaryColor: accentColor,
+          primaryColor: Theme.of(context).splashColor,
           colorScheme: Theme.of(context).colorScheme.copyWith(
-                primary: accentColor,
+                primary: Theme.of(context).splashColor,
               ),
         ),
         child: Stepper(
@@ -69,16 +69,15 @@ class AddPostPage extends StatelessWidget {
             currentStep: state.currentStep,
             onStepContinue: () => bloc.goToNextStep(context),
             onStepCancel: () => bloc.goToPreviousStep(),
-            //onStepTapped: (step) => bloc.setCurrentStep(step),
             controlsBuilder: (context, details) => Container(
                   margin: const EdgeInsets.only(top: 20),
-                  width: ScreenUtil().setWidth(400),
+                  width: ScreenUtil().setWidth(300),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       if (bloc.canGoToNextStep())
                         PlatformElevatedButton(
-                          color: accentColor,
+                          color: Theme.of(context).splashColor,
                           padding: const EdgeInsets.only(
                               left: 15, right: 15, bottom: 5, top: 5),
                           cupertino: ((context, platform) =>
@@ -105,9 +104,10 @@ class AddPostPage extends StatelessWidget {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(15)))),
                           onPressed: details.onStepCancel,
-                          child: const Text(
+                          child: Text(
                             'Back',
-                            style: TextStyle(color: accentColor),
+                            style:
+                                TextStyle(color: Theme.of(context).splashColor),
                           ),
                         )
                     ],
@@ -118,205 +118,243 @@ class AddPostPage extends StatelessWidget {
                   isActive: state.currentStep == 0,
                   title: Text(
                     'What do you want to sell?',
-                    style: titleStyle,
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
-                  content: Column(
-                    children: [
-                      Container(
+                  content: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).highlightColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                            width: ScreenUtil().setWidth(300),
+                            height: ScreenUtil().setHeight(300),
+                            child: _stepSvg[0]),
+                        Container(
                           margin: const EdgeInsets.only(bottom: 10),
-                          width: ScreenUtil().setWidth(300),
-                          height: ScreenUtil().setHeight(300),
-                          child: _stepSvg[0]),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: const Text(
-                          'Try to include esential words that describe your item the best',
-                          style: TextStyle(color: Colors.black38),
+                          child: Text(
+                            'Try to include esential words that describe your item the best',
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: singleLineFieldHeight,
-                        child: PlatformTextField(
-                          controller: _titleController,
-                          onChanged: (text) => bloc.setTitleValue(text),
-                          cupertino: (context, platform) =>
-                              _personalInfoCupertinoTextDataField(context),
+                        SizedBox(
+                          height: singleLineFieldHeight,
+                          child: PlatformTextField(
+                            controller: _titleController,
+                            onChanged: (text) => bloc.setTitleValue(text),
+                            cupertino: (context, platform) =>
+                                _personalInfoCupertinoTextDataField(context),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )),
               Step(
                   isActive: state.currentStep == 1,
                   title: Text(
                     'Tell us more about you object',
-                    style: titleStyle,
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
-                  content: Column(
-                    children: [
-                      Container(
+                  content: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).highlightColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            width: ScreenUtil().setWidth(300),
+                            height: ScreenUtil().setHeight(300),
+                            child: _stepSvg[1]),
+                        Container(
                           margin: const EdgeInsets.only(bottom: 10),
-                          width: ScreenUtil().setWidth(300),
-                          height: ScreenUtil().setHeight(300),
-                          child: _stepSvg[1]),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: const Text(
-                          'Describe your product as detailed as you can. Include details about its condition, features, color, sizes, etc',
-                          style: TextStyle(color: Colors.black38),
+                          child: Text(
+                            'Describe your product as detailed as you can. Include details about its condition, features, color, sizes, etc',
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
                         ),
-                      ),
-                      PlatformTextField(
-                        controller: _descriptionController,
-                        maxLines: 5,
-                        onChanged: (text) =>
-                            BlocProvider.of<AddPostViewBloc>(context)
-                                .setDescriptionValue(text),
-                        cupertino: (context, platform) =>
-                            _personalInfoCupertinoTextDataField(context),
-                      ),
-                    ],
+                        PlatformTextField(
+                          controller: _descriptionController,
+                          maxLines: 5,
+                          onChanged: (text) =>
+                              BlocProvider.of<AddPostViewBloc>(context)
+                                  .setDescriptionValue(text),
+                          cupertino: (context, platform) =>
+                              _personalInfoCupertinoTextDataField(context),
+                        ),
+                      ],
+                    ),
                   )),
               Step(
                   isActive: state.currentStep == 2,
                   title: Text(
                     'What is the price?',
-                    style: titleStyle,
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
-                  content: Column(
-                    children: [
-                      Container(
+                  content: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).highlightColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            width: ScreenUtil().setWidth(300),
+                            height: ScreenUtil().setHeight(300),
+                            child: _stepSvg[2]),
+                        Container(
                           margin: const EdgeInsets.only(bottom: 10),
-                          width: ScreenUtil().setWidth(300),
-                          height: ScreenUtil().setHeight(300),
-                          child: _stepSvg[2]),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: const Text(
-                          'Decide how much is your item worth. Take into account its grade of wear, how old it is, etc',
-                          style: TextStyle(color: Colors.black38),
+                          child: Text(
+                            'Decide how much is your item worth. Take into account its grade of wear, how old it is, etc',
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: singleLineFieldHeight,
-                        child: PlatformTextField(
-                          controller: _priceController,
-                          maxLines: 1,
-                          keyboardType: const TextInputType.numberWithOptions(),
-                          onChanged: (text) =>
-                              BlocProvider.of<AddPostViewBloc>(context)
-                                  .setPriceValue(text),
-                          cupertino: (context, platform) =>
-                              _personalInfoCupertinoTextDataField(context),
+                        SizedBox(
+                          height: singleLineFieldHeight,
+                          child: PlatformTextField(
+                            controller: _priceController,
+                            maxLines: 1,
+                            keyboardType:
+                                const TextInputType.numberWithOptions(),
+                            onChanged: (text) =>
+                                BlocProvider.of<AddPostViewBloc>(context)
+                                    .setPriceValue(text),
+                            cupertino: (context, platform) =>
+                                _personalInfoCupertinoTextDataField(context),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )),
               Step(
                   isActive: state.currentStep == 3,
                   title: Text(
                     'What category does the item belongs to?',
-                    style: titleStyle,
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
-                  content: Column(
-                    children: [
-                      Container(
+                  content: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).highlightColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            width: ScreenUtil().setWidth(300),
+                            height: ScreenUtil().setHeight(300),
+                            child: _stepSvg[3]),
+                        Container(
                           margin: const EdgeInsets.only(bottom: 10),
-                          width: ScreenUtil().setWidth(300),
-                          height: ScreenUtil().setHeight(300),
-                          child: _stepSvg[3]),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: const Text(
-                          'Select the most appropriate category for your item. This will help others find your product more easily.',
-                          style: TextStyle(color: Colors.black38),
+                          child: Text(
+                            'Select the most appropriate category for your item. This will help others find your product more easily.',
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: singleLineFieldHeight,
-                        child: PlatformTextField(
-                          readOnly: true,
-                          hintText: 'Select a category',
-                          controller: _categoryController,
-                          onTap: () =>
-                              _openDrowDownFacultiesList(state, context),
-                          cupertino: (context, platform) =>
-                              _personalInfoCupertinoTextDataField(context),
+                        SizedBox(
+                          height: singleLineFieldHeight,
+                          child: PlatformTextField(
+                            readOnly: true,
+                            hintText: 'Select a category',
+                            controller: _categoryController,
+                            onTap: () =>
+                                _openDrowDownFacultiesList(state, context),
+                            cupertino: (context, platform) =>
+                                _personalInfoCupertinoTextDataField(context),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )),
               Step(
                   isActive: state.currentStep == 4,
                   title: Text(
                     'Add some photos',
-                    style: titleStyle,
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
-                  content: Column(
-                    children: [
-                      Container(
+                  content: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).highlightColor,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10))),
+                    child: Column(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.only(bottom: 10),
+                            width: ScreenUtil().setWidth(300),
+                            height: ScreenUtil().setHeight(300),
+                            child: _stepSvg[4]),
+                        Container(
                           margin: const EdgeInsets.only(bottom: 10),
-                          width: ScreenUtil().setWidth(300),
-                          height: ScreenUtil().setHeight(300),
-                          child: _stepSvg[4]),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        child: const Text(
-                          'Besides you description, you will need to add at least on photo to detail your post. Try to add  clear photos and include only the item you want to sell to avoid confusion.',
-                          style: TextStyle(color: Colors.black38),
+                          child: Text(
+                            'Besides you description, you will need to add at least on photo to detail your post. Try to add  clear photos and include only the item you want to sell to avoid confusion.',
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: ScreenUtil().setHeight(400),
-                        child: ListView(
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            GestureDetector(
-                              onTap: () =>
-                                  BlocProvider.of<AddPostViewBloc>(context)
-                                      .setPhotos(),
-                              child: Card(
-                                elevation: 5,
-                                child: SizedBox(
-                                    width: ScreenUtil().setWidth(400),
-                                    child: state.images.isNotEmpty
-                                        ? Image.memory(state.images[0])
-                                        : const Icon(
-                                            Icons.add_a_photo_outlined)),
+                        SizedBox(
+                          height: ScreenUtil().setHeight(400),
+                          child: ListView(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<AddPostViewBloc>(context)
+                                        .setPhotos(),
+                                child: Card(
+                                  elevation: 5,
+                                  color: Theme.of(context).highlightColor,
+                                  child: SizedBox(
+                                      width: ScreenUtil().setWidth(400),
+                                      child: state.images.isNotEmpty
+                                          ? Image.memory(state.images[0])
+                                          : const Icon(
+                                              Icons.add_a_photo_outlined)),
+                                ),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () =>
-                                  BlocProvider.of<AddPostViewBloc>(context)
-                                      .setPhotos(),
-                              child: Card(
-                                elevation: 5,
-                                child: SizedBox(
-                                    width: ScreenUtil().setWidth(400),
-                                    child: state.images.length >= 2
-                                        ? Image.memory(state.images[1])
-                                        : const Icon(
-                                            Icons.add_a_photo_outlined)),
+                              GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<AddPostViewBloc>(context)
+                                        .setPhotos(),
+                                child: Card(
+                                  elevation: 5,
+                                  color: Theme.of(context).highlightColor,
+                                  child: SizedBox(
+                                      width: ScreenUtil().setWidth(400),
+                                      child: state.images.length >= 2
+                                          ? Image.memory(state.images[1])
+                                          : const Icon(
+                                              Icons.add_a_photo_outlined)),
+                                ),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () =>
-                                  BlocProvider.of<AddPostViewBloc>(context)
-                                      .setPhotos(),
-                              child: Card(
-                                elevation: 5,
-                                child: SizedBox(
-                                    width: ScreenUtil().setWidth(400),
-                                    child: state.images.length >= 3
-                                        ? Image.memory(state.images[2])
-                                        : const Icon(
-                                            Icons.add_a_photo_outlined)),
+                              GestureDetector(
+                                onTap: () =>
+                                    BlocProvider.of<AddPostViewBloc>(context)
+                                        .setPhotos(),
+                                child: Card(
+                                  elevation: 5,
+                                  color: Theme.of(context).highlightColor,
+                                  child: SizedBox(
+                                      width: ScreenUtil().setWidth(400),
+                                      child: state.images.length >= 3
+                                          ? Image.memory(state.images[2])
+                                          : const Icon(
+                                              Icons.add_a_photo_outlined)),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )),
             ]),
       ),
@@ -366,7 +404,7 @@ class AddPostPage extends StatelessWidget {
   CupertinoTextFieldData _personalInfoCupertinoTextDataField(
       BuildContext context) {
     return CupertinoTextFieldData(
-      cursorColor: accentColor,
+      cursorColor: Theme.of(context).splashColor,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: const BorderRadius.all(Radius.circular(20)),

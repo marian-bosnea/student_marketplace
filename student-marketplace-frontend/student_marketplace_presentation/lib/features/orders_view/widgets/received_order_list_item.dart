@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
+import 'package:student_marketplace_presentation/features/orders_view/widgets/status_styles.dart';
 
 class ReceivedOrderListItem extends StatelessWidget {
   final OrderEntity order;
@@ -20,46 +21,59 @@ class ReceivedOrderListItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(top: 5, bottom: 5),
         decoration: BoxDecoration(
+            color: Theme.of(context).highlightColor,
             border: Border.all(width: 2, color: Colors.black12),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         padding: const EdgeInsets.all(10),
-        height: ScreenUtil().setHeight(200),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    order.objectTitle!,
-                    style: TextStyle(
-                        fontSize: ScreenUtil().setSp(40),
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  Text('#${order.id}')
-                ],
+        height: 100,
+        child: Row(
+          children: [
+            SizedBox(
+              width: 50,
+              child: Icon(
+                getStatusIcon(order.status),
+                color: getStatusLabelColor(order.status),
               ),
-              Text(_getStatusLabel(order.status),
-                  style: TextStyle(
-                      fontSize: ScreenUtil().setSp(30),
-                      color: _getStatusLabelColor(order.status))),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: ScreenUtil().setWidth(700),
-                    child: Text(order.addressDescription!,
-                        maxLines: 2,
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 100,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          order.objectTitle!,
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        Text(
+                          '#${order.id}',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        )
+                      ],
+                    ),
+                    Text(_getStatusLabel(order.status),
                         style: TextStyle(
                             fontSize: ScreenUtil().setSp(30),
-                            color: Colors.black54)),
-                  ),
-                ],
-              ),
-            ]),
+                            color: _getStatusLabelColor(order.status))),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(order.addressDescription!,
+                              maxLines: 5,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.displayMedium),
+                        ),
+                      ],
+                    ),
+                  ]),
+            ),
+          ],
+        ),
       ),
     );
   }

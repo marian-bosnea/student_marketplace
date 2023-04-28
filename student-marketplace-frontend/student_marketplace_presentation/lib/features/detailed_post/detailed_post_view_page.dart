@@ -6,13 +6,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:like_button/like_button.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:student_marketplace_business_logic/data/models/sale_post_model.dart';
 
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
+import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_page.dart';
 
 import '../../core/constants/enums.dart';
-import '../../core/theme/colors.dart';
 import 'detailed_post_view_bloc.dart';
 import 'detailed_post_view_state.dart';
 
@@ -42,29 +41,31 @@ class DetailedPostViewPage extends StatelessWidget {
             );
           }
           return PlatformScaffold(
+            backgroundColor: Theme.of(context).primaryColor,
             appBar: PlatformAppBar(
-                trailingActions: [
-                  if (state.post!.isOwn!)
-                    PlatformIconButton(
-                      onPressed: () => Navigator.of(context).pushNamed(
-                          PageNames.editPostPage,
-                          arguments: state.post),
-                      icon: const Icon(
-                        Icons.edit,
-                        color: accentColor,
-                      ),
-                    )
-                ],
-                cupertino: (context, platform) =>
-                    CupertinoNavigationBarData(previousPageTitle: 'Posts'),
-                automaticallyImplyLeading: true,
-                backgroundColor: Colors.white),
+              backgroundColor: Theme.of(context).highlightColor,
+              trailingActions: [
+                if (state.post!.isOwn!)
+                  PlatformIconButton(
+                    onPressed: () => Navigator.of(context)
+                        .pushNamed(RouteNames.editPost, arguments: state.post),
+                    icon: Icon(
+                      Icons.edit,
+                      color: Theme.of(context).splashColor,
+                    ),
+                  )
+              ],
+              cupertino: (context, platform) =>
+                  CupertinoNavigationBarData(previousPageTitle: 'Posts'),
+              automaticallyImplyLeading: true,
+            ),
             body: Material(
+              color: Theme.of(context).primaryColor,
               child: Stack(
                 children: [
                   Container(
                     margin: const EdgeInsets.only(bottom: 80),
-                    color: secondaryColor,
+                    color: Theme.of(context).primaryColor,
                     child: ListView(
                       children: [
                         SizedBox(
@@ -82,11 +83,14 @@ class DetailedPostViewPage extends StatelessWidget {
                                             .setSelectedImage(index),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: index ==
-                                                  state.selectedImageIndex!
-                                              ? Border.all(color: accentColor)
-                                              : null,
+                                          color: Theme.of(context)
+                                              .highlightColor,
+                                          border:
+                                              index == state.selectedImageIndex!
+                                                  ? Border.all(
+                                                      color: Theme.of(context)
+                                                          .splashColor)
+                                                  : null,
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(20))),
                                       width: 80,
@@ -111,23 +115,16 @@ class DetailedPostViewPage extends StatelessWidget {
                             child: PhotoView(
                               imageProvider: MemoryImage(state
                                   .post!.images[state.selectedImageIndex!]),
-                            )
-                            // child: Image.memory(
-                            //   state.post!.images[state.selectedImageIndex!],
-                            //   fit: BoxFit.scaleDown,
-                            // ),
-                            ),
+                            )),
                         Container(
-                          // margin: const EdgeInsets.only(left: 20, right: 20),
                           padding: const EdgeInsets.only(
                               left: 15, right: 15, bottom: 10, top: 10),
-                          decoration: const BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.only(
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).highlightColor,
+                            borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(40),
                                 topLeft: Radius.circular(40)),
                           ),
-                          //  BorderRadius.all(Radius.circular(20)),
                           child: Column(
                             children: [
                               Container(
@@ -146,15 +143,15 @@ class DetailedPostViewPage extends StatelessWidget {
                                             children: [
                                               Text(
                                                 state.post!.categoryName!,
-                                                style: const TextStyle(
-                                                    color: accentColor),
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .splashColor),
                                               ),
                                               Text(
                                                 state.post!.title,
-                                                style: const TextStyle(
-                                                    fontSize: 24,
-                                                    fontWeight:
-                                                        FontWeight.w600),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelLarge,
                                               ),
                                             ]),
                                       ),
@@ -170,9 +167,9 @@ class DetailedPostViewPage extends StatelessWidget {
                                         ),
                                     ]),
                               ),
-                              const Divider(
+                              Divider(
                                 height: 0.1,
-                                color: Colors.black26,
+                                color: Theme.of(context).dividerColor,
                               ),
                               Container(
                                 margin:
@@ -186,17 +183,18 @@ class DetailedPostViewPage extends StatelessWidget {
                                         margin: const EdgeInsets.only(
                                             top: 5, bottom: 5),
                                         child: Row(
-                                          children: const [
+                                          children: [
                                             Icon(
                                               Icons.feed,
-                                              color: accentColor,
+                                              color:
+                                                  Theme.of(context).splashColor,
                                             ),
                                             Text(
                                               'Description',
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelLarge,
                                             ),
                                           ],
                                         ),
@@ -204,12 +202,15 @@ class DetailedPostViewPage extends StatelessWidget {
                                       Text(
                                         state.post!.description!,
                                         textAlign: TextAlign.start,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium,
                                       )
                                     ]),
                               ),
-                              const Divider(
+                              Divider(
                                 height: 0.1,
-                                color: Colors.black26,
+                                color: Theme.of(context).dividerColor,
                               ),
                               Container(
                                 margin:
@@ -223,52 +224,76 @@ class DetailedPostViewPage extends StatelessWidget {
                                         margin: const EdgeInsets.only(
                                             top: 5, bottom: 5),
                                         child: Row(
-                                          children: const [
+                                          children: [
                                             Icon(
                                               Icons.info_outline,
-                                              color: accentColor,
+                                              color:
+                                                  Theme.of(context).splashColor,
                                             ),
                                             Text(
                                               'About',
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelMedium,
                                             ),
                                           ],
                                         ),
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
+                                          Text(
                                             'Sold by ',
-                                            style: TextStyle(
-                                                color: Colors.black38),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium,
                                           ),
                                           Text(
                                             state.post!.ownerName!,
                                             textAlign: TextAlign.start,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium,
                                           ),
+                                          PlatformTextButton(
+                                            child: Text(
+                                              'View Profile',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelLarge,
+                                            ),
+                                            onPressed: () => Navigator.of(
+                                                    context)
+                                                .push(MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UserProfileViewPage(
+                                                            userId: state.post!
+                                                                .ownerId!))),
+                                          )
                                         ],
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
+                                          Text(
                                             'Posted on  ',
-                                            style: TextStyle(
-                                                color: Colors.black38),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium,
                                           ),
                                           Text(
                                             state.post!.postingDate!,
                                             textAlign: TextAlign.start,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium,
                                           ),
                                         ],
                                       ),
                                     ]),
                               ),
-                              const Divider(
+                              Divider(
                                 height: 0.1,
-                                color: Colors.black26,
+                                color: Theme.of(context).dividerColor,
                               ),
                               Container(
                                 margin:
@@ -282,31 +307,36 @@ class DetailedPostViewPage extends StatelessWidget {
                                         margin: const EdgeInsets.only(
                                             top: 5, bottom: 5),
                                         child: Row(
-                                          children: const [
+                                          children: [
                                             Icon(
                                               Icons.insert_chart,
-                                              color: accentColor,
+                                              color:
+                                                  Theme.of(context).splashColor,
                                             ),
                                             Text(
                                               'Statistics',
                                               textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.w600),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelLarge,
                                             ),
                                           ],
                                         ),
                                       ),
                                       Row(
                                         children: [
-                                          const Text(
+                                          Text(
                                             'Views: ',
-                                            style: TextStyle(
-                                                color: Colors.black38),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium,
                                           ),
                                           Text(
                                             state.post!.viewsCount!.toString(),
                                             textAlign: TextAlign.start,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .displayMedium,
                                           ),
                                         ],
                                       ),
@@ -325,39 +355,44 @@ class DetailedPostViewPage extends StatelessWidget {
                         padding: const EdgeInsets.all(20),
                         width: MediaQuery.of(context).size.width,
                         height: 100,
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).highlightColor,
                             borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
+                                const BorderRadius.all(Radius.circular(20))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               '${state.post!.price} RON',
-                              style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(50),
-                                  fontWeight: FontWeight.w700),
+                              style: Theme.of(context).textTheme.labelLarge,
                             ),
                             if (!state.post!.isOwn!)
                               GestureDetector(
-                                  onTap: () => Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              UserProfileViewPage(
-                                                  userId:
-                                                      state.post!.ownerId!))),
+                                  onTap: () async {
+                                    final room = await BlocProvider.of<
+                                            ChatRoomsViewBloc>(context)
+                                        .createRoom(state.post!.ownerId!);
+
+                                    Navigator.of(context).pushNamed(
+                                        RouteNames.messages,
+                                        arguments: room);
+                                  },
                                   child: Container(
+                                    width: ScreenUtil().setWidth(250),
                                     height: ScreenUtil().setWidth(80),
-                                    width: ScreenUtil().setWidth(160),
-                                    decoration: const BoxDecoration(
-                                        color: primaryColor,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(5))),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color:
+                                                Theme.of(context).splashColor),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(10))),
                                     child: Center(
-                                      child: Text('👤Profile',
+                                      child: Text('Message',
                                           style: TextStyle(
-                                              fontSize: ScreenUtil().setSp(40),
-                                              color: accentColor,
+                                              fontSize: ScreenUtil().setSp(35),
+                                              color:
+                                                  Theme.of(context).splashColor,
                                               fontWeight: FontWeight.w600)),
                                     ),
                                   )),
@@ -365,21 +400,21 @@ class DetailedPostViewPage extends StatelessWidget {
                               Container(
                                 width: ScreenUtil().setWidth(250),
                                 height: ScreenUtil().setWidth(80),
-                                decoration: const BoxDecoration(
-                                    color: accentColor,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).splashColor,
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10))),
                                 child: Center(
                                   child: TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pushNamed(
-                                          PageNames.createOrderPage,
+                                          RouteNames.createOrder,
                                           arguments: state.post);
                                     },
                                     child: Text(
                                       'Order',
                                       style: TextStyle(
-                                          fontSize: ScreenUtil().setSp(40),
+                                          fontSize: ScreenUtil().setSp(35),
                                           color: Colors.white,
                                           fontWeight: FontWeight.w600),
                                     ),

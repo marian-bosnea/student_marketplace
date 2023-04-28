@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
 
 class AwbFormViewPage extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
@@ -30,7 +27,7 @@ class AwbFormViewPage extends StatelessWidget {
                 controller: _controller,
               ),
               PlatformElevatedButton(
-                color: accentColor,
+                color: Theme.of(context).splashColor,
                 onPressed: () => Navigator.of(context).pop(_controller.text),
                 child: const Text('Done'),
               )

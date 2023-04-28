@@ -149,7 +149,7 @@ class RegisterViewBloc extends Cubit<RegisterViewState> {
             : RegisterPageStatus.submissionFailed));
     if (state.status == RegisterPageStatus.submissionSuccessful) {
       emit(state.copyWith(currentStep: 0));
-      Navigator.of(context).pushReplacementNamed(PageNames.authenticationPage);
+      Navigator.of(context).pushReplacementNamed(RouteNames.authentication);
     }
   }
 

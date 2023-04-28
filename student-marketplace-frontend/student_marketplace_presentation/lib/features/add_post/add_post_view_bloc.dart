@@ -108,7 +108,7 @@ class AddPostViewBloc extends Cubit<AddPostState> {
             postingDate: getCurrentDateFormatted(),
             title: state.title)));
 
-    Navigator.of(context).pushReplacementNamed(PageNames.homePage);
+    Navigator.of(context).pushReplacementNamed(RouteNames.home);
   }
 
   Future<void> setCategoryValue(int categoryId) async {
@@ -121,7 +121,7 @@ class AddPostViewBloc extends Cubit<AddPostState> {
 
     final categories = (result as Right).value;
 
-    emit(state.copyWith(categories: categories));
+    if (!isClosed) emit(state.copyWith(categories: categories));
   }
 
   setCurrentStep(int step) {
@@ -133,7 +133,7 @@ class AddPostViewBloc extends Cubit<AddPostState> {
       upload(context);
       BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
       BlocProvider.of<HomeViewBloc>(context).goToHome();
-      Navigator.of(context).pushReplacementNamed(PageNames.homePage);
+      Navigator.of(context).pushReplacementNamed(RouteNames.home);
 
       return;
     }

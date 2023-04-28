@@ -54,6 +54,7 @@ class LoginViewPage extends StatelessWidget {
 
   Widget _bodyWidget(BuildContext context, LoginViewState state) {
     return Material(
+      color: Theme.of(context).highlightColor,
       child: Center(
         child: Container(
           padding: EdgeInsets.only(
@@ -78,9 +79,7 @@ class LoginViewPage extends StatelessWidget {
                         child: Text(
                           "Let's log you in",
                           textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontSize: ScreenUtil().setSp(50),
-                              fontWeight: FontWeight.w600),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                       ),
                       SizedBox(
@@ -144,14 +143,16 @@ class LoginViewPage extends StatelessWidget {
                                         ? Icons.check_box
                                         : Icons.check_box_outline_blank,
                                     color: state.keepSignedIn
-                                        ? accentColor
-                                        : Colors.black12,
+                                        ? Theme.of(context).splashColor
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .displayMedium!
+                                            .color,
                                   )),
                             ),
                             Text("Keep me signed in",
-                                style: TextStyle(
-                                  fontSize: ScreenUtil().setSp(40),
-                                ))
+                                style:
+                                    Theme.of(context).textTheme.displayMedium)
                           ],
                         ),
                       ),
@@ -160,26 +161,26 @@ class LoginViewPage extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text(
-                              "Don't have an account?",
-                              style:
-                                  TextStyle(fontSize: ScreenUtil().setSp(30)),
-                            ),
+                            Text("Don't have an account?",
+                                style: Theme.of(context).textTheme.labelMedium),
                             GestureDetector(
                                 onTap: () => Navigator.of(context)
-                                    .pushNamed(PageNames.registerPage),
+                                    .pushNamed(RouteNames.register),
                                 child: Container(
                                     height: 40,
                                     width: 100,
                                     decoration: BoxDecoration(
                                         color: Colors.white,
-                                        border: Border.all(color: accentColor),
+                                        border: Border.all(
+                                            color:
+                                                Theme.of(context).splashColor),
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(20))),
-                                    child: const Center(
+                                    child: Center(
                                         child: Text(
                                       'Register',
-                                      style: TextStyle(color: accentColor),
+                                      style: TextStyle(
+                                          color: Theme.of(context).splashColor),
                                     ))))
                           ],
                         ),
@@ -192,8 +193,8 @@ class LoginViewPage extends StatelessWidget {
                           child: Container(
                               height: 40,
                               width: 100,
-                              decoration: const BoxDecoration(
-                                  color: accentColor,
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).splashColor,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(20))),
                               child: const Center(
@@ -245,9 +246,11 @@ class LoginViewPage extends StatelessWidget {
       suffix: _getEmailTextFieldPrefix(context, state),
       padding: const EdgeInsets.only(left: 10),
       autocorrect: false,
+      placeholderStyle: Theme.of(context).textTheme.displayMedium,
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(color: Colors.black12)),
+          border: Border.all(
+              color: Theme.of(context).textTheme.displayMedium!.color!)),
     );
   }
 
@@ -270,9 +273,11 @@ class LoginViewPage extends StatelessWidget {
       BuildContext context, LoginViewState state) {
     return CupertinoTextFieldData(
         padding: const EdgeInsets.only(left: 10),
+        placeholderStyle: Theme.of(context).textTheme.displayMedium,
         decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(20)),
-            border: Border.all(color: Colors.black12)),
+            border: Border.all(
+                color: Theme.of(context).textTheme.displayMedium!.color!)),
         obscureText: true,
         suffix: const SizedBox(
           height: 40,

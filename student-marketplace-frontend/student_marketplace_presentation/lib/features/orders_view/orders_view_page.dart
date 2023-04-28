@@ -26,19 +26,26 @@ class OrdersViewPage extends StatelessWidget {
           return PlatformScaffold(
             appBar: isMaterial(context)
                 ? PlatformAppBar(
+                    backgroundColor: Theme.of(context).highlightColor,
                     automaticallyImplyLeading: true,
-                    title: const Text('My Orders'),
+                    title: Text(
+                      'My Orders',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                   )
                 : null,
             body: Material(
+              color: Theme.of(context).primaryColor,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: CustomScrollView(
                   slivers: [
                     if (isCupertino(context))
-                      const CupertinoSliverNavigationBar(
+                      CupertinoSliverNavigationBar(
                         largeTitle: Text('My Orders',
-                            style: TextStyle(color: accentColor)),
+                            style: TextStyle(
+                                color: Theme.of(context).splashColor)),
+                        backgroundColor: Theme.of(context).highlightColor,
                         automaticallyImplyLeading: true,
                         previousPageTitle: 'Account',
                       ),
@@ -55,15 +62,15 @@ class OrdersViewPage extends StatelessWidget {
                             initialLabelIndex: state.type.index,
                             activeFgColor: Colors.white,
                             inactiveBgColor: Colors.white,
-                            inactiveFgColor: accentColor,
+                            inactiveFgColor: Theme.of(context).splashColor,
                             totalSwitches: 2,
                             labels: const ["Sent", "Received"],
                             iconSize: 30.0,
                             borderWidth: 1.0,
-                            borderColor: const [accentColor],
-                            activeBgColors: const [
-                              [accentColor],
-                              [accentColor],
+                            borderColor: [Theme.of(context).splashColor],
+                            activeBgColors: [
+                              [Theme.of(context).splashColor],
+                              [Theme.of(context).splashColor],
                             ],
                             onToggle: (index) =>
                                 BlocProvider.of<OrdersViewBloc>(context)
@@ -103,7 +110,7 @@ class OrdersViewPage extends StatelessWidget {
                       order: state.receivedOrders.elementAt(index),
                       onTap: () {
                         Navigator.of(context)
-                            .pushNamed(PageNames.detailedReceivedOrderPage,
+                            .pushNamed(RouteNames.detailedReceivedOrder,
                                 arguments:
                                     state.receivedOrders.elementAt(index))
                             .then((value) {

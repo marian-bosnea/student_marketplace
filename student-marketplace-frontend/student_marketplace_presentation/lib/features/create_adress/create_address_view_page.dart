@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
@@ -35,14 +34,16 @@ class CreateAddressViewPage extends StatelessWidget {
         builder: (context, state) {
           final bloc = BlocProvider.of<CreateAddressViewBloc>(context);
           return PlatformScaffold(
+            backgroundColor: Theme.of(context).primaryColor,
             cupertino: (context, platform) =>
                 CupertinoPageScaffoldData(resizeToAvoidBottomInset: false),
             appBar: PlatformAppBar(
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).highlightColor,
               title: Text(
                 addressToEdit != null ? 'Edit Address' : 'New Address',
-                style: const TextStyle(
-                    color: accentColor, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    color: Theme.of(context).splashColor,
+                    fontWeight: FontWeight.w600),
               ),
               cupertino: ((context, platform) => CupertinoNavigationBarData(
                   automaticallyImplyLeading: true,
@@ -64,7 +65,9 @@ class CreateAddressViewPage extends StatelessWidget {
                       hintText: 'Name',
                       controller: _nameController,
                       cupertino: (context, platform) =>
-                          _inputTextFieldData(context),
+                          _cupertinoTextFieldData(context),
+                      material: (context, platform) =>
+                          _materialTextFieldData(context),
                       onChanged: (text) => bloc.setNameValue(text),
                     ),
                   ),
@@ -74,7 +77,9 @@ class CreateAddressViewPage extends StatelessWidget {
                       hintText: 'County',
                       controller: _countyController,
                       cupertino: (context, platform) =>
-                          _inputTextFieldData(context),
+                          _cupertinoTextFieldData(context),
+                      material: (context, platform) =>
+                          _materialTextFieldData(context),
                       onChanged: (text) => bloc.setCountyValue(text),
                     ),
                   ),
@@ -84,7 +89,9 @@ class CreateAddressViewPage extends StatelessWidget {
                       hintText: 'City',
                       controller: _cityController,
                       cupertino: (context, platform) =>
-                          _inputTextFieldData(context),
+                          _cupertinoTextFieldData(context),
+                      material: (context, platform) =>
+                          _materialTextFieldData(context),
                       onChanged: (text) => bloc.setCityValue(text),
                     ),
                   ),
@@ -94,7 +101,9 @@ class CreateAddressViewPage extends StatelessWidget {
                       hintText: 'Address',
                       controller: _descriptionController,
                       cupertino: (context, platform) =>
-                          _inputTextFieldData(context),
+                          _cupertinoTextFieldData(context),
+                      material: (context, platform) =>
+                          _materialTextFieldData(context),
                       onChanged: (text) => bloc.setDescriptionValue(text),
                     ),
                   ),
@@ -105,7 +114,7 @@ class CreateAddressViewPage extends StatelessWidget {
                           CupertinoElevatedButtonData(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(30))),
-                      color: accentColor,
+                      color: Theme.of(context).splashColor,
                       child: Text(
                         addressToEdit != null ? 'Edit Address' : 'New Address',
                       ),
@@ -126,13 +135,22 @@ class CreateAddressViewPage extends StatelessWidget {
     );
   }
 
-  CupertinoTextFieldData _inputTextFieldData(BuildContext context) {
+  CupertinoTextFieldData _cupertinoTextFieldData(BuildContext context) {
     return CupertinoTextFieldData(
-      cursorColor: accentColor,
+      cursorColor: Theme.of(context).splashColor,
+      style: Theme.of(context).textTheme.labelMedium,
+      placeholderStyle: Theme.of(context).textTheme.displayMedium,
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).highlightColor,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           border: Border.all(color: Colors.black12)),
     );
+  }
+
+  MaterialTextFieldData _materialTextFieldData(BuildContext context) {
+    return MaterialTextFieldData(
+        cursorColor: Theme.of(context).splashColor,
+        decoration:
+            InputDecoration(fillColor: Theme.of(context).highlightColor));
   }
 }
