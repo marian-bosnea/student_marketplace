@@ -1,9 +1,13 @@
 const jwt = require('jsonwebtoken');
 const codes = require('./constants/statusCodes');
 
+
 generateAccessToken = (userId) => {
+    console.log(process.env.ACCESS_TOKEN_SECRET);
+
 const accessToken = jwt.sign(userId, process.env.ACCESS_TOKEN_SECRET);
 const refreshToken = jwt.sign(userId, process.env.ACCESS_TOKEN_SECRET);
+
 
 return ({accessToken: accessToken, refreshToken: refreshToken});
 }
