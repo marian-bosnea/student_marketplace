@@ -1,1 +1,0 @@
-When creating a new user: authentication_credentials -> user_profile -> user

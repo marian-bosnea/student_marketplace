@@ -1,2 +1,0 @@
-To make server authomatically restart when making changes start it with this command "npm  run devStart"
- 
