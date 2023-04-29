@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/5167474f-c82a-400f-b511-c2e6118456e5/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/unimarketplace",
+    "appService.deploySubpath": "."
+}
