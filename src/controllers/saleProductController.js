@@ -150,8 +150,23 @@ getAll = async (req, res) => {
    const client = await pool.connect();
    const userId = res.locals.decryptedId;
 
+   var limit = req.query.limit;
+   if(!limit) {
+      limit = 100;
+   }
+
+   var offset = req.query.offset;
+
+   if(!offset) {
+      offset = 0;
+   }
+
+   console.log(`limit = ${limit}, offset = ${offset}`);
+
    try {
-      const results = await client.query(sql.SALE_OBJECT_READ_ALL);
+      const results = await client.query(sql.SALE_OBJECT_READ_ALL, [limit, offset]);
+      console.log(results.rows);
+
       let saleObjectsJson = [];
       for (i = 0; i < results.rowCount; i++) {
       const isOwn = userId == results.rows[i].owner_id;
