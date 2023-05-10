@@ -10,7 +10,6 @@ import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_
 import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_page.dart';
 
 import '../../core/constants/enums.dart';
-import '../../core/theme/colors.dart';
 import '../add_post/add_post_view_page.dart';
 import '../favorites/favorites_view_page.dart';
 import '../posts_view/posts_view_bloc.dart';

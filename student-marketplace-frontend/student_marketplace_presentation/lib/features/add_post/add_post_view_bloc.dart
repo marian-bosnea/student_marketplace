@@ -131,7 +131,7 @@ class AddPostViewBloc extends Cubit<AddPostState> {
   goToNextStep(BuildContext context) {
     if (state.currentStep == 4) {
       upload(context);
-      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+      //BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
       BlocProvider.of<HomeViewBloc>(context).goToHome();
       Navigator.of(context).pushReplacementNamed(RouteNames.home);
 

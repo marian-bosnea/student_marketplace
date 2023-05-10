@@ -12,8 +12,8 @@ class SalePostRemotedataSourceImpl implements SalePostRemoteDataSource {
 
   @override
   Future<Either<Failure, List<SalePostEntity>>> getAllPosts(
-      String token) async {
-    final result = await httpInterface.fetchAllSalePosts(token);
+      String token, int limit, int offset) async {
+    final result = await httpInterface.fetchAllSalePosts(token, limit, offset);
     if (result == null) {
       return Left(NetworkFailure());
     } else {

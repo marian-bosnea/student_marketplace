@@ -10,7 +10,7 @@ import 'package:student_marketplace_presentation/features/register/register_view
 import 'package:student_marketplace_presentation/features/register/register_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
-import '../../core/theme/colors.dart';
+import '../../core/theme/theme_data.dart';
 import '../login/login_view_page.dart';
 
 @immutable

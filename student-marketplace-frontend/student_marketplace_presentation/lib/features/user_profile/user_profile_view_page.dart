@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/features/shared/empty_list_placeholder.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_state.dart';

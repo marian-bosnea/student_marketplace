@@ -22,7 +22,7 @@ class FavoritesViewBloc extends Cubit<FavoritesViewState> {
   Future<void> removeFromFavorites(BuildContext context, int postId) async {
     await removeFromFavoritesUsecase(IdParam(id: postId));
     fetchFavoritePosts();
-    BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    //BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
   }
 
   Future<void> goToDetailedPostPage(

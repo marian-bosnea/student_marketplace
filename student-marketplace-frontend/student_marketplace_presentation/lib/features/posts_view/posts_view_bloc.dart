@@ -119,7 +119,8 @@ class PostViewBloc extends Cubit<PostViewState> {
   Future<void> fetchAllPosts() async {
     emit(state.copyWith(status: PostsViewStatus.loading));
 
-    final postsResult = await getAllPostsUsecase(NoParams());
+    final postsResult =
+        await getAllPostsUsecase(LimitOffsetParams(limit: 10, offset: 0));
     if (postsResult is Left) {
       emit(state.copyWith(status: PostsViewStatus.fail));
     } else {

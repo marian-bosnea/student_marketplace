@@ -19,7 +19,7 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
   '/': (context) =>
       BlocBuilder<AuthBloc, AuthState>(builder: (context, authState) {
         if (authState.status == AuthStatus.authenticated) {
-          BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+          //BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
           BlocProvider.of<PostViewBloc>(context).fetchAllCategories();
           BlocProvider.of<FavoritesViewBloc>(context).fetchFavoritePosts();
           BlocProvider.of<AccountViewBloc>(context).fetchUserProfile(0);

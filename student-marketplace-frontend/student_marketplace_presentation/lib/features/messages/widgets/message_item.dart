@@ -2,7 +2,7 @@ import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:student_marketplace_business_logic/domain/entities/message_entity.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 
 class MessageItem extends StatelessWidget {
   final bool isOwn;

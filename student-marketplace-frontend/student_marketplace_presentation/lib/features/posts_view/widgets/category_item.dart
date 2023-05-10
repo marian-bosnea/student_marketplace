@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/colors.dart';
+import '../../../core/theme/theme_data.dart';
 
 class CategoryItem extends StatelessWidget {
   const CategoryItem(

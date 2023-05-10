@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/features/detailed_order/received_detailed_order_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/detailed_order/received_detailed_order_view_state.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_bloc.dart';

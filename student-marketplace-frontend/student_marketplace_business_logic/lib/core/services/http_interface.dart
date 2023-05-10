@@ -20,9 +20,9 @@ import '../../domain/entities/user_entity.dart';
 class HttpInterface {
   final ip = "192.168.0.105";
   final port = "3000";
-  final baseUrl = "https://localhost:3000";
-  // final baseUrl = "http://192.168.0.101:3000";
-  //final baseUrl = "http://bore.pub:35701";
+  //final baseUrl = "https://localhost:3000";
+  final baseUrl = "http://192.168.0.101:3000";
+  //final baseUrl = "http://unimarketplace.azurewebsites.net";
   //final baseUrl = ' https://7776-212-93-144-202.eu.ngrok.io';
   final int getSuccessCode = 200;
   final int postSuccessCode = 201;
@@ -136,10 +136,14 @@ class HttpInterface {
     return response.bodyBytes;
   }
 
-  Future<List<SalePostModel>?> fetchAllSalePosts(String token) async {
-    final requestUrl = "$baseUrl/sale-object/get/all";
+  Future<List<SalePostModel>?> fetchAllSalePosts(
+      String token, int limit, int offset) async {
+    final requestUrl =
+        '$baseUrl/sale-object/get/all?limit=$limit&offset=$offset';
     final response = await http.get(
-      Uri.parse(requestUrl),
+      Uri.parse(
+        requestUrl,
+      ),
       headers: {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $token'

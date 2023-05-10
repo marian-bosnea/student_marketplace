@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:student_marketplace_business_logic/domain/entities/chat_room_entity.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
 import 'package:student_marketplace_presentation/features/messages/messages_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/messages/widgets/message_item.dart';
 
@@ -146,8 +145,9 @@ class MessagesViewPage extends StatelessWidget {
         return Container();
 
       case MessagesViewStatus.loaded:
-        return SizedBox(
+        return Container(
           width: MediaQuery.of(context).size.width,
+          margin: const EdgeInsets.only(bottom: 30),
           child: ListView.builder(
               controller: _scrollController,
               reverse: false,

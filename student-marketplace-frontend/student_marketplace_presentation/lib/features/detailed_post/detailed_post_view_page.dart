@@ -32,11 +32,15 @@ class DetailedPostViewPage extends StatelessWidget {
           if (state.status == PostsViewStatus.loading ||
               state.status == PostsViewStatus.initial) {
             return Container(
-              color: Colors.white,
+              color: Theme.of(context).primaryColor,
               child: Center(
                 child: isCupertino(context)
-                    ? const CupertinoActivityIndicator()
-                    : const CircularProgressIndicator(),
+                    ? CupertinoActivityIndicator(
+                        color: Theme.of(context).textTheme.labelMedium!.color,
+                      )
+                    : CircularProgressIndicator(
+                        color: Theme.of(context).textTheme.labelMedium!.color,
+                      ),
               ),
             );
           }

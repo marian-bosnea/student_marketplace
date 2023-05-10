@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:student_marketplace_business_logic/domain/entities/address_entity.dart';
 import 'package:student_marketplace_presentation/features/address_list_view/own_addresses_view_bloc.dart';
 
-import '../../core/theme/colors.dart';
+import '../../core/theme/theme_data.dart';
 import 'create_address_view_bloc.dart';
 import 'create_adress_view_state.dart';
 

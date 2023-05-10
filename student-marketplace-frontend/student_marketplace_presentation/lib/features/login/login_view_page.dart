@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mockito/mockito.dart';
 import '../../core/config/on_generate_route.dart';
-import '../../core/theme/colors.dart';
+import '../../core/theme/theme_data.dart';
 import '../authentication/auth_bloc.dart';
 import '../authentication/auth_state.dart';
 import '../home/home_view_page.dart';

@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/shared/empty_list_placeholder.dart';
 
@@ -40,14 +40,14 @@ class FavoritesViewPage extends StatelessWidget {
           itemCount: state.posts.length,
           itemBuilder: (context, index) {
             final post = state.posts.elementAt(index);
-            return Slidable(
-                key: ValueKey(post.postId),
-                endActionPane:
-                    ActionPane(motion: const ScrollMotion(), children: [
-                  SizedBox(
-                    height: 150,
-                    width: 200,
-                    child: SlidableAction(
+            return Container(
+              height: 150,
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: Slidable(
+                  key: ValueKey(post.postId),
+                  endActionPane:
+                      ActionPane(motion: const ScrollMotion(), children: [
+                    SlidableAction(
                       onPressed: (context) =>
                           BlocProvider.of<FavoritesViewBloc>(context)
                               .removeFromFavorites(context, post.postId!),
@@ -55,14 +55,14 @@ class FavoritesViewPage extends StatelessWidget {
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       backgroundColor: const Color(0xFFFE4A49),
                       foregroundColor: Colors.white,
-                      icon: CupertinoIcons.trash,
+                      icon: FontAwesomeIcons.trash,
                       label: 'Remove',
                     ),
-                  ),
-                ]),
-                child: FavoriteListItem(
-                  post: post,
-                ));
+                  ]),
+                  child: FavoriteListItem(
+                    post: post,
+                  )),
+            );
           }),
     );
   }

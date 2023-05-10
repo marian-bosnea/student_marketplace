@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_presentation/core/config/injection_container.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_state.dart';
 import 'package:student_marketplace_presentation/features/orders_view/widgets/received_order_list_item.dart';
@@ -36,52 +36,52 @@ class OrdersViewPage extends StatelessWidget {
                 : null,
             body: Material(
               color: Theme.of(context).primaryColor,
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: CustomScrollView(
-                  slivers: [
-                    if (isCupertino(context))
-                      CupertinoSliverNavigationBar(
-                        largeTitle: Text('My Orders',
-                            style: TextStyle(
-                                color: Theme.of(context).splashColor)),
-                        backgroundColor: Theme.of(context).highlightColor,
-                        automaticallyImplyLeading: true,
-                        previousPageTitle: 'Account',
-                      ),
-                    SliverToBoxAdapter(
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        width: 200,
-                        height: 40,
-                        child: Center(
-                          child: ToggleSwitch(
-                            minWidth: 90.0,
-                            minHeight: 70.0,
-                            cornerRadius: 20.0,
-                            initialLabelIndex: state.type.index,
-                            activeFgColor: Colors.white,
-                            inactiveBgColor: Colors.white,
-                            inactiveFgColor: Theme.of(context).splashColor,
-                            totalSwitches: 2,
-                            labels: const ["Sent", "Received"],
-                            iconSize: 30.0,
-                            borderWidth: 1.0,
-                            borderColor: [Theme.of(context).splashColor],
-                            activeBgColors: [
-                              [Theme.of(context).splashColor],
-                              [Theme.of(context).splashColor],
-                            ],
-                            onToggle: (index) =>
-                                BlocProvider.of<OrdersViewBloc>(context)
-                                    .setViewType(index!),
-                          ),
+              child: CustomScrollView(
+                slivers: [
+                  if (isCupertino(context))
+                    CupertinoSliverNavigationBar(
+                      largeTitle: Text('My Orders',
+                          style:
+                              TextStyle(color: Theme.of(context).splashColor)),
+                      backgroundColor: Theme.of(context).highlightColor,
+                      automaticallyImplyLeading: true,
+                      previousPageTitle: 'Account',
+                    ),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      width: 200,
+                      height: 40,
+                      child: Center(
+                        child: ToggleSwitch(
+                          minWidth: 90.0,
+                          minHeight: 70.0,
+                          cornerRadius: 20.0,
+                          initialLabelIndex: state.type.index,
+                          activeFgColor: Colors.white,
+                          inactiveBgColor: Colors.white,
+                          inactiveFgColor: Theme.of(context).splashColor,
+                          totalSwitches: 2,
+                          labels: const ["Sent", "Received"],
+                          iconSize: 30.0,
+                          borderWidth: 1.0,
+                          borderColor: [Theme.of(context).splashColor],
+                          activeBgColors: [
+                            [Theme.of(context).splashColor],
+                            [Theme.of(context).splashColor],
+                          ],
+                          onToggle: (index) =>
+                              BlocProvider.of<OrdersViewBloc>(context)
+                                  .setViewType(index!),
                         ),
                       ),
                     ),
-                    _getSelecedList(context, state)
-                  ],
-                ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.all(10.0),
+                    sliver: _getSelecedList(context, state),
+                  )
+                ],
               ),
             ),
           );

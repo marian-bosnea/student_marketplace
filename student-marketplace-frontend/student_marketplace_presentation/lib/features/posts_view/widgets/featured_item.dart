@@ -4,7 +4,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 
-import '../../../core/theme/colors.dart';
+import '../../../core/theme/theme_data.dart';
 import '../../detailed_post/detailed_post_view_page.dart';
 
 class FeaturedItem extends StatelessWidget {

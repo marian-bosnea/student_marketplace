@@ -6,7 +6,7 @@ import 'package:student_marketplace_business_logic/domain/entities/sale_post_ent
 import 'package:student_marketplace_presentation/features/create_order/create_order_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/create_order/create_order_view_state.dart';
 
-import '../../core/theme/colors.dart';
+import '../../core/theme/theme_data.dart';
 
 class CreateOrderViewPage extends StatelessWidget {
   final SalePostEntity post;

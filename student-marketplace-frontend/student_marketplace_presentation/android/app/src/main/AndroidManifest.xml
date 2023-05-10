@@ -1,9 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.student_marketplace_frontend">
+    <uses-permission android:name="android.permission.INTERNET" /> 
+
    <application
-        android:label="student_marketplace_frontend"
+        android:label="UniMarketq"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:exported="true"

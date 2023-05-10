@@ -6,19 +6,22 @@ import '../../entities/sale_post_entity.dart';
 import '../../repositories/auth_session_repository.dart';
 import '../../repositories/sale_post_repository.dart';
 
-class GetAllPostsUsecase extends Usecase<List<SalePostEntity>, NoParams> {
+class GetAllPostsUsecase
+    extends Usecase<List<SalePostEntity>, LimitOffsetParams> {
   final SalePostRepository postRepository;
   final AuthSessionRepository authRepository;
   GetAllPostsUsecase(
       {required this.postRepository, required this.authRepository});
 
   @override
-  Future<Either<Failure, List<SalePostEntity>>> call(NoParams params) async {
+  Future<Either<Failure, List<SalePostEntity>>> call(
+      LimitOffsetParams params) async {
     final result = await authRepository.getCachedSession();
     if (result is Left) return Left(UnauthenticatedFailure());
 
     final session = (result as Right).value;
-    final postsResult = await postRepository.getAllPosts(session.token);
+    final postsResult = await postRepository.getAllPosts(
+        session.token, params.limit, params.offset);
 
     if (postsResult is Left) return Left(NetworkFailure());
     final posts = (postsResult as Right).value;

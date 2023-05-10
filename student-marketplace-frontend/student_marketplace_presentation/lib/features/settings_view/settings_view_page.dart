@@ -83,8 +83,14 @@ class _SettingsViewPageState extends State<SettingsViewPage> {
                               ? Colors.indigo.shade600
                               : Colors.orange.shade600,
                           iconBuilder: (value) => value
-                              ? const Icon(FontAwesomeIcons.moon)
-                              : const Icon(FontAwesomeIcons.lightbulb),
+                              ? const Icon(
+                                  FontAwesomeIcons.moon,
+                                  color: Colors.white,
+                                )
+                              : const Icon(
+                                  FontAwesomeIcons.lightbulb,
+                                  color: Colors.white,
+                                ),
                           textBuilder: (value) => value
                               ? Center(
                                   child: Text(

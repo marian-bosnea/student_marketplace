@@ -6,7 +6,7 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import '../../core/config/injection_container.dart' as di;
 
 import 'add_post_view_bloc.dart';

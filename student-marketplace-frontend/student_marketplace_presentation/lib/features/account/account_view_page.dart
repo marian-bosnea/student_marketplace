@@ -9,7 +9,7 @@ import 'package:student_marketplace_presentation/core/config/on_generate_route.d
 
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/shared/list_action_item.dart';
-import '../../core/theme/colors.dart';
+import '../../core/theme/theme_data.dart';
 
 import 'account_view_bloc.dart';
 import 'account_view_state.dart';

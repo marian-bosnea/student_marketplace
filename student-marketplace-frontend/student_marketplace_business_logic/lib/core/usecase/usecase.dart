@@ -19,6 +19,16 @@ class NoParams extends Equatable {
   List<Object?> get props => [];
 }
 
+class LimitOffsetParams extends Equatable {
+  final int limit;
+  final int offset;
+
+  LimitOffsetParams({required this.limit, required this.offset});
+
+  @override
+  List<Object?> get props => [limit, offset];
+}
+
 class MessageCallbackParam extends Equatable {
   final Function(MessageEntity) callback;
 

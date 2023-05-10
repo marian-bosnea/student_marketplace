@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:student_marketplace_presentation/core/constants/enums.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_state.dart';

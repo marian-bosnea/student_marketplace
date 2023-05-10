@@ -8,7 +8,7 @@ import 'package:student_marketplace_business_logic/domain/entities/sale_post_ent
 import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
-import '../../core/theme/colors.dart';
+import '../../core/theme/theme_data.dart';
 
 class PostItem extends StatelessWidget {
   final SalePostEntity post;
@@ -24,9 +24,10 @@ class PostItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
-      transitionType: ContainerTransitionType.fadeThrough,
+      transitionType: ContainerTransitionType.fade,
       transitionDuration: const Duration(milliseconds: 500),
       closedColor: Theme.of(context).highlightColor,
+      openColor: Theme.of(context).primaryColor,
       openShape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
       closedShape: const RoundedRectangleBorder(

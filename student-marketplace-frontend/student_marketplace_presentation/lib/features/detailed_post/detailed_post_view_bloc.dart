@@ -68,7 +68,7 @@ class DetailedPostViewBloc extends Cubit<DetailedPostViewState> {
     }
     emit(state.copyWith(isFavorite: !state.isFavorite));
 
-    BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+    //BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
     BlocProvider.of<FavoritesViewBloc>(context).fetchFavoritePosts();
 
     return result;

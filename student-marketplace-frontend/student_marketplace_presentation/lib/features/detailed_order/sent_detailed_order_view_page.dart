@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/features/orders_view/utils/status_data.dart';
 
 class DetailedSentOrderViewPage extends StatelessWidget {

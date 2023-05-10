@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:student_marketplace_presentation/core/theme/colors.dart';
+import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/core/theme/theme_bloc.dart';
 import 'package:student_marketplace_presentation/core/theme/theme_state.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_bloc.dart';
