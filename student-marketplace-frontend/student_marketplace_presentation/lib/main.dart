@@ -39,7 +39,7 @@ class StudentMarketPlace extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<AuthBloc>()..onAppStarted(context)),
         BlocProvider(create: (_) => di.sl<LoginViewBloc>()),
         BlocProvider(create: (_) => di.sl<RegisterViewBloc>()),
-        BlocProvider(create: (_) => di.sl<PostViewBloc>()..fetchAllPosts()),
+        BlocProvider(create: (_) => di.sl<PostViewBloc>()),
         BlocProvider(
             create: (_) => di.sl<FavoritesViewBloc>()..fetchFavoritePosts()),
         BlocProvider(create: (_) => di.sl<AccountViewBloc>()),

@@ -1,30 +1,66 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 
 import 'package:student_marketplace_presentation/features/posts_view/posts_state.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/posts_view/widgets/featured_item.dart';
-import 'package:student_marketplace_presentation/features/shared/empty_list_placeholder.dart';
 import 'package:student_marketplace_presentation/features/shared/post_item.dart';
 
+import '../../core/config/injection_container.dart';
 import '../../core/constants/enums.dart';
 import 'widgets/category_item.dart';
 
-class PostViewPage extends StatelessWidget {
+class PostViewPage extends StatefulWidget {
   const PostViewPage({super.key});
+
+  @override
+  State<PostViewPage> createState() => _PostViewPageState();
+}
+
+class _PostViewPageState extends State<PostViewPage>
+    with AutomaticKeepAliveClientMixin<PostViewPage> {
+  late PagingController<int, SalePostEntity> _pagingController;
+  late PostViewBloc _pageBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _pagingController = PagingController(firstPageKey: 0);
+    _pageBloc = sl<PostViewBloc>();
+
+    _pageBloc.fetchPostsPage(0, _pagingController);
+
+    _pagingController.addPageRequestListener((pageKey) {
+      _pageBloc.fetchPostsPage(pageKey, _pagingController);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Theme.of(context).primaryColor,
       child:
-          BlocBuilder<PostViewBloc, PostViewState>(builder: (context, state) {
+          BlocConsumer<PostViewBloc, PostViewState>(listener: (context, state) {
+        if (state.status == PostsViewStatus.initial) {
+          _pageBloc.fetchPostsPage(0, _pagingController);
+        }
+
+        _pagingController.addPageRequestListener((pageKey) {
+          _pageBloc.fetchPostsPage(pageKey, _pagingController);
+        });
+
+        _pagingController.addStatusListener((status) {});
+      }, builder: (context, state) {
         return RefreshIndicator(
           color: Theme.of(context).splashColor,
           backgroundColor: Theme.of(context).primaryColor,
-          onRefresh: () async => _onRefresh(context, state),
+          onRefresh: () async => _pagingController.refresh(),
           child: CustomScrollView(
               reverse: false,
               key: const PageStorageKey(0),
@@ -37,31 +73,33 @@ class PostViewPage extends StatelessWidget {
 
   @pragma('Components')
   List<Widget> _getSlivers(BuildContext context, PostViewState state) {
-    switch (state.status) {
-      case PostsViewStatus.initial:
-        return [Container()];
-      case PostsViewStatus.loading:
-        return [
-          SliverToBoxAdapter(
-            child: _buildShimmerWidget(context),
-          )
-        ];
-      case PostsViewStatus.loaded:
-        if (state.posts.isEmpty) {
-          return [
-            const SliverToBoxAdapter(
-                child: EmptyListPlaceholder(
-                    message: 'There is no item in this category'))
-          ];
-        }
-        return _buildPostsLoadedWidgets(context, state);
-      case PostsViewStatus.fail:
-        return [
-          const SliverToBoxAdapter(
-            child: Center(child: Text('Failed to load posts')),
-          )
-        ];
-    }
+    return _buildPostsLoadedWidgets(context, state);
+
+    // switch (state.status) {
+    //   case PostsViewStatus.initial:
+    //     return [const SliverToBoxAdapter()];
+    //   case PostsViewStatus.loading:
+    //     return [
+    //       SliverToBoxAdapter(
+    //         child: _buildShimmerWidget(context),
+    //       )
+    //     ];
+    //   case PostsViewStatus.loaded:
+    //     if (state.posts.isEmpty) {
+    //       return [
+    //         const SliverToBoxAdapter(
+    //             child: EmptyListPlaceholder(
+    //                 message: 'There is no item in this category'))
+    //       ];
+    //     }
+    //     return _buildPostsLoadedWidgets(context, state);
+    //   case PostsViewStatus.fail:
+    //     return [
+    //       const SliverToBoxAdapter(
+    //         child: Center(child: Text('Failed to load posts')),
+    //       )
+    //     ];
+    // }
   }
 
   SizedBox _buildShimmerWidget(BuildContext context) {
@@ -125,15 +163,33 @@ class PostViewPage extends StatelessWidget {
         ),
       SliverPadding(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        sliver: SliverGrid.builder(
-          key: const PageStorageKey(1),
-          itemCount: state.posts.length,
-          itemBuilder: (context, index) {
-            final post = state.posts.elementAt(index);
-            return PostItem(
-              post: post,
-            );
-          },
+        sliver: PagedSliverGrid<int, SalePostEntity>(
+          key: const PageStorageKey(0),
+          pagingController: _pagingController,
+          showNoMoreItemsIndicatorAsGridChild: false,
+          showNewPageProgressIndicatorAsGridChild: false,
+          builderDelegate: PagedChildBuilderDelegate(
+            animateTransitions: true,
+            transitionDuration: const Duration(milliseconds: 500),
+            noItemsFoundIndicatorBuilder: (context) {
+              return Center(
+                child: Text('No items found'),
+              );
+            },
+            noMoreItemsIndicatorBuilder: (context) {
+              return const Center(child: Text('No more posts'));
+            },
+            newPageProgressIndicatorBuilder: (context) {
+              return isMaterial(context)
+                  ? const CircularProgressIndicator()
+                  : const CupertinoActivityIndicator();
+            },
+            itemBuilder: (context, post, index) {
+              return PostItem(
+                post: post,
+              );
+            },
+          ),
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
               childAspectRatio: 2 / 3,
@@ -180,9 +236,18 @@ class PostViewPage extends StatelessWidget {
   @pragma('UI callback handlers')
   _onRefresh(BuildContext context, PostViewState state) {
     if (state.selectedCategoryIndex == -1) {
-      BlocProvider.of<PostViewBloc>(context).fetchAllPosts();
+      //  BlocProvider.of<PostViewBloc>(context).fetchPostsPage(0);
     } else {
       BlocProvider.of<PostViewBloc>(context).fetchAllPostsOfSelectedCategory();
     }
   }
+
+  @override
+  void dispose() {
+    //_pagingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  bool get wantKeepAlive => false;
 }

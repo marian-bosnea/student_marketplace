@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
@@ -55,7 +56,7 @@ class PostViewBloc extends Cubit<PostViewState> {
 
         await fetchAllPostsOfSelectedCategory();
       } else {
-        fetchAllPosts();
+        //  fetchPostsPage(0);
       }
     }
   }
@@ -109,30 +110,37 @@ class PostViewBloc extends Cubit<PostViewState> {
   Future<void> onSearchQueryChanged(String query) async {
     if (query.isEmpty) {
       if (state.selectedCategoryIndex == -1) {
-        fetchAllPosts();
+        // fetchPostsPage(0);
       } else {
         fetchAllPostsOfSelectedCategory();
       }
     }
   }
 
-  Future<void> fetchAllPosts() async {
+  Future<void> fetchPostsPage(int page, PagingController controller) async {
     emit(state.copyWith(status: PostsViewStatus.loading));
-
-    final postsResult =
-        await getAllPostsUsecase(LimitOffsetParams(limit: 10, offset: 0));
+    const elementsCount = 2;
+    final offset = page * elementsCount;
+    final postsResult = await getAllPostsUsecase(
+        LimitOffsetParams(limit: elementsCount, offset: offset));
     if (postsResult is Left) {
       emit(state.copyWith(status: PostsViewStatus.fail));
-    } else {
-      final posts = (postsResult as Right).value;
-      if (posts.isEmpty) {
-        emit(state.copyWith(status: PostsViewStatus.fail));
-        return;
-      }
-      emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
-
-      _getFeaturedItem();
+      return;
     }
+
+    final posts = (postsResult as Right).value;
+    // if (posts.isEmpty) {
+    //   emit(state.copyWith(status: PostsViewStatus.fail));
+    //   return;
+    // }
+    emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
+    if (posts.length < elementsCount) {
+      controller.appendLastPage(posts);
+    } else {
+      controller.appendPage(posts, page + 1);
+    }
+
+    _getFeaturedItem();
   }
 
   Future<bool> onFavoriteButtonPressed(
