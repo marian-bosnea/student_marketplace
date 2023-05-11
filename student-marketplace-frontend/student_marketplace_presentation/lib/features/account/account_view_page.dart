@@ -7,9 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
 
-import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/shared/list_action_item.dart';
-import '../../core/theme/theme_data.dart';
 
 import 'account_view_bloc.dart';
 import 'account_view_state.dart';
@@ -51,14 +49,15 @@ class AccountViewPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        width: ScreenUtil().setWidth(150),
-                        height: ScreenUtil().setHeight(200),
-                        child: CircleAvatar(
-                            foregroundImage: Image.memory(
-                          state.avatarBytes!,
-                        ).image),
-                      ),
+                      if (state.avatarBytes != null)
+                        SizedBox(
+                          width: ScreenUtil().setWidth(150),
+                          height: ScreenUtil().setHeight(200),
+                          child: CircleAvatar(
+                              foregroundImage: Image.memory(
+                            state.avatarBytes!,
+                          ).image),
+                        ),
                       Container(
                         margin: const EdgeInsets.only(left: 20),
                         width: ScreenUtil().setWidth(450),
@@ -157,8 +156,9 @@ class AccountViewPage extends StatelessWidget {
                     color: Colors.red,
                     hasTrailing: true,
                     label: 'Favorites',
-                    onTap: () =>
-                        BlocProvider.of<HomeViewBloc>(context).goToFavorites(),
+                    onTap: () {
+                      //  BlocProvider.of<HomeViewBloc>(context).goToFavorites();
+                    },
                   ),
                 ],
               ),

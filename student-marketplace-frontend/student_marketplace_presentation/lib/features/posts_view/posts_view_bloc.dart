@@ -134,6 +134,7 @@ class PostViewBloc extends Cubit<PostViewState> {
     //   return;
     // }
     emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
+
     if (posts.length < elementsCount) {
       controller.appendLastPage(posts);
     } else {

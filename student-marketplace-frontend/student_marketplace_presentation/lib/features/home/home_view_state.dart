@@ -3,53 +3,34 @@ import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 
-import '../../core/constants/enums.dart';
-
 class HomeViewState extends Equatable {
-  final HomePageStatus status;
   final String title;
-  final bool hasLoadedPosts;
-  final bool hasLoadedProfile;
-  final Uint8List? profileIcon;
 
-  final bool shouldRefreshPosts;
+  final int currentPageIndex;
+
   final String searchHint;
 
-  const HomeViewState(
-      {this.status = HomePageStatus.home,
-      this.hasLoadedPosts = false,
-      this.hasLoadedProfile = false,
-      this.title = 'Discover',
-      this.searchHint = 'Search',
-      this.profileIcon,
-      this.shouldRefreshPosts = false});
+  const HomeViewState({
+    this.currentPageIndex = 0,
+    this.title = 'Discover',
+    this.searchHint = 'Search',
+  });
 
   HomeViewState copyWith(
       {String? title,
-      HomePageStatus? status,
+      int? currentPageIndex,
       Uint8List? profileIcon,
       bool? hasLoadedPosts,
       bool? hasLoadedProfile,
       String? searchHint,
       bool? shouldRefreshPosts}) {
     return HomeViewState(
-        status: status ?? this.status,
-        title: title ?? this.title,
-        profileIcon: profileIcon,
-        searchHint: searchHint ?? this.searchHint,
-        hasLoadedPosts: hasLoadedPosts ?? this.hasLoadedPosts,
-        hasLoadedProfile: hasLoadedProfile ?? this.hasLoadedProfile,
-        shouldRefreshPosts: shouldRefreshPosts ?? this.shouldRefreshPosts);
+      currentPageIndex: currentPageIndex ?? this.currentPageIndex,
+      title: title ?? this.title,
+      searchHint: searchHint ?? this.searchHint,
+    );
   }
 
   @override
-  List<Object?> get props => [
-        status,
-        title,
-        profileIcon,
-        hasLoadedPosts,
-        hasLoadedProfile,
-        shouldRefreshPosts,
-        searchHint
-      ];
+  List<Object?> get props => [currentPageIndex, title, searchHint];
 }

@@ -131,7 +131,7 @@ Future<void> init() async {
   sl.registerFactory(() => AccountViewBloc(
       getUserUsecase: sl.call(), deauthenticateUsecase: sl.call()));
 
-  sl.registerFactory(() => PostViewBloc(
+  sl.registerLazySingleton(() => PostViewBloc(
       addToFavoritesUsecase: sl.call(),
       removeFromFavoritesUsecase: sl.call(),
       getAllPostsUsecase: sl.call(),

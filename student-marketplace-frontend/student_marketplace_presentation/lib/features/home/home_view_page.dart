@@ -6,10 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
-import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_page.dart';
 
-import '../../core/constants/enums.dart';
 import '../add_post/add_post_view_page.dart';
 import '../favorites/favorites_view_page.dart';
 import '../posts_view/posts_view_bloc.dart';
@@ -17,13 +15,38 @@ import '../posts_view/posts_view_page.dart';
 import 'home_view_state.dart';
 import 'home_view_bloc.dart';
 
-class HomeViewPage extends StatelessWidget {
+class HomeViewPage extends StatefulWidget {
+  const HomeViewPage({super.key});
+
+  @override
+  State<HomeViewPage> createState() => _HomeViewPageState();
+}
+
+class _HomeViewPageState extends State<HomeViewPage> {
   final sl = GetIt.instance;
+
   final navBarIconSize = 25.0;
-  HomeViewPage({super.key});
+  late List<Widget> _pages;
+  late HomeViewBloc _pageBloc;
+
+  @override
+  void initState() {
+    _pageBloc = sl.call<HomeViewBloc>();
+    _pages = [
+      const PostViewPage(),
+      const ChatRoomsViewPage(),
+      AddPostPage(),
+      FavoritesViewPage(),
+      AccountViewPage()
+    ];
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeViewBloc, HomeViewState>(
+      bloc: _pageBloc,
       builder: (context, state) {
         return PlatformScaffold(
           appBar: isMaterial(context)
@@ -41,8 +64,14 @@ class HomeViewPage extends StatelessWidget {
                   headerSliverBuilder: (context, innerBoxIsScroller) {
                     return <Widget>[_getNavigationBar(context, state)];
                   },
-                  body: _getCurrentPage(context, state))
-              : _getCurrentPage(context, state),
+                  body: IndexedStack(
+                    index: state.currentPageIndex,
+                    children: _pages,
+                  ))
+              : IndexedStack(
+                  index: state.currentPageIndex,
+                  children: _pages,
+                ),
           bottomNavBar: PlatformNavBar(
             cupertino: (context, platform) =>
                 CupertinoTabBarData(activeColor: Theme.of(context).splashColor),
@@ -53,21 +82,21 @@ class HomeViewPage extends StatelessWidget {
                   icon: Icon(
                       size: navBarIconSize,
                       FontAwesomeIcons.solidCompass,
-                      color: state.status == HomePageStatus.home
+                      color: state.currentPageIndex == 0
                           ? Theme.of(context).splashColor
                           : Theme.of(context).textTheme.displayMedium!.color)),
               BottomNavigationBarItem(
                   label: 'Messages',
                   icon: Icon(FontAwesomeIcons.solidMessage,
                       size: navBarIconSize,
-                      color: state.status == HomePageStatus.messages
+                      color: state.currentPageIndex == 1
                           ? Theme.of(context).splashColor
                           : Theme.of(context).textTheme.displayMedium!.color)),
               BottomNavigationBarItem(
                   label: 'Sell',
                   icon: Icon(FontAwesomeIcons.plus,
                       size: navBarIconSize,
-                      color: state.status == HomePageStatus.addPost
+                      color: state.currentPageIndex == 2
                           ? Theme.of(context).splashColor
                           : Theme.of(context).textTheme.displayMedium!.color)),
               BottomNavigationBarItem(
@@ -75,7 +104,7 @@ class HomeViewPage extends StatelessWidget {
                   icon: Icon(
                     FontAwesomeIcons.solidHeart,
                     size: navBarIconSize,
-                    color: state.status == HomePageStatus.favorites
+                    color: state.currentPageIndex == 3
                         ? Theme.of(context).splashColor
                         : Theme.of(context).textTheme.displayMedium!.color,
                   )),
@@ -84,12 +113,12 @@ class HomeViewPage extends StatelessWidget {
                   icon: Icon(
                     FontAwesomeIcons.solidUser,
                     size: navBarIconSize,
-                    color: state.status == HomePageStatus.account
+                    color: state.currentPageIndex == 4
                         ? Theme.of(context).splashColor
                         : Theme.of(context).textTheme.displayMedium!.color,
                   ))
             ],
-            itemChanged: (index) => onBottomNavbarItemTap(context, index),
+            itemChanged: (index) => _pageBloc.setCurrentPageIndex(index),
           ),
         );
       },
@@ -102,7 +131,7 @@ class HomeViewPage extends StatelessWidget {
       alwaysShowMiddle: false,
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).highlightColor,
-      largeTitle: state.status == HomePageStatus.home
+      largeTitle: state.currentPageIndex == 0
           ? Row(
               children: [
                 Container(
@@ -160,43 +189,5 @@ class HomeViewPage extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(15)),
           border: Border.all(color: Colors.black12)),
     );
-  }
-
-  onBottomNavbarItemTap(BuildContext context, int index) {
-    switch (index) {
-      case 0:
-        BlocProvider.of<HomeViewBloc>(context).goToHome();
-        break;
-      case 1:
-        BlocProvider.of<HomeViewBloc>(context).goToOrders();
-        break;
-      case 2:
-        BlocProvider.of<HomeViewBloc>(context).goToAddPost();
-        break;
-      case 3:
-        BlocProvider.of<HomeViewBloc>(context).goToFavorites();
-        break;
-      case 4:
-        BlocProvider.of<HomeViewBloc>(context).goToAccount();
-        break;
-    }
-  }
-
-  Widget _getCurrentPage(BuildContext context, HomeViewState state) {
-    switch (state.status) {
-      case HomePageStatus.intial:
-        return Container();
-      case HomePageStatus.home:
-        return const PostViewPage();
-      case HomePageStatus.messages:
-        BlocProvider.of<ChatRoomsViewBloc>(context).init();
-        return ChatRoomsViewPage();
-      case HomePageStatus.addPost:
-        return AddPostPage();
-      case HomePageStatus.favorites:
-        return FavoritesViewPage();
-      case HomePageStatus.account:
-        return AccountViewPage();
-    }
   }
 }

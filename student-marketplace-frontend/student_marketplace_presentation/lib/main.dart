@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/core/theme/theme_bloc.dart';
 import 'package:student_marketplace_presentation/core/theme/theme_state.dart';
@@ -39,7 +38,7 @@ class StudentMarketPlace extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<AuthBloc>()..onAppStarted(context)),
         BlocProvider(create: (_) => di.sl<LoginViewBloc>()),
         BlocProvider(create: (_) => di.sl<RegisterViewBloc>()),
-        BlocProvider(create: (_) => di.sl<PostViewBloc>()),
+        BlocProvider.value(value: di.sl<PostViewBloc>()),
         BlocProvider(
             create: (_) => di.sl<FavoritesViewBloc>()..fetchFavoritePosts()),
         BlocProvider(create: (_) => di.sl<AccountViewBloc>()),
