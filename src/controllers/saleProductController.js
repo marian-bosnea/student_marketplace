@@ -309,8 +309,9 @@ getAllByOwnerId = async (req, res) => {
       let saleObjectsJson = [];
 
       for (i = 0; i < results.rowCount; i++) {
+         const postId = results.rows[i].id;
          saleObjectsJson.push({
-            id: results.rows[i].id,
+            id: postId,
             title: results.rows[i].title,
             price: results.rows[i].price,
             views_count: results.rows[i].views_count,
@@ -318,6 +319,7 @@ getAllByOwnerId = async (req, res) => {
             date: results.rows[i].date
          });
       }
+
       res.status(codes.GET_SUCCESS_CODE);
       res.send({ results: saleObjectsJson });
 
