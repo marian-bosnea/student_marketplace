@@ -79,19 +79,19 @@ update = async (req, res) => {
       await client.query('BEGIN')
       const result = await client.query(sql.SALE_OBJECT_UPDATE_DESCRIPTION, [title, description, price, id]);
       const descriptionId = result.rows[0].id;
-   
+
       await client.query(sql.SALE_OBJECT_UPDATE_CATEGORY, [categoryID, id]);
       await client.query(sql.SALE_OBJECT_DELETE_IMAGES, [id]);
       var paths = req.files.map(file => file.path)
 
       for (var p in paths) {
-          await client.query(sql.OBJECT_IMAGE_INSERT, [paths[p], descriptionId]);
+         await client.query(sql.OBJECT_IMAGE_INSERT, [paths[p], descriptionId]);
       }
 
       await client.query('COMMIT')
 
       res.status(codes.POST_SUCCESS_CODE);
-     // res.send({ id: objectRes.rows[0].id });
+      // res.send({ id: objectRes.rows[0].id });
 
    } catch (e) {
       console.log(e);
@@ -146,57 +146,56 @@ getDetailedSalePost = async (req, res) => {
 }
 
 getAll = async (req, res) => {
-   console.log("Requested all sale posts");
    const client = await pool.connect();
    const userId = res.locals.decryptedId;
 
    var limit = req.query.limit;
-   if(!limit) {
+   var offset = req.query.offset;
+
+   if (!limit) {
       limit = 100;
    }
 
-   var offset = req.query.offset;
-
-   if(!offset) {
+   if (!offset) {
       offset = 0;
    }
 
    console.log(`limit = ${limit}, offset = ${offset}`);
 
    try {
-      const results = await client.query(sql.SALE_OBJECT_READ_ALL, [limit, offset]);
-      console.log(results.rows);
+      const results = await client.query(sql.SALE_OBJECT_READ_ALL, [userId, limit, offset]);
+      console.log('***Start of request for unflitered posts***');
 
       let saleObjectsJson = [];
       for (i = 0; i < results.rowCount; i++) {
-      const isOwn = userId == results.rows[i].owner_id;
-      const postId = results.rows[i].id;
-      const title = results.rows[i].title;
-      const price = results.rows[i].price;
-      const viewsCount = results.rows[i].views_count;
-
-      const favResults = await client.query(sql.SALE_OBJECT_CHECK_IF_FAVORITE, [userId, postId]);
-      const isFavorite  =   favResults.rowCount != 0;
+         const isOwn = userId == results.rows[i].owner_id;
+         const postId = results.rows[i].id;
+         const title = results.rows[i].title;
+         const price = results.rows[i].price;
+         const viewsCount = results.rows[i].views_count;
+         const isFavorite = results.rows[i].is_favorite;
 
          saleObjectsJson.push({
-            id:postId,
+            id: postId,
             title: title,
             price: price,
             views_count: viewsCount,
             is_own: isOwn,
             is_favorite: isFavorite
          });
+         console.log(results.rows[i].title);
       }
+      console.log('***End of request***');
 
       res.status(codes.GET_SUCCESS_CODE);
       res.send({ results: saleObjectsJson });
-   
+
    } catch (e) {
       res.status(codes.INVALID_INPUT_CODE);
       res.send({ message: "Invalid input" });
       throw e
    } finally {
-     await client.release()
+      await client.release()
 
    }
 }
@@ -204,30 +203,43 @@ getAll = async (req, res) => {
 
 getAllFromCategory = async (req, res) => {
    const categoryId = req.body.categoryId;
+   var limit = req.body.limit;
+   var offset = req.body.offset;
    const client = await pool.connect()
    const userId = res.locals.decryptedId;
-   try {
-      const results = await client.query(sql.SALE_OBJECT_READ_CATEGORY, [categoryId]);
+   if (!offset) {
+      offset = 0;
+   }
+   if (!limit) {
+      limit = 100;
+   }
 
+   console.log('***Start of request for filtered posts by category***');
+
+   try {
+      const results = await client.query(sql.SALE_OBJECT_READ_CATEGORY, [userId, categoryId, limit, offset]);
       let saleObjectsJson = [];
 
       for (i = 0; i < results.rowCount; i++) {
-        const isOwnPost = userId == results.rows[i].owner_id;
-        const postId = results.rows[i].id;
-        const title = results.rows[i].title;
-        const price = results.rows[i].price;
-        const viewsCount = results.rows[i].views_count;
-        const favResult = await pool.query(sql.SALE_OBJECT_CHECK_IF_FAVORITE, [userId, postId]);
+         const isOwnPost = userId == results.rows[i].owner_id;
+         const postId = results.rows[i].id;
+         const title = results.rows[i].title;
+         const price = results.rows[i].price;
+         const viewsCount = results.rows[i].views_count;
+         const is_favorite = results.rows[i].is_favorite;
 
          saleObjectsJson.push({
-            id:postId,
+            id: postId,
             title: title,
             price: price,
             views_count: viewsCount,
             is_own: isOwnPost,
-            is_favorite: favResult.rowCount > 0
+            is_favorite: is_favorite
          });
+         console.log(results.rows[i].title);
       }
+
+      console.log('***End of request***');
 
       res.status(codes.GET_SUCCESS_CODE);
       res.send({ results: saleObjectsJson });
@@ -259,18 +271,18 @@ searchWithTextQuery = async (req, res) => {
          const price = results.rows[i].price;
          const category_id = results.rows[i].category_id;
          const viewsCount = results.rows[i].views_count;
- 
-          const favResult = await pool.query(sql.SALE_OBJECT_CHECK_IF_FAVORITE, [userId, postId]);
- 
-          saleObjectsJson.push({
-             id:postId,
-             title: title,
-             price: price,
-             views_count: viewsCount,
-             is_own: isOwnPost,
-             is_favorite: favResult.rowCount > 0,
-             category_id: category_id
-          });
+
+         const favResult = await pool.query(sql.SALE_OBJECT_CHECK_IF_FAVORITE, [userId, postId]);
+
+         saleObjectsJson.push({
+            id: postId,
+            title: title,
+            price: price,
+            views_count: viewsCount,
+            is_own: isOwnPost,
+            is_favorite: favResult.rowCount > 0,
+            category_id: category_id
+         });
       }
 
       const filteredResults = fuzzySearch.search(saleObjectsJson, query);
@@ -297,8 +309,8 @@ getAllByOwnerId = async (req, res) => {
    var userId = req.body.ownerId;
 
 
-   if(userId == -1 || userId == null){
-   userId = res.locals.decryptedId;
+   if (userId == -1 || userId == null) {
+      userId = res.locals.decryptedId;
    }
 
    const client = await pool.connect()
@@ -448,9 +460,9 @@ removeFromFavorites = async (req, res) => {
    const client = await pool.connect();
 
    try {
-    await client.query(sql.SALE_OBJECT_REMOVE_FROM_FAVORITES, [userId, postId]);
+      await client.query(sql.SALE_OBJECT_REMOVE_FROM_FAVORITES, [userId, postId]);
       res.status(codes.POST_SUCCESS_CODE).send();
-      
+
    } catch (e) {
       res.status(codes.INVALID_INPUT_CODE);
       console.log('error');

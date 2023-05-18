@@ -49,13 +49,34 @@ module.exports.DELETE_TOKEN = `DELETE FROM authorization_token WHERE token = $1`
 //#region Sale
 module.exports.CATEGORY_READ_ALL = `SELECT * FROM object_category`;
 
+// module.exports.SALE_OBJECT_READ_ALL = `
+// SELECT o.id, d.title, d.price, o.views_count, o.owner_id, o.category_id
+// FROM object_description d 
+// INNER JOIN sale_object o ON o.description_id = d.id
+// ORDER BY o.date ASC
+// LIMIT $1
+// OFFSET $2
+// `;
+
 module.exports.SALE_OBJECT_READ_ALL = `
-SELECT o.id, d.title, d.price, o.views_count, o.owner_id, o.category_id
-FROM object_description d 
-INNER JOIN sale_object o ON o.description_id = d.id
-ORDER BY o.date ASC
-LIMIT $1
-OFFSET $2
+SELECT
+  o.id,
+  d.title,
+  d.price,
+  o.views_count,
+  o.owner_id,
+  o.category_id,
+  (CASE WHEN f.post_id IS NULL THEN false ELSE true END) AS is_favorite
+FROM
+  object_description d
+INNER JOIN
+  sale_object o ON o.description_id = d.id
+LEFT JOIN
+  favorite_post f ON f.user_id = $1 AND f.post_id = o.id
+ORDER BY
+  o.id ASC
+LIMIT $2
+OFFSET $3;
 `;
 
 module.exports.SALE_OBJECT_READ_DETAILED = `
@@ -96,10 +117,26 @@ VALUES ($1, $2, $3, $4, $5)
  RETURNING id`;
 
 module.exports.SALE_OBJECT_READ_CATEGORY = `
-SELECT o.id, d.title, d.price , o.views_count
-FROM object_description d 
-INNER JOIN sale_object o ON o.description_id = d.id
-WHERE o.category_id = $1`;
+SELECT
+  o.id,
+  d.title,
+  d.price,
+  o.views_count,
+  o.owner_id,
+  o.category_id,
+  (CASE WHEN f.post_id IS NULL THEN false ELSE true END) AS is_favorite
+FROM
+  object_description d
+INNER JOIN
+  sale_object o ON o.description_id = d.id
+LEFT JOIN
+  favorite_post f ON f.user_id = $1 AND f.post_id = o.id
+WHERE
+  o.category_id = $2
+ORDER BY
+  o.id ASC
+LIMIT $3
+OFFSET $4;`;
 
 module.exports.SALE_OBJECT_UPDATE_DESCRIPTION = `
 UPDATE object_description SET title = $1, description = $2, price = $3
