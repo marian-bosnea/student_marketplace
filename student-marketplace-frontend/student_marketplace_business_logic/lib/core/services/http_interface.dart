@@ -21,7 +21,7 @@ class HttpInterface {
   final ip = "192.168.0.105";
   final port = "3000";
   //final baseUrl = "https://localhost:3000";
-  final baseUrl = "http://192.168.0.101:3000";
+  final baseUrl = "http://192.168.0.102:3000";
   //final baseUrl = "http://unimarketplace.azurewebsites.net";
   //final baseUrl = ' https://7776-212-93-144-202.eu.ngrok.io';
   final int getSuccessCode = 200;
@@ -231,14 +231,21 @@ class HttpInterface {
   }
 
   Future<List<SalePostModel>?> fetchAllSalePostsOfCategory(
-      {required String token, required int categoryId}) async {
+      {required String token,
+      required int categoryId,
+      required int offset,
+      required int limit}) async {
     final requestUrl = "$baseUrl/sale-object/get/category";
     final response = await http.post(Uri.parse(requestUrl),
         headers: {
           'Content-Type': 'application/json',
           'authorization': 'Bearer $token'
         },
-        body: jsonEncode(<String, dynamic>{'categoryId': categoryId}));
+        body: jsonEncode(<String, dynamic>{
+          'categoryId': categoryId,
+          'offset': offset,
+          'limit': limit
+        }));
 
     if (response.statusCode != getSuccessCode) return null;
     final bodyJson = json.decode(response.body) as Map<String, dynamic>;

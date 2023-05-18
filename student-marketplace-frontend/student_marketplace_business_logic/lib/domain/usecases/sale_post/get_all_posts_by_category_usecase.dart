@@ -23,7 +23,10 @@ class GetAllPostsByCategoryUsecase
 
     final token = (session as Right).value;
     final result = await postRepository.getAllPostsByCategory(
-        token.token, params.categoryId);
+        token: token.token,
+        categoryId: params.categoryId,
+        offset: params.offset,
+        limit: params.limit);
 
     if (result is Left) return Left(NetworkFailure());
     final posts = (result as Right).value;

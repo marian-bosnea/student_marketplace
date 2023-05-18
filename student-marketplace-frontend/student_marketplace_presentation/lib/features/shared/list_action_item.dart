@@ -44,7 +44,7 @@ class ListActionItem extends StatelessWidget {
                         child: icon,
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width - 120,
+                        width: MediaQuery.of(context).size.width - 130,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

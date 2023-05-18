@@ -23,7 +23,7 @@ class SocketInterface {
       'token': token,
     };
 
-    socket = io.io('http://192.168.0.101:3000', <String, dynamic>{
+    socket = io.io('http://192.168.0.102:3000', <String, dynamic>{
       'autoConnect': false,
       'transports': ['websocket'],
       'query': queryParams

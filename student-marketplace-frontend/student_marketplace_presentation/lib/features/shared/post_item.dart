@@ -8,17 +8,24 @@ import 'package:student_marketplace_business_logic/domain/entities/sale_post_ent
 import 'package:student_marketplace_presentation/features/detailed_post/detailed_post_view_page.dart';
 import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
-import '../../core/theme/theme_data.dart';
-
-class PostItem extends StatelessWidget {
+class PostItem extends StatefulWidget {
   final SalePostEntity post;
-  late bool _isFavorite;
 
-  PostItem({
+  const PostItem({
     super.key,
     required this.post,
-  }) {
-    _isFavorite = post.isFavorite!;
+  });
+
+  @override
+  State<PostItem> createState() => _PostItemState();
+}
+
+class _PostItemState extends State<PostItem> {
+  late bool _isFavorite;
+  @override
+  void initState() {
+    _isFavorite = widget.post.isFavorite!;
+    super.initState();
   }
 
   @override
@@ -26,6 +33,7 @@ class PostItem extends StatelessWidget {
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
       transitionDuration: const Duration(milliseconds: 500),
+      closedElevation: 5,
       closedColor: Theme.of(context).highlightColor,
       openColor: Theme.of(context).primaryColor,
       openShape: const RoundedRectangleBorder(
@@ -54,7 +62,7 @@ class PostItem extends StatelessWidget {
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(20)),
                               child: Image.memory(
-                                post.images.first,
+                                widget.post.images.first,
                                 fit: BoxFit.cover,
                               )),
                         ),
@@ -63,11 +71,11 @@ class PostItem extends StatelessWidget {
                   ),
                   Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                     Text(
-                      post.title,
+                      widget.post.title,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
-                    Text('${post.price} RON',
+                    Text('${widget.post.price} RON',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Theme.of(context).splashColor,
@@ -77,7 +85,7 @@ class PostItem extends StatelessWidget {
                 ],
               ),
             ),
-            if (!post.isOwn!)
+            if (!widget.post.isOwn!)
               Positioned(
                 top: 5,
                 right: 5,
@@ -93,7 +101,7 @@ class PostItem extends StatelessWidget {
                         final result =
                             await BlocProvider.of<PostViewBloc>(context)
                                 .onFavoriteButtonPressed(
-                                    context, post, _isFavorite);
+                                    context, widget.post, _isFavorite);
                         _isFavorite = result;
                         return result;
                       },
@@ -107,7 +115,7 @@ class PostItem extends StatelessWidget {
       openBuilder:
           (BuildContext context, void Function({Object? returnValue}) action) {
         return DetailedPostViewPage(
-          postId: post.postId!,
+          postId: widget.post.postId!,
         );
       },
     );

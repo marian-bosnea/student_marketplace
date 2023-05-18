@@ -23,7 +23,7 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
           BlocProvider.of<PostViewBloc>(context).fetchAllCategories();
           BlocProvider.of<FavoritesViewBloc>(context).fetchFavoritePosts();
           BlocProvider.of<AccountViewBloc>(context).fetchUserProfile(0);
-          return HomeViewPage();
+          return const HomeViewPage();
         } else {
           return LoginViewPage();
         }

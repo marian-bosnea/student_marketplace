@@ -14,6 +14,8 @@ import 'package:student_marketplace_presentation/features/edit_post/edit_post_vi
 import 'package:student_marketplace_presentation/features/home/home_view_page.dart';
 import 'package:student_marketplace_presentation/features/messages/messages_view_page.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_page.dart';
+import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_page.dart';
+import 'package:student_marketplace_presentation/features/search_view/search_view_page.dart';
 import 'package:student_marketplace_presentation/features/settings_view/settings_view_page.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_page.dart';
 
@@ -69,8 +71,12 @@ class OnGenerateRoute {
         return routeBuilder(MessagesViewPage(
           room: args as ChatRoomEntity,
         ));
+      case RouteNames.ownPostsView:
+        return routeBuilder(OwnPostsViewPage());
       case RouteNames.awbForm:
         return routeBuilder(AwbFormViewPage());
+      case RouteNames.search:
+        return animatedRouteBuilder(const SearchViewPage());
       case RouteNames.settings:
         return routeBuilder(const SettingsViewPage());
       default:
@@ -83,15 +89,29 @@ dynamic routeBuilder(Widget page) {
   return MaterialPageRoute(builder: (context) => page);
 }
 
+dynamic animatedRouteBuilder(Widget page) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(
+        opacity: animation,
+        child: child,
+      );
+    },
+  );
+}
+
 class RouteNames {
   static const authentication = '/';
   static const register = '/register_page';
   static const home = '/home_page';
+  static const search = '/search_page';
   static const account = '/account_page';
   static const editPost = '/edit_post_page';
   static const createAddress = '/create_address_page';
   static const addressView = '/addresses_view_page';
   static const ordersView = '/orders_view';
+  static const ownPostsView = '/own_posts';
   static const userProfile = '/user_profile_page';
   static const detailedPost = '/detailed_post_page';
   static const detailedReceivedOrder = '/detailed_received_order_page';

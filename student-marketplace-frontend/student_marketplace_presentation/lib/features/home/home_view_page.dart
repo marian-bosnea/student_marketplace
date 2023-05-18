@@ -49,29 +49,20 @@ class _HomeViewPageState extends State<HomeViewPage> {
       bloc: _pageBloc,
       builder: (context, state) {
         return PlatformScaffold(
-          appBar: isMaterial(context)
-              ? PlatformAppBar(
-                  automaticallyImplyLeading: false,
-                  title: PlatformText(
-                    state.title,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  backgroundColor: Theme.of(context).highlightColor,
-                )
-              : null,
-          body: isCupertino(context)
-              ? NestedScrollView(
-                  headerSliverBuilder: (context, innerBoxIsScroller) {
-                    return <Widget>[_getNavigationBar(context, state)];
-                  },
-                  body: IndexedStack(
-                    index: state.currentPageIndex,
-                    children: _pages,
-                  ))
-              : IndexedStack(
-                  index: state.currentPageIndex,
-                  children: _pages,
-                ),
+          // appBar: PlatformAppBar(
+          //   automaticallyImplyLeading: false,
+          //   title: PlatformText(
+          //     state.title,
+          //     style: TextStyle(color: Theme.of(context).splashColor),
+          //   ),
+          //   backgroundColor: Theme.of(context).highlightColor,
+          // ),
+          body: SafeArea(
+            child: IndexedStack(
+              index: state.currentPageIndex,
+              children: _pages,
+            ),
+          ),
           bottomNavBar: PlatformNavBar(
             cupertino: (context, platform) =>
                 CupertinoTabBarData(activeColor: Theme.of(context).splashColor),
@@ -125,53 +116,53 @@ class _HomeViewPageState extends State<HomeViewPage> {
     );
   }
 
-  Widget _getNavigationBar(BuildContext context, HomeViewState state) {
-    final postsBloc = BlocProvider.of<PostViewBloc>(context);
-    return CupertinoSliverNavigationBar(
-      alwaysShowMiddle: false,
-      automaticallyImplyLeading: false,
-      backgroundColor: Theme.of(context).highlightColor,
-      largeTitle: state.currentPageIndex == 0
-          ? Row(
-              children: [
-                Container(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    height: ScreenUtil().setHeight(80),
-                    width: ScreenUtil().setWidth(690),
-                    child: PlatformTextField(
-                        hintText: state.searchHint,
-                        onChanged: (text) =>
-                            postsBloc.onSearchQueryChanged(text),
-                        cupertino: (context, target) =>
-                            _searchCupertinoTextFieldData(context),
-                        onSubmitted: (text) =>
-                            postsBloc.fetchAllPostsByTextQuery(text))),
-                Container(
-                  padding: const EdgeInsets.all(5),
-                  margin: const EdgeInsets.only(right: 10),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).splashColor,
-                      border: Border.all(color: Colors.black12),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(10))),
-                  height: ScreenUtil().setHeight(80),
-                  width: ScreenUtil().setWidth(80),
-                  child: Center(
-                    child: Icon(
-                      Icons.category,
-                      color: Colors.white,
-                      size: ScreenUtil().setHeight(50),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : Text(
-              state.title,
-              style: TextStyle(color: Theme.of(context).splashColor),
-            ),
-    );
-  }
+  // Widget _getNavigationBar(BuildContext context, HomeViewState state) {
+  //   final postsBloc = BlocProvider.of<PostViewBloc>(context);
+  //   return CupertinoSliverNavigationBar(
+  //     alwaysShowMiddle: false,
+  //     automaticallyImplyLeading: false,
+  //     backgroundColor: Theme.of(context).highlightColor,
+  //     largeTitle: state.currentPageIndex == 0
+  //         ? Row(
+  //             children: [
+  //               Container(
+  //                   padding: const EdgeInsets.only(left: 10, right: 10),
+  //                   height: ScreenUtil().setHeight(80),
+  //                   width: ScreenUtil().setWidth(690),
+  //                   child: PlatformTextField(
+  //                       hintText: state.searchHint,
+  //                       onChanged: (text) =>
+  //                           postsBloc.onSearchQueryChanged(text),
+  //                       cupertino: (context, target) =>
+  //                           _searchCupertinoTextFieldData(context),
+  //                       onSubmitted: (text) =>
+  //                           postsBloc.fetchAllPostsByTextQuery(text))),
+  //               Container(
+  //                 padding: const EdgeInsets.all(5),
+  //                 margin: const EdgeInsets.only(right: 10),
+  //                 decoration: BoxDecoration(
+  //                     color: Theme.of(context).splashColor,
+  //                     border: Border.all(color: Colors.black12),
+  //                     borderRadius:
+  //                         const BorderRadius.all(Radius.circular(10))),
+  //                 height: ScreenUtil().setHeight(80),
+  //                 width: ScreenUtil().setWidth(80),
+  //                 child: Center(
+  //                   child: Icon(
+  //                     Icons.category,
+  //                     color: Colors.white,
+  //                     size: ScreenUtil().setHeight(50),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           )
+  //         : Text(
+  //             state.title,
+  //             style: TextStyle(color: Theme.of(context).splashColor),
+  //           ),
+  //   );
+  // }
 
   CupertinoTextFieldData _searchCupertinoTextFieldData(BuildContext context) {
     return CupertinoTextFieldData(

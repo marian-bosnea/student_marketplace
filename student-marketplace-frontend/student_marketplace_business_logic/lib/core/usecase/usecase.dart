@@ -138,11 +138,14 @@ class TokenIdParam extends Equatable {
 
 class CategoryParam extends Equatable {
   final int categoryId;
+  final int offset;
+  final int limit;
 
-  const CategoryParam({required this.categoryId});
+  const CategoryParam(
+      {required this.categoryId, required this.offset, required this.limit});
 
   @override
-  List<Object?> get props => [categoryId];
+  List<Object?> get props => [categoryId, limit, offset];
 }
 
 class UserParam extends Equatable {

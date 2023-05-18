@@ -4,15 +4,14 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:student_marketplace_business_logic/core/error/failures.dart';
 import 'package:student_marketplace_business_logic/core/usecase/usecase.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
-import 'package:student_marketplace_business_logic/domain/usecases/authentication/get_cached_session_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/product_category/get_all_categories_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/add_to_favorites_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_by_category_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_by_query_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_all_posts_usecase.dart';
-import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
 import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
@@ -48,91 +47,97 @@ class PostViewBloc extends Cubit<PostViewState> {
   }
 
   Future<void> selectCategory(int index) async {
-    if (index != state.selectedCategoryIndex) {
-      emit(state.copyWith(selectedCategoryIndex: index));
+    if (index == state.selectedCategoryIndex) return;
 
-      if (index != -1) {
-        notifyCategoryChanged();
+    emit(state.copyWith(selectedCategoryIndex: index));
 
-        await fetchAllPostsOfSelectedCategory();
-      } else {
-        //  fetchPostsPage(0);
-      }
-    }
+    // if (index != -1) {
+    //   notifyCategoryChanged();
+
+    //   await fetchAllPostsOfSelectedCategory();
+    // } else {
+    //     fetchPostsPage(0);
+    // }
   }
 
   Future<void> fetchAllPostsOfSelectedCategory() async {
-    emit(state.copyWith(status: PostsViewStatus.loading));
+    // emit(state.copyWith(status: PostsViewStatus.loading));
 
-    final postsResult = await getAllPostsByCategoryUsecase(CategoryParam(
-        categoryId: state.categories[state.selectedCategoryIndex - 1].id));
+    // final postsResult = await getAllPostsByCategoryUsecase(CategoryParam(
+    //     categoryId: state.categories[state.selectedCategoryIndex - 1].id));
 
-    if (postsResult is Left) {
-      emit(state.copyWith(status: PostsViewStatus.fail));
-      return;
-    } else {
-      final posts = (postsResult as Right).value;
-      emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
-    }
-    _getFeaturedItem();
+    // if (postsResult is Left) {
+    //   emit(state.copyWith(status: PostsViewStatus.fail));
+    //   return;
+    // } else {
+    //   final posts = (postsResult as Right).value;
+    //   emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
+    // }
 
-    emit(state);
+    // emit(state);
   }
 
-  Future<void> fetchAllPostsByTextQuery(String query) async {
-    onSearchQueryChanged(query);
-    emit(state.copyWith(status: PostsViewStatus.loading));
+  // Future<void> fetchAllPostsByTextQuery(String query) async {
+  //   onSearchQueryChanged(query);
+  //   emit(state.copyWith(status: PostsViewStatus.loading));
 
-    final result = await getAllPostsByQueryUsecase(QueryParam(query: query));
+  //   final result = await getAllPostsByQueryUsecase(QueryParam(query: query));
 
-    if (result is Left) {
-      emit(state.copyWith(status: PostsViewStatus.fail));
-      return;
-    } else {
-      final posts = (result as Right).value;
-      if (state.selectedCategoryIndex != -1) {
-        List<SalePostEntity> filteredPosts = [];
-        final selectedCategoryId =
-            state.categories[state.selectedCategoryIndex - 1].id;
-        for (var p in posts) {
-          if (p.categoryId == selectedCategoryId) {
-            filteredPosts.add(p);
-          }
-        }
-        emit(state.copyWith(
-            posts: filteredPosts, status: PostsViewStatus.loaded));
-      } else {
-        emit(state.copyWith(posts: posts, status: PostsViewStatus.loaded));
-      }
-    }
-  }
+  //   if (result is Left) {
+  //     emit(state.copyWith(status: PostsViewStatus.fail));
+  //     return;
+  //   } else {
+  //     final posts = (result as Right).value;
+  //     if (state.selectedCategoryIndex != -1) {
+  //       List<SalePostEntity> filteredPosts = [];
+  //       final selectedCategoryId =
+  //           state.categories[state.selectedCategoryIndex - 1].id;
+  //       for (var p in posts) {
+  //         if (p.categoryId == selectedCategoryId) {
+  //           filteredPosts.add(p);
+  //         }
+  //       }
+  //       emit(state.copyWith(
+  //           posts: filteredPosts, status: PostsViewStatus.loaded));
+  //     } else {
+  //       emit(state.copyWith(posts: posts, status: PostsViewStatus.loaded));
+  //     }
+  //   }
+  // }
 
-  Future<void> onSearchQueryChanged(String query) async {
-    if (query.isEmpty) {
-      if (state.selectedCategoryIndex == -1) {
-        // fetchPostsPage(0);
-      } else {
-        fetchAllPostsOfSelectedCategory();
-      }
-    }
-  }
+  // Future<void> onSearchQueryChanged(String query) async {
+  //   if (query.isEmpty) {
+  //     if (state.selectedCategoryIndex == -1) {
+  //       // fetchPostsPage(0);
+  //     } else {
+  //       fetchAllPostsOfSelectedCategory();
+  //     }
+  //   }
+  // }
 
   Future<void> fetchPostsPage(int page, PagingController controller) async {
     emit(state.copyWith(status: PostsViewStatus.loading));
-    const elementsCount = 2;
+    const elementsCount = 5;
     final offset = page * elementsCount;
-    final postsResult = await getAllPostsUsecase(
-        LimitOffsetParams(limit: elementsCount, offset: offset));
+    Either<Failure, List<SalePostEntity>> postsResult;
+
+    if (state.selectedCategoryIndex == -1) {
+      postsResult = await getAllPostsUsecase(
+          LimitOffsetParams(limit: elementsCount, offset: offset));
+    } else {
+      postsResult = await getAllPostsByCategoryUsecase(CategoryParam(
+          categoryId: state.categories[state.selectedCategoryIndex - 1].id,
+          limit: elementsCount,
+          offset: offset));
+    }
+
     if (postsResult is Left) {
       emit(state.copyWith(status: PostsViewStatus.fail));
       return;
     }
 
     final posts = (postsResult as Right).value;
-    // if (posts.isEmpty) {
-    //   emit(state.copyWith(status: PostsViewStatus.fail));
-    //   return;
-    // }
+
     emit(state.copyWith(status: PostsViewStatus.loaded, posts: posts));
 
     if (posts.length < elementsCount) {
