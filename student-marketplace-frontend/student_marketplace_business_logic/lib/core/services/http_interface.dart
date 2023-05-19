@@ -278,14 +278,23 @@ class HttpInterface {
   }
 
   Future<List<SalePostModel>?> fetchAllPostsByQuery(
-      {required String token, required String query}) async {
+      {required String token,
+      required String query,
+      required int categoryId,
+      required int offset,
+      required int limit}) async {
     final requestUrl = "$baseUrl/sale-object/get/query";
     final response = await http.post(Uri.parse(requestUrl),
         headers: {
           'Content-Type': 'application/json',
           'authorization': 'Bearer $token'
         },
-        body: jsonEncode(<String, String>{'query': query}));
+        body: jsonEncode(<String, dynamic>{
+          'query': query,
+          'limit': limit,
+          'offset': offset,
+          'categoryId': categoryId
+        }));
 
     if (response.statusCode != getSuccessCode) return null;
     final bodyJson = json.decode(response.body) as Map<String, dynamic>;
@@ -311,7 +320,7 @@ class HttpInterface {
           viewsCount: map['views_count'] as int,
           isFavorite: map['is_favorite'] as bool,
           isOwn: map['is_own'] as bool,
-          categoryId: map['category_id'] as int,
+          // categoryId: map['category_id'] as int,
           images: [imageResponse.bodyBytes]));
     }
     return salePosts;

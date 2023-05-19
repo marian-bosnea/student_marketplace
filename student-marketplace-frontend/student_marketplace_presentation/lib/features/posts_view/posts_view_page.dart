@@ -13,6 +13,7 @@ import 'package:student_marketplace_presentation/features/posts_view/posts_view_
 import 'package:student_marketplace_presentation/features/shared/post_item.dart';
 
 import '../../core/config/injection_container.dart';
+import '../shared/posts_grid_view.dart';
 import 'widgets/category_item.dart';
 
 class PostViewPage extends StatefulWidget {
@@ -162,57 +163,6 @@ class Header extends StatelessWidget {
         ],
       ),
     ));
-  }
-}
-
-class PostsGridView extends StatelessWidget {
-  const PostsGridView({
-    super.key,
-    required PagingController<int, SalePostEntity> pagingController,
-  }) : _pagingController = pagingController;
-
-  final PagingController<int, SalePostEntity> _pagingController;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      sliver: PagedSliverGrid<int, SalePostEntity>(
-        key: const PageStorageKey(1),
-        pagingController: _pagingController,
-        showNoMoreItemsIndicatorAsGridChild: false,
-        showNewPageProgressIndicatorAsGridChild: false,
-        builderDelegate: PagedChildBuilderDelegate(
-          //animateTransitions: true,
-          transitionDuration: const Duration(milliseconds: 500),
-          noItemsFoundIndicatorBuilder: (context) {
-            return Center(
-              child: Container(
-                  margin: const EdgeInsets.all(10),
-                  child: const Text('No items found')),
-            );
-          },
-          noMoreItemsIndicatorBuilder: (context) {
-            return const Center(child: Text('No more posts'));
-          },
-          newPageProgressIndicatorBuilder: (context) {
-            return isMaterial(context)
-                ? const CircularProgressIndicator()
-                : const CupertinoActivityIndicator();
-          },
-          itemBuilder: (context, post, index) {
-            return PostItem(
-              post: post,
-            );
-          },
-        ),
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            childAspectRatio: 2 / 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10),
-      ),
-    );
   }
 }
 

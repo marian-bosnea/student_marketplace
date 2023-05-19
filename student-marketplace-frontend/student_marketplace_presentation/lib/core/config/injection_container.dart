@@ -91,6 +91,7 @@ import 'package:student_marketplace_business_logic/domain/usecases/user/sign_up_
 import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/search_view/search_view_bloc.dart';
 
 import '../../features/add_post/add_post_view_bloc.dart';
 import '../../features/authentication/auth_bloc.dart';
@@ -158,6 +159,9 @@ Future<void> init() async {
   sl.registerFactory(() => OrdersViewBloc());
 
   sl.registerFactory(() => ChatRoomsViewBloc());
+
+  sl.registerLazySingleton(
+      () => SearchViewBloc(getAllPostsByQueryUsecase: sl.call()));
   // Usecases
 
   sl.registerLazySingleton(() => AuthenticateUsecase(repository: sl.call()));

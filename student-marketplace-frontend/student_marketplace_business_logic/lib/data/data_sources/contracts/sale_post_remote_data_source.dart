@@ -11,7 +11,11 @@ abstract class SalePostRemoteDataSource {
       String token, int limit, int offset);
   Future<Either<Failure, List<SalePostEntity>>> getFavoritesPosts(String token);
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByQuery(
-      String token, String query);
+      {required String token,
+      required String query,
+      required int categoryId,
+      required int offset,
+      required int limit});
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
       {required String token,
       required int categoryId,

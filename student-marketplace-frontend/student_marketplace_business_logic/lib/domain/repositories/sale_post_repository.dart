@@ -12,7 +12,12 @@ abstract class SalePostRepository {
   Future<Either<Failure, List<SalePostEntity>>> getFavoritePosts(String token);
 
   Future<Either<Failure, List<SalePostEntity>>> getPostsByQuery(
-      String token, String query);
+      {required String token,
+      required String query,
+      required int categoryId,
+      required int offset,
+      required int limit});
+
   Future<Either<Failure, List<SalePostEntity>>> getAllPostsByCategory(
       {required String token,
       required int categoryId,

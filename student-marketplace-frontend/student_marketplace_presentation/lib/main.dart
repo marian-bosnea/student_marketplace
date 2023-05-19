@@ -11,6 +11,7 @@ import 'package:student_marketplace_presentation/features/favorites/favorites_vi
 import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_bloc.dart';
+import 'package:student_marketplace_presentation/features/search_view/search_view_bloc.dart';
 
 import 'core/config/routes.dart';
 import 'features/authentication/auth_bloc.dart';
@@ -38,6 +39,7 @@ class StudentMarketPlace extends StatelessWidget {
         BlocProvider(create: (_) => di.sl<AuthBloc>()..onAppStarted(context)),
         BlocProvider(create: (_) => di.sl<LoginViewBloc>()),
         BlocProvider(create: (_) => di.sl<RegisterViewBloc>()),
+        BlocProvider(create: (_) => di.sl<SearchViewBloc>()),
         BlocProvider.value(value: di.sl<PostViewBloc>()),
         BlocProvider(
             create: (_) => di.sl<FavoritesViewBloc>()..fetchFavoritePosts()),

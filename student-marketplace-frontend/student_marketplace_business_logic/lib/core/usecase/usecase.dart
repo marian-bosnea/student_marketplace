@@ -119,11 +119,18 @@ class AuthSessionParam extends Equatable {
 
 class QueryParam extends Equatable {
   final String query;
+  final int categoryId;
+  final int offset;
+  final int limit;
 
-  const QueryParam({required this.query});
+  const QueryParam(
+      {required this.query,
+      required this.categoryId,
+      required this.offset,
+      required this.limit});
 
   @override
-  List<Object?> get props => [query];
+  List<Object?> get props => [query, categoryId, limit, offset];
 }
 
 class TokenIdParam extends Equatable {

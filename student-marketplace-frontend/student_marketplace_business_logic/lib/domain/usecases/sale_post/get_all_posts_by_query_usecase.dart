@@ -20,8 +20,23 @@ class GetAllPostsByQueryUsecase
     if (session is Left) return Left(UnauthenticatedFailure());
 
     final token = (session as Right).value;
-    final result =
-        await postRepository.getPostsByQuery(token.token, params.query);
+
+    Either<Failure, List<SalePostEntity>> result;
+
+    if (params.query.isEmpty && params.categoryId != -1) {
+      result = await postRepository.getAllPostsByCategory(
+          token: token.token,
+          categoryId: params.categoryId,
+          offset: params.offset,
+          limit: params.limit);
+    } else {
+      result = await postRepository.getPostsByQuery(
+          token: token.token,
+          query: params.query,
+          categoryId: params.categoryId,
+          limit: params.limit,
+          offset: params.offset);
+    }
 
     if (result is Left) return Left(NetworkFailure());
     final posts = (result as Right).value;
