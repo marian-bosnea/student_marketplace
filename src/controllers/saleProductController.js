@@ -257,10 +257,22 @@ getAllFromCategory = async (req, res) => {
 searchWithTextQuery = async (req, res) => {
    const query = req.body.query;
    const client = await pool.connect();
+   const categoryId = req.body.categoryId;
    const userId = res.locals.decryptedId;
+   const limit = req.body.limit;
+   var offset = req.body.offset;
 
+   const noLimit = 1000000;
+   const nofOffset = 0;
+
+   console.log(`***Requested posts filtered by query=${query} &  categoryId=${categoryId}***`);
    try {
-      const results = await client.query(sql.SALE_OBJECT_READ_ALL, []);
+      var results;
+      if (categoryId == -1) {
+          results = await client.query(sql.SALE_OBJECT_READ_ALL, [userId, noLimit, nofOffset]);
+      } else {
+          results = await client.query(sql.SALE_OBJECT_READ_CATEGORY, [userId, categoryId, noLimit, nofOffset]);
+      }
 
       let saleObjectsJson = [];
 
@@ -269,10 +281,8 @@ searchWithTextQuery = async (req, res) => {
          const postId = results.rows[i].id;
          const title = results.rows[i].title;
          const price = results.rows[i].price;
-         const category_id = results.rows[i].category_id;
          const viewsCount = results.rows[i].views_count;
-
-         const favResult = await pool.query(sql.SALE_OBJECT_CHECK_IF_FAVORITE, [userId, postId]);
+         const is_favorite = results.rows[i].is_favorite;
 
          saleObjectsJson.push({
             id: postId,
@@ -280,17 +290,21 @@ searchWithTextQuery = async (req, res) => {
             price: price,
             views_count: viewsCount,
             is_own: isOwnPost,
-            is_favorite: favResult.rowCount > 0,
-            category_id: category_id
+            is_favorite: is_favorite
          });
+      
       }
-
       const filteredResults = fuzzySearch.search(saleObjectsJson, query);
       saleObjectsJson = [];
 
-      for (i = 0; i < filteredResults.length; i++) {
+      for (i = offset; i < offset + limit; i++) {
+         if (i == filteredResults.length)
+            break;
          saleObjectsJson.push(filteredResults[i].item);
+         console.log(`Added: ${results.rows[i].title}`);
       }
+
+      console.log('***End of request***');
 
       res.status(codes.GET_SUCCESS_CODE);
       res.send({ results: saleObjectsJson });
