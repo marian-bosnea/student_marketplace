@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:student_marketplace_presentation/core/constants/enums.dart';
 import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/features/shared/empty_list_placeholder.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_bloc.dart';
@@ -35,23 +36,34 @@ class UserProfileViewPage extends StatelessWidget {
                       CupertinoNavigationBarData(previousPageTitle: 'Posts'),
                 )
               : null,
-          body: CustomScrollView(slivers: [
-            if (isCupertino(context))
-              CupertinoSliverNavigationBar(
-                previousPageTitle: 'Posts',
-                backgroundColor: Theme.of(context).highlightColor,
-                largeTitle: Text(
-                  'Profile',
-                  style: TextStyle(color: Theme.of(context).splashColor),
+          body: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: CustomScrollView(slivers: [
+              if (isCupertino(context))
+                CupertinoSliverNavigationBar(
+                  previousPageTitle: 'Posts',
+                  backgroundColor: Theme.of(context).highlightColor,
+                  largeTitle: Text(
+                    'Profile',
+                    style: TextStyle(color: Theme.of(context).splashColor),
+                  ),
                 ),
-              ),
-            _getBodyWidget(context, state),
-            if (state.posts.isEmpty)
-              const SliverToBoxAdapter(
-                child: EmptyListPlaceholder(
-                    message: 'User has not listed any item on marketplace'),
-              )
-          ]),
+              _getBodyWidget(context, state),
+              if (state.status == ProfilePageStatus.loading)
+                SliverToBoxAdapter(
+                  child: Center(
+                      child: isMaterial(context)
+                          ? const CircularProgressIndicator()
+                          : const CupertinoActivityIndicator()),
+                ),
+              if (state.posts.isEmpty &&
+                  state.status == ProfilePageStatus.loaded)
+                const SliverToBoxAdapter(
+                  child: EmptyListPlaceholder(
+                      message: 'User has not listed any item on marketplace'),
+                )
+            ]),
+          ),
         );
       }),
     );

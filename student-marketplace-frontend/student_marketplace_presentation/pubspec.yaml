@@ -40,7 +40,8 @@ dependencies:
   toggle_switch: ^2.0.1
   flutter_svg: ^2.0.4
   font_awesome_flutter: ^10.4.0
-  
+  smooth_page_indicator: ^1.1.0
+  flutter_gradient_colors: ^2.1.1
 
   # Testing
   mockito: ^5.4.0
@@ -51,6 +52,7 @@ dependencies:
   animated_toggle_switch: ^0.6.2
   flutter_launcher_icons: ^0.13.1
   infinite_scroll_pagination: ^3.2.0
+  extended_image: ^7.0.2
 
 dev_dependencies:
   flutter_test:

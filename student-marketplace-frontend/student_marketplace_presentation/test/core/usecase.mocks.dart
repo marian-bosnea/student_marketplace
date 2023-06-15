@@ -196,7 +196,7 @@ class MockGetAllPostsUsecase extends _i1.Mock
       ) as _i3.AuthSessionRepository);
   @override
   _i9.Future<_i4.Either<_i10.Failure, List<_i14.SalePostEntity>>> call(
-          _i12.NoParams? params) =>
+          _i12.LimitOffsetParams? params) =>
       (super.noSuchMethod(
         Invocation.method(
           #call,

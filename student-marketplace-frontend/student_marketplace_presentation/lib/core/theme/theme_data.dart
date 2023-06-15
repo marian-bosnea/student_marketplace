@@ -9,7 +9,7 @@ ThemeData lightTheme() => ThemeData(
       highlightColor: const Color.fromARGB(255, 240, 240, 240),
       dividerColor: const Color.fromARGB(255, 200, 200, 200),
       splashColor: accentColor,
-      textTheme: GoogleFonts.varelaRoundTextTheme(
+      textTheme: GoogleFonts.robotoTextTheme(
         const TextTheme(
             labelLarge: TextStyle(fontSize: 20, color: Colors.black),
             labelMedium: TextStyle(fontSize: 16, color: Colors.black),
@@ -30,7 +30,7 @@ ThemeData darkTheme() => ThemeData(
       appBarTheme: const AppBarTheme(
         color: Colors.red,
       ),
-      textTheme: GoogleFonts.varelaRoundTextTheme(
+      textTheme: GoogleFonts.robotoTextTheme(
         const TextTheme(
             labelLarge: TextStyle(fontSize: 20, color: Colors.white),
             labelMedium: TextStyle(fontSize: 16, color: Colors.white),

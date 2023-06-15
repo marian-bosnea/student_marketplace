@@ -6,7 +6,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
-import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import '../../core/config/injection_container.dart' as di;
 
 import 'add_post_view_bloc.dart';
@@ -46,7 +45,7 @@ class AddPostPage extends StatelessWidget {
         ..init(postToEdit),
       child: BlocBuilder<AddPostViewBloc, AddPostState>(
         builder: (context, state) {
-          return getStepperForm(context, state);
+          return SingleChildScrollView(child: getStepperForm(context, state));
         },
       ),
     );
@@ -71,7 +70,7 @@ class AddPostPage extends StatelessWidget {
             onStepCancel: () => bloc.goToPreviousStep(),
             controlsBuilder: (context, details) => Container(
                   margin: const EdgeInsets.only(top: 20),
-                  width: ScreenUtil().setWidth(300),
+                  //width: ScreenUtil().setWidth(300),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class CategoryItem extends StatelessWidget {
   CategoryItem(
@@ -45,7 +46,7 @@ class CategoryItem extends StatelessWidget {
                     : null,
                 borderRadius: BorderRadius.circular(15)),
             child: Center(
-              child: Text(label,
+              child: PlatformText(label,
                   style: TextStyle(
                     fontSize: 16,
                     color: isSelected

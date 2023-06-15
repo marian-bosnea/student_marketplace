@@ -10,7 +10,6 @@ import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/own_posts/own_posts_view_state.dart';
 import 'package:student_marketplace_presentation/features/shared/own_post_list_item.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
 import '../shared/empty_list_placeholder.dart';
 
@@ -76,48 +75,23 @@ class OwnPostsViewPage extends StatelessWidget {
                     message: 'You havent post anything on marketplace',
                   ),
                 ),
-              SliverToBoxAdapter(
-                child: Container(
-                  margin: const EdgeInsets.all(10),
-                  width: 100,
-                  height: 50,
-                  color: Theme.of(context).primaryColor,
-                  child: Center(
-                    child: Material(
-                      type: MaterialType.transparency,
-                      color: Theme.of(context).primaryColor,
-                      child: ToggleSwitch(
-                          minWidth: 100.0,
-                          minHeight: 50.0,
-                          cornerRadius: 20.0,
-                          initialLabelIndex: 0,
-                          activeFgColor: Colors.white,
-                          inactiveBgColor: Theme.of(context).highlightColor,
-                          inactiveFgColor: Theme.of(context).splashColor,
-                          totalSwitches: 3,
-                          labels: const ["Active", "Sold", "Inactive"],
-                          iconSize: 30.0,
-                          borderWidth: 1.0,
-                          borderColor: [Theme.of(context).splashColor],
-                          activeBgColors: [
-                            [Theme.of(context).splashColor],
-                            [Theme.of(context).splashColor],
-                            [Theme.of(context).splashColor],
-                          ],
-                          onToggle: (index) {}),
-                    ),
-                  ),
-                ),
-              ),
+              if (state.status == PostsViewStatus.loading)
+                Center(
+                    child: isMaterial(context)
+                        ? const CircularProgressIndicator()
+                        : const CupertinoActivityIndicator()),
               if (state.posts.isNotEmpty)
-                SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                        childCount: state.posts.length, (context, index) {
-                  return SizedBox(
-                      height: 150,
-                      child:
-                          OwnPostListItem(post: state.posts.elementAt(index)));
-                }))
+                SliverPadding(
+                  padding: const EdgeInsets.all(10),
+                  sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                          childCount: state.posts.length, (context, index) {
+                    return SizedBox(
+                        height: 150,
+                        child: OwnPostListItem(
+                            post: state.posts.elementAt(index)));
+                  })),
+                )
             ],
           );
   }

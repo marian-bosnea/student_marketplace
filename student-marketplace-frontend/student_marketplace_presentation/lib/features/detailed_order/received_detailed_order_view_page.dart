@@ -63,162 +63,167 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SliverList(
-                    delegate: SliverChildListDelegate([
-                  Text(
-                    "Shipping",
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
-                  Material(
-                    color: Theme.of(context).highlightColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: SizedBox(
-                        height: ScreenUtil().setHeight(200),
+                SliverPadding(
+                  padding: const EdgeInsets.all(10),
+                  sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                    Text(
+                      "Shipping",
+                      style: Theme.of(context).textTheme.displayMedium,
+                    ),
+                    Material(
+                      color: Theme.of(context).highlightColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: SizedBox(
+                          height: ScreenUtil().setHeight(200),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Address: ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium,
+                                      maxLines: 2,
+                                    ),
+                                    SizedBox(
+                                        width: ScreenUtil().setWidth(600),
+                                        child: Text(order.addressDescription!,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium)),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Status: ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium,
+                                    ),
+                                    Text(_getStatusLabel(state.orderStatus),
+                                        style: TextStyle(
+                                            fontSize: ScreenUtil().setSp(35),
+                                            color: _getStatusLabelColor(
+                                                state.orderStatus))),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Last modified: ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium,
+                                      maxLines: 2,
+                                    ),
+                                    Text(state.lastModifiedDate,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium),
+                                  ],
+                                ),
+                              ]),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "Product",
+                      style: Theme.of(context).textTheme.displayMedium,
+                    ),
+                    Material(
+                      color: Theme.of(context).highlightColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
                         child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pushNamed(
+                                  RouteNames.detailedPost,
+                                  arguments: order.objectId),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    'Address: ',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium,
-                                    maxLines: 2,
-                                  ),
-                                  SizedBox(
-                                      width: ScreenUtil().setWidth(600),
-                                      child: Text(order.addressDescription!,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium)),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Status: ',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium,
-                                  ),
-                                  Text(_getStatusLabel(state.orderStatus),
-                                      style: TextStyle(
-                                          fontSize: ScreenUtil().setSp(35),
-                                          color: _getStatusLabelColor(
-                                              state.orderStatus))),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Last modified: ',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium,
-                                    maxLines: 2,
-                                  ),
-                                  Text(state.lastModifiedDate,
+                                  Text(order.objectTitle!,
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelMedium),
+                                  const Icon(Icons.chevron_right)
                                 ],
                               ),
-                            ]),
-                      ),
-                    ),
-                  ),
-                  Text(
-                    "Product",
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
-                  Material(
-                    color: Theme.of(context).highlightColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(
-                                RouteNames.detailedPost,
-                                arguments: order.objectId),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(order.objectTitle!,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium),
-                                const Icon(Icons.chevron_right)
-                              ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Text(
-                    "Buyer",
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
-                  Material(
-                    color: Theme.of(context).highlightColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(
-                                RouteNames.userProfile,
-                                arguments: order.partnerId),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(order.partnerName!,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium),
-                                const Icon(Icons.chevron_right)
-                              ],
+                    Text(
+                      "Buyer",
+                      style: Theme.of(context).textTheme.displayMedium,
+                    ),
+                    Material(
+                      color: Theme.of(context).highlightColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () => Navigator.of(context).pushNamed(
+                                  RouteNames.userProfile,
+                                  arguments: order.partnerId),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(order.partnerName!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelMedium),
+                                  const Icon(Icons.chevron_right)
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Text(
-                    "Notes",
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
-                  Material(
-                    color: Theme.of(context).highlightColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text(order.notes),
+                    Text(
+                      "Notes",
+                      style: Theme.of(context).textTheme.displayMedium,
                     ),
-                  ),
-                  Text(
-                    "Action",
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    child: Center(
-                      child: _getAction(context, state.orderStatus),
+                    Material(
+                      color: Theme.of(context).highlightColor,
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(order.notes),
+                      ),
                     ),
-                  )
-                ])),
+                    Text(
+                      "Action",
+                      style: Theme.of(context).textTheme.displayMedium,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: _getAction(context, state.orderStatus),
+                      ),
+                    )
+                  ])),
+                ),
               ]),
             ),
           );
@@ -313,6 +318,8 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
               onTap: () async {
                 final awb =
                     await Navigator.of(context).pushNamed(RouteNames.awbForm);
+
+                if (awb == null) return;
 
                 pageBloc.setAWB(awb as String);
               }),

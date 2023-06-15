@@ -6,9 +6,7 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/add
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/check_if_favorite_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/get_detailed_post_usecase.dart';
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/remove_from_favorites_usecase.dart';
-import 'package:student_marketplace_business_logic/domain/usecases/sale_post/update_post_usecase.dart';
 import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
-import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
 import 'detailed_post_view_state.dart';

@@ -8,6 +8,7 @@ import 'package:student_marketplace_presentation/core/config/on_generate_route.d
 
 import 'package:student_marketplace_presentation/features/shared/list_action_item.dart';
 
+import '../shared/panel_title.dart';
 import 'account_view_bloc.dart';
 import 'account_view_state.dart';
 
@@ -98,23 +99,6 @@ class AccountViewPage extends StatelessWidget {
   }
 }
 
-class PanelTitle extends StatelessWidget {
-  final String title;
-  const PanelTitle({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      padding: const EdgeInsets.only(left: 10),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.displayMedium,
-      ),
-    );
-  }
-}
-
 class DashboardActionsPanel extends StatelessWidget {
   const DashboardActionsPanel({
     super.key,
@@ -128,37 +112,6 @@ class DashboardActionsPanel extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           color: Theme.of(context).highlightColor),
-      // child: GridView(
-      //   physics: const NeverScrollableScrollPhysics(),
-      //   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-      //       maxCrossAxisExtent: 200,
-      //       childAspectRatio: 2 / 2,
-      //       crossAxisSpacing: 10,
-      //       mainAxisSpacing: 10),
-      //   children: [
-      //     DashboardItem(
-      //       assetPath: 'assets/illustrations/box.png',
-      //       label: 'Orders',
-      //       color: [Colors.blue.withAlpha(200), Colors.indigo.withAlpha(200)],
-      //       onTap: () => Navigator.of(context).pushNamed(RouteNames.ordersView),
-      //     ),
-      //     DashboardItem(
-      //       assetPath: 'assets/illustrations/address.png',
-      //       label: 'My Addresses',
-      //       color: [Colors.orangeAccent.withAlpha(200), Colors.orange],
-      //       onTap: () =>
-      //           Navigator.of(context).pushNamed(RouteNames.addressView),
-      //     ),
-      //     DashboardItem(
-      //         assetPath: 'assets/illustrations/post.png',
-      //         label: 'Listings',
-      //         color: [
-      //           Colors.deepOrangeAccent.withAlpha(150),
-      //           Colors.orange.withAlpha(200),
-      //         ],
-      //         onTap: () => Navigator.of(context).pushNamed('/own_posts'))
-      //   ],
-      // ),
       child: Column(
         children: [
           ListActionItem(

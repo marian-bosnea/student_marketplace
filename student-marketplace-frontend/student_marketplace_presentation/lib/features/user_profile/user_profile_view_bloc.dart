@@ -33,13 +33,17 @@ class UserProfileViewBloc extends Cubit<UserProfileViewState> {
           status: ProfilePageStatus.loaded));
     } else {}
 
+    emit(state.copyWith(status: ProfilePageStatus.loading));
     final fetchPostsResult =
         await getAllPostsByOwnerUsecase(OptionalIdParam(id: id));
 
-    if (fetchPostsResult is Left) return;
+    if (fetchPostsResult is Left) {
+      emit(state.copyWith(status: ProfilePageStatus.initial));
+      return;
+    }
 
     final posts = (fetchPostsResult as Right).value;
 
-    emit(state.copyWith(posts: posts));
+    emit(state.copyWith(posts: posts, status: ProfilePageStatus.loaded));
   }
 }

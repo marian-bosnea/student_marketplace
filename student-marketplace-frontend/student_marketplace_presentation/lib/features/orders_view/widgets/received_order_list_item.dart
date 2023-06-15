@@ -25,7 +25,7 @@ class ReceivedOrderListItem extends StatelessWidget {
             border: Border.all(width: 2, color: Colors.black12),
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         padding: const EdgeInsets.all(10),
-        height: 100,
+        height: 120,
         child: Row(
           children: [
             SizedBox(

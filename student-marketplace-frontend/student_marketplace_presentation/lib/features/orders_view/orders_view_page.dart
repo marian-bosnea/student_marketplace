@@ -100,7 +100,7 @@ class OrdersViewPage extends StatelessWidget {
     return state.receivedOrders.isEmpty
         ? const SliverToBoxAdapter(
             child: EmptyListPlaceholder(
-              message: "You don't have any sent order",
+              message: "You don't have any received order",
             ),
           )
         : SliverList(

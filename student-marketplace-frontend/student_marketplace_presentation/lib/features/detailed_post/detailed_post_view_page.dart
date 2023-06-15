@@ -121,6 +121,7 @@ class DetailedPostViewPage extends StatelessWidget {
                                   .post!.images[state.selectedImageIndex!]),
                             )),
                         Container(
+                          height: MediaQuery.of(context).size.height - 400,
                           padding: const EdgeInsets.only(
                               left: 15, right: 15, bottom: 10, top: 10),
                           decoration: BoxDecoration(

@@ -12,8 +12,6 @@ import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upd
 import 'package:student_marketplace_business_logic/domain/usecases/sale_post/upload_post_usecase.dart';
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
 import 'package:student_marketplace_presentation/core/utils/date_formater.dart';
-import 'package:student_marketplace_presentation/features/home/home_view_bloc.dart';
-import 'package:student_marketplace_presentation/features/posts_view/posts_view_bloc.dart';
 
 import '../../core/config/injection_container.dart';
 import 'add_post_view_state.dart';

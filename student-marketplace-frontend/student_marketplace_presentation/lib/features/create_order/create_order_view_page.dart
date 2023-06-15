@@ -20,79 +20,83 @@ class CreateOrderViewPage extends StatelessWidget {
         builder: (context, state) {
           final bloc = BlocProvider.of<CreateOrderViewBloc>(context);
 
-          return Material(
-            child: PlatformScaffold(
-              backgroundColor: Theme.of(context).primaryColor,
-              appBar: PlatformAppBar(
-                backgroundColor: Theme.of(context).highlightColor,
-                cupertino: ((context, platform) =>
-                    CupertinoNavigationBarData(previousPageTitle: 'Post')),
-              ),
-              body: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Stepper(
-                  onStepContinue: () => bloc.goToNextStep(context),
-                  onStepCancel: () => bloc.goToPreviousStep(),
-                  currentStep: state.currentStep,
-                  controlsBuilder: (context, details) => Container(
-                    margin: const EdgeInsets.only(top: 20),
-                    width: ScreenUtil().setWidth(400),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (bloc.canGoToNextStep())
-                          PlatformElevatedButton(
-                            color: Theme.of(context).splashColor,
-                            padding: const EdgeInsets.only(
-                                left: 15, right: 15, bottom: 5, top: 5),
-                            cupertino: ((context, platform) =>
-                                CupertinoElevatedButtonData(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(15)))),
-                            onPressed: details.onStepContinue,
-                            child: Text(
-                              state.currentStep == 2 ? 'Send order' : 'Next',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        if (details.currentStep > 0)
-                          PlatformElevatedButton(
-                            color: Colors.white,
-                            padding: const EdgeInsets.only(
-                                left: 15, right: 15, bottom: 5, top: 5),
-                            cupertino: ((context, platform) =>
-                                CupertinoElevatedButtonData(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(15)))),
-                            onPressed: details.onStepCancel,
-                            child: Text(
-                              'Back',
-                              style: TextStyle(
-                                  color: Theme.of(context).splashColor),
-                            ),
-                          )
-                      ],
+          return buildPageScaffold(context, bloc, state);
+        },
+      ),
+    );
+  }
+
+  Material buildPageScaffold(BuildContext context, CreateOrderViewBloc bloc,
+      CreateOrderViewState state) {
+    return Material(
+      child: PlatformScaffold(
+        backgroundColor: Theme.of(context).primaryColor,
+        appBar: PlatformAppBar(
+          backgroundColor: Theme.of(context).highlightColor,
+          cupertino: ((context, platform) =>
+              CupertinoNavigationBarData(previousPageTitle: 'Post')),
+        ),
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Stepper(
+            onStepContinue: () => bloc.goToNextStep(context),
+            onStepCancel: () => bloc.goToPreviousStep(),
+            currentStep: state.currentStep,
+            controlsBuilder: (context, details) => Container(
+              margin: const EdgeInsets.only(top: 20),
+              width: ScreenUtil().setWidth(400),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (bloc.canGoToNextStep())
+                    PlatformElevatedButton(
+                      color: Theme.of(context).splashColor,
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, bottom: 5, top: 5),
+                      cupertino: ((context, platform) =>
+                          CupertinoElevatedButtonData(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)))),
+                      onPressed: details.onStepContinue,
+                      child: Text(
+                        state.currentStep == 2 ? 'Send order' : 'Next',
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     ),
-                  ),
-                  steps: [
-                    Step(
-                        isActive: state.currentStep == 0,
-                        title: const Text('Product'),
-                        content: getProductStepContent(context, state)),
-                    Step(
-                        isActive: state.currentStep == 1,
-                        title: const Text('Address'),
-                        content: getAddressStepContent(context, state)),
-                    Step(
-                        isActive: state.currentStep == 2,
-                        title: const Text('Additional information'),
-                        content: getAdditionalInfoStepContent(context, state))
-                  ],
-                ),
+                  if (details.currentStep > 0)
+                    PlatformElevatedButton(
+                      color: Colors.white,
+                      padding: const EdgeInsets.only(
+                          left: 15, right: 15, bottom: 5, top: 5),
+                      cupertino: ((context, platform) =>
+                          CupertinoElevatedButtonData(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)))),
+                      onPressed: details.onStepCancel,
+                      child: Text(
+                        'Back',
+                        style: TextStyle(color: Theme.of(context).splashColor),
+                      ),
+                    )
+                ],
               ),
             ),
-          );
-        },
+            steps: [
+              Step(
+                  isActive: state.currentStep == 0,
+                  title: const Text('Product'),
+                  content: getProductStepContent(context, state)),
+              Step(
+                  isActive: state.currentStep == 1,
+                  title: const Text('Address'),
+                  content: getAddressStepContent(context, state)),
+              Step(
+                  isActive: state.currentStep == 2,
+                  title: const Text('Additional information'),
+                  content: getAdditionalInfoStepContent(context, state))
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -3,13 +3,13 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:typed_data' as _i3;
+import 'dart:typed_data' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:student_marketplace_business_logic/domain/entities/product_category_entity.dart'
-    as _i4;
-import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart'
     as _i2;
+import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart'
+    as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -22,10 +22,36 @@ import 'package:student_marketplace_business_logic/domain/entities/sale_post_ent
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+/// A class which mocks [ProductCategoryEntity].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockProductCategoryEntity extends _i1.Mock
+    implements _i2.ProductCategoryEntity {
+  MockProductCategoryEntity() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  int get id => (super.noSuchMethod(
+        Invocation.getter(#id),
+        returnValue: 0,
+      ) as int);
+  @override
+  String get name => (super.noSuchMethod(
+        Invocation.getter(#name),
+        returnValue: '',
+      ) as String);
+  @override
+  List<Object?> get props => (super.noSuchMethod(
+        Invocation.getter(#props),
+        returnValue: <Object?>[],
+      ) as List<Object?>);
+}
+
 /// A class which mocks [SalePostEntity].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSalePostEntity extends _i1.Mock implements _i2.SalePostEntity {
+class MockSalePostEntity extends _i1.Mock implements _i3.SalePostEntity {
   MockSalePostEntity() {
     _i1.throwOnMissingStub(this);
   }
@@ -57,10 +83,10 @@ class MockSalePostEntity extends _i1.Mock implements _i2.SalePostEntity {
         returnValueForMissingStub: null,
       );
   @override
-  List<_i3.Uint8List> get images => (super.noSuchMethod(
+  List<_i4.Uint8List> get images => (super.noSuchMethod(
         Invocation.getter(#images),
-        returnValue: <_i3.Uint8List>[],
-      ) as List<_i3.Uint8List>);
+        returnValue: <_i4.Uint8List>[],
+      ) as List<_i4.Uint8List>);
   @override
   set postId(int? _postId) => super.noSuchMethod(
         Invocation.setter(
@@ -141,32 +167,6 @@ class MockSalePostEntity extends _i1.Mock implements _i2.SalePostEntity {
         ),
         returnValueForMissingStub: null,
       );
-  @override
-  List<Object?> get props => (super.noSuchMethod(
-        Invocation.getter(#props),
-        returnValue: <Object?>[],
-      ) as List<Object?>);
-}
-
-/// A class which mocks [ProductCategoryEntity].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockProductCategoryEntity extends _i1.Mock
-    implements _i4.ProductCategoryEntity {
-  MockProductCategoryEntity() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  int get id => (super.noSuchMethod(
-        Invocation.getter(#id),
-        returnValue: 0,
-      ) as int);
-  @override
-  String get name => (super.noSuchMethod(
-        Invocation.getter(#name),
-        returnValue: '',
-      ) as String);
   @override
   List<Object?> get props => (super.noSuchMethod(
         Invocation.getter(#props),

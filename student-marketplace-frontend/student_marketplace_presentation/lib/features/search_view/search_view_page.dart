@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:student_marketplace_business_logic/domain/entities/product_category_entity.dart';
 import 'package:student_marketplace_business_logic/domain/entities/sale_post_entity.dart';
 import 'package:student_marketplace_presentation/features/posts_view/widgets/category_item.dart';
 import 'package:student_marketplace_presentation/features/search_view/search_view_bloc.dart';
@@ -59,14 +60,6 @@ class _SearchViewPageState extends State<SearchViewPage> {
                   CategoriesPanel(
                     pagingController: _pagingController,
                   ),
-                  if (state.status == SearchViewStatus.intial)
-                    SliverList(
-                      delegate: SliverChildListDelegate([
-                        const Text('History item 1'),
-                        const Text('History item 1'),
-                        const Text('History item 1'),
-                      ]),
-                    ),
                   if (state.status != SearchViewStatus.intial)
                     PostsGridView(pagingController: _pagingController)
                 ],
@@ -157,7 +150,9 @@ class SearchBar extends StatelessWidget {
 
 class CategoriesPanel extends StatelessWidget {
   final PagingController<int, SalePostEntity> pagingController;
-  const CategoriesPanel({super.key, required this.pagingController});
+  late ProductCategoryEntity? selectedCategory;
+
+  CategoriesPanel({super.key, required this.pagingController});
 
   @override
   Widget build(BuildContext context) {
@@ -165,49 +160,90 @@ class CategoriesPanel extends StatelessWidget {
       bloc: BlocProvider.of<SearchViewBloc>(context),
       builder: (context, state) {
         final bloc = BlocProvider.of<PostViewBloc>(context);
+        final isACategorySelected = state.selectedCategoryId != -1;
         return SliverToBoxAdapter(
           child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 20),
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            width:
+                isACategorySelected ? 200 : MediaQuery.of(context).size.width,
             child: Material(
               elevation: 1,
               type: MaterialType.card,
               color: Theme.of(context).highlightColor,
               borderRadius: BorderRadius.circular(25),
-              child: Hero(
-                tag: 'categories',
-                child: Container(
-                  //margin: const EdgeInsets.symmetric(vertical: 20),
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).highlightColor,
-                      borderRadius: BorderRadius.circular(25)),
-                  width: MediaQuery.of(context).size.width,
-                  child: Wrap(
-                      children:
-                          List.generate(bloc.state.categories.length, (index) {
-                    final category = bloc.state.categories.elementAt(index);
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).highlightColor,
+                    borderRadius: BorderRadius.circular(25)),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                height: isACategorySelected ? 70 : 210,
+                child: Wrap(
+                    children: isACategorySelected
+                        ? [
+                            Builder(
+                                builder: (context) =>
+                                    selectedCategoryBuilder(context, state))
+                          ]
+                        : List.generate(bloc.state.categories.length, (index) {
+                            final category =
+                                bloc.state.categories.elementAt(index);
 
-                    return FittedBox(
-                      child: SizedBox(
-                        height: 70,
-                        child: CategoryItem(
-                            label: category.name,
-                            isSelected: category.id == state.selectedCategoryId,
-                            onTap: () {
-                              BlocProvider.of<SearchViewBloc>(context)
-                                  .setCategoryId(category.id);
-
-                              pagingController.refresh();
-                            }),
-                      ),
-                    );
-                  })),
-                ),
+                            return FittedBox(
+                              child: Hero(
+                                tag: category.name,
+                                child: SizedBox(
+                                  height: 70,
+                                  child: CategoryItem(
+                                      label: category.name,
+                                      isSelected: category.id ==
+                                          state.selectedCategoryId,
+                                      onTap: () => onTap(context, category.id)),
+                                ),
+                              ),
+                            );
+                          })),
               ),
             ),
           ),
         );
       },
     );
+  }
+
+  Widget selectedCategoryBuilder(BuildContext context, SearchViewState state) {
+    final categories = BlocProvider.of<PostViewBloc>(context).state.categories;
+    final category = categories.firstWhere(
+      (element) {
+        return element.id == state.selectedCategoryId;
+      },
+    );
+    return Hero(
+      tag: category.name,
+      child: Row(
+        children: [
+          SizedBox(
+            height: 70,
+            child: CategoryItem(
+                label: category.name,
+                isSelected: category.id == state.selectedCategoryId,
+                onTap: () => onTap(context, category.id)),
+          ),
+          PlatformIconButton(
+            icon: Icon(
+              FontAwesomeIcons.xmark,
+              color: Theme.of(context).textTheme.labelMedium!.color!,
+            ),
+            onPressed: () => onTap(context, category.id),
+          )
+        ],
+      ),
+    );
+  }
+
+  onTap(BuildContext context, int id) {
+    BlocProvider.of<SearchViewBloc>(context).setCategoryId(id);
+
+    pagingController.refresh();
   }
 }

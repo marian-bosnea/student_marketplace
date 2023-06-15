@@ -15,7 +15,7 @@ class OwnPostListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: 5, left: 5, bottom: 5),
-      height: ScreenUtil().setHeight(450),
+      height: 150,
       child: OpenContainer(
         closedColor: Theme.of(context).highlightColor,
         transitionType: ContainerTransitionType.fadeThrough,

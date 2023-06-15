@@ -4,6 +4,8 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:student_marketplace_business_logic/data/models/message_model.dart';
 import 'package:student_marketplace_business_logic/domain/entities/message_entity.dart';
 
+import '../config.dart';
+
 class SocketInterface {
   final String token;
 
@@ -23,7 +25,7 @@ class SocketInterface {
       'token': token,
     };
 
-    socket = io.io('http://192.168.0.102:3000', <String, dynamic>{
+    socket = io.io(baseUrl, <String, dynamic>{
       'autoConnect': false,
       'transports': ['websocket'],
       'query': queryParams

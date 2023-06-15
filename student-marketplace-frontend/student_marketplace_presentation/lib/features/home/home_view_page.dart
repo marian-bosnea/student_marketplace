@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
 import 'package:student_marketplace_presentation/features/chat_rooms/chat_rooms_view_page.dart';
+import 'package:student_marketplace_presentation/features/favorites/favorites_view_bloc.dart';
 
 import '../add_post/add_post_view_page.dart';
 import '../favorites/favorites_view_page.dart';
@@ -109,7 +110,10 @@ class _HomeViewPageState extends State<HomeViewPage> {
                         : Theme.of(context).textTheme.displayMedium!.color,
                   ))
             ],
-            itemChanged: (index) => _pageBloc.setCurrentPageIndex(index),
+            itemChanged: (index) {
+              BlocProvider.of<FavoritesViewBloc>(context).fetchFavoritePosts();
+              _pageBloc.setCurrentPageIndex(index);
+            },
           ),
         );
       },

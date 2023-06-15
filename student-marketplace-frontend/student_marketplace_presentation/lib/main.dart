@@ -26,11 +26,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
 
-  runApp(const StudentMarketPlace());
+  runApp(const UnimarketApp());
 }
 
-class StudentMarketPlace extends StatelessWidget {
-  const StudentMarketPlace({super.key});
+class UnimarketApp extends StatelessWidget {
+  const UnimarketApp({super.key});
 
   @override
   Widget build(BuildContext context) {
