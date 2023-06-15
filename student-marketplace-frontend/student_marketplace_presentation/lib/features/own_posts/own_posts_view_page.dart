@@ -22,10 +22,10 @@ class OwnPostsViewPage extends StatelessWidget {
       CupertinoSliverNavigationBar(
         automaticallyImplyLeading: true,
         previousPageTitle: 'Account',
-        backgroundColor: Theme.of(context).highlightColor,
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         largeTitle: Text(
           'My Posts',
-          style: TextStyle(color: Theme.of(context).splashColor),
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
       );
 
@@ -34,10 +34,11 @@ class OwnPostsViewPage extends StatelessWidget {
     return BlocBuilder<OwnPostsViewBloc, OwnPostsViewState>(
         builder: (context, state) {
       return PlatformScaffold(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         appBar: isMaterial(context)
             ? PlatformAppBar(
-                backgroundColor: Theme.of(context).highlightColor,
+                backgroundColor:
+                    Theme.of(context).colorScheme.secondaryContainer,
                 automaticallyImplyLeading: true,
                 cupertino: (context, platform) =>
                     CupertinoNavigationBarData(previousPageTitle: 'Account'),
@@ -58,7 +59,6 @@ class OwnPostsViewPage extends StatelessWidget {
     }
     return isMaterial(context)
         ? Material(
-            color: Theme.of(context).primaryColor,
             child: ListView.builder(
                 itemCount: state.posts.length,
                 itemBuilder: (context, index) => SizedBox(

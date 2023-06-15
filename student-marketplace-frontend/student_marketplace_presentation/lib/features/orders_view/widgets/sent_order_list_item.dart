@@ -22,13 +22,11 @@ class SentOrderListItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(top: 5, bottom: 5),
         child: Material(
-          elevation: 1,
-          color: Theme.of(context).highlightColor,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           child: Container(
-            decoration: BoxDecoration(
-                border: Border.all(width: 2, color: Colors.black12),
-                borderRadius: const BorderRadius.all(Radius.circular(10))),
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(10))),
             padding: const EdgeInsets.all(10),
             height: ScreenUtil().setHeight(200),
             child: Row(
@@ -50,7 +48,12 @@ class SentOrderListItem extends StatelessWidget {
                           children: [
                             Text(
                               order.objectTitle!,
-                              style: Theme.of(context).textTheme.labelLarge,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondaryContainer),
                             ),
                           ],
                         ),
@@ -61,9 +64,13 @@ class SentOrderListItem extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text('Last modified: ${order.lastModifiedDate} ',
-                                style:
-                                    Theme.of(context).textTheme.displayMedium),
+                            Text(
+                              'Last modified: ${order.lastModifiedDate} ',
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondaryContainer),
+                            ),
                           ],
                         ),
                       ]),

@@ -20,7 +20,7 @@ class ChatRoomsViewPage extends StatelessWidget {
           ? const EmptyListPlaceholder(
               message: "You don't have any active conversations")
           : Material(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.surface,
               child: ListView.builder(
                   itemCount: state.rooms.length,
                   itemBuilder: (context, index) =>
@@ -69,13 +69,16 @@ class ChatRoomItem extends StatelessWidget {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          room.partnerName,
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
+                        Text(room.partnerName,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20)),
                         Text(
                           room.lastMessage,
-                          style: Theme.of(context).textTheme.displayMedium,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontSize: 16),
                         ),
                         const SizedBox(
                           height: 5,

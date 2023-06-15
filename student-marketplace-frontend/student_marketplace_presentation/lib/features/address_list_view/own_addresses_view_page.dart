@@ -24,9 +24,9 @@ class OwnAddressesViewPage extends StatelessWidget {
       builder: (context, state) {
         final bloc = BlocProvider.of<OwnAddressesViewBloc>(context);
         return PlatformScaffold(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: PlatformAppBar(
-            backgroundColor: Theme.of(context).highlightColor,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
             trailingActions: [
               PlatformTextButton(
                 padding: EdgeInsets.zero,

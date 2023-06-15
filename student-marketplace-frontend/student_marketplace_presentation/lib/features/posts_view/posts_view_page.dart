@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide ModalBottomSheetRoute;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gradient_colors/flutter_gradient_colors.dart';
@@ -47,13 +46,13 @@ class _PostViewPageState extends State<PostViewPage> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).colorScheme.surface,
       child: BlocBuilder<PostViewBloc, PostViewState>(
           bloc: _pageBloc,
           builder: (context, state) {
             return RefreshIndicator(
-              color: Theme.of(context).splashColor,
-              backgroundColor: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
               onRefresh: () async => _pagingController.refresh(),
               child: CustomScrollView(
                   reverse: false,
@@ -144,20 +143,13 @@ class CategoriesShowcasePanel extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).highlightColor.withAlpha(130),
-                    spreadRadius: 4,
-                    blurRadius: 2,
-                    offset: const Offset(4, 5), // changes position of shadow
-                  ),
-                ]),
+              borderRadius: BorderRadius.circular(25),
+            ),
             child: Material(
-              elevation: 2,
+              elevation: 0,
               type: MaterialType.card,
               borderRadius: BorderRadius.circular(25),
-              color: Theme.of(context).highlightColor,
+              color: Theme.of(context).colorScheme.secondaryContainer,
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -166,14 +158,13 @@ class CategoriesShowcasePanel extends StatelessWidget {
                     Container(
                       width: MediaQuery.of(context).size.width - 50,
                       margin: const EdgeInsets.only(bottom: 10),
-                      child: PlatformText(
+                      child: Text(
                         'Browse Categories',
                         style: TextStyle(
                             fontSize: 30,
                             color: Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .color!),
+                                .colorScheme
+                                .onSecondaryContainer),
                         textAlign: TextAlign.start,
                       ),
                     ),
@@ -255,7 +246,7 @@ class CategoriesShowcasePanel extends StatelessWidget {
                                                     color: Colors.white
                                                         .withOpacity(0.7),
                                                   ),
-                                                  child: PlatformText(
+                                                  child: Text(
                                                     category.name,
                                                     style: const TextStyle(
                                                         color: Colors.black,
@@ -278,7 +269,8 @@ class CategoriesShowcasePanel extends StatelessWidget {
                           count: state.categories.length,
                           effect: WormEffect(
                               activeDotColor: Theme.of(context)
-                                  .splashColor), // your preferred effect
+                                  .colorScheme
+                                  .onSecondaryContainer), // your preferred effect
                           onDotClicked: (index) {})
                   ],
                 ),
@@ -311,15 +303,15 @@ class Header extends StatelessWidget {
             maxLines: 2,
             style: TextStyle(
                 fontSize: 25,
-                fontWeight: FontWeight.w700,
-                color: Theme.of(context).textTheme.labelLarge!.color!),
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface),
           ),
           Hero(
             tag: 'search',
             child: Material(
               elevation: 5,
               type: MaterialType.card,
-              color: Theme.of(context).highlightColor,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(20),
               child: Container(
                 width: 50,
@@ -335,7 +327,7 @@ class Header extends StatelessWidget {
                   icon: Icon(
                     FontAwesomeIcons.magnifyingGlass,
                     //size: 30,
-                    color: Theme.of(context).splashColor,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
               ),

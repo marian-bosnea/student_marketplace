@@ -30,28 +30,24 @@ class CategoryItem extends StatelessWidget {
         child: Material(
           type: MaterialType.card,
           borderRadius: BorderRadius.circular(15),
-          elevation: isSelected ? 2 : 5,
           color: isSelected
-              ? Theme.of(context).splashColor
-              : Theme.of(context).highlightColor,
+              ? Theme.of(context).colorScheme.primary
+              : Theme.of(context).colorScheme.background,
           child: Container(
             padding: const EdgeInsets.all(10),
             height: 40,
             decoration: BoxDecoration(
-                color: isSelected
-                    ? Theme.of(context).splashColor
-                    : Theme.of(context).highlightColor,
-                border: isSelected
-                    ? Border.all(color: Theme.of(context).splashColor)
+                border: !isSelected
+                    ? Border.all(color: Theme.of(context).colorScheme.outline)
                     : null,
                 borderRadius: BorderRadius.circular(15)),
             child: Center(
-              child: PlatformText(label,
+              child: Text(label,
                   style: TextStyle(
                     fontSize: 16,
                     color: isSelected
-                        ? Theme.of(context).primaryColor
-                        : Theme.of(context).textTheme.labelMedium!.color,
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.onPrimaryContainer,
                   )),
             ),
           ),

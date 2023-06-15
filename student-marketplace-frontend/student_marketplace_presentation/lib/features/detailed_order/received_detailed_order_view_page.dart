@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
-import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/features/detailed_order/received_detailed_order_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/detailed_order/received_detailed_order_view_state.dart';
 import 'package:student_marketplace_presentation/features/orders_view/orders_view_bloc.dart';
@@ -29,10 +28,11 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
         builder: (context, state) {
           return Material(
             child: PlatformScaffold(
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               appBar: isMaterial(context)
                   ? PlatformAppBar(
-                      backgroundColor: Theme.of(context).primaryColor,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceVariant,
                       automaticallyImplyLeading: true,
                       cupertino: ((context, platform) =>
                           CupertinoNavigationBarData(
@@ -43,23 +43,29 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
               body: CustomScrollView(slivers: [
                 if (isCupertino(context))
                   CupertinoSliverNavigationBar(
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.surfaceVariant,
                     automaticallyImplyLeading: true,
                     previousPageTitle: 'Orders',
                     largeTitle: Text("Order",
-                        style: TextStyle(color: Theme.of(context).splashColor)),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary)),
                   ),
                 SliverToBoxAdapter(
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor,
+                        color: Theme.of(context).colorScheme.surfaceVariant,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10))),
                     margin: const EdgeInsets.all(5),
                     child: Text(
                       "Number #${order.id}",
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                   ),
                 ),
@@ -67,12 +73,13 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                    Text(
-                      "Shipping",
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
+                    Text("Shipping",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onSurface)),
                     Material(
-                      color: Theme.of(context).highlightColor,
+                      color: Theme.of(context).colorScheme.surfaceVariant,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
@@ -87,9 +94,12 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       'Address: ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurfaceVariant),
                                       maxLines: 2,
                                     ),
                                     SizedBox(
@@ -105,9 +115,12 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       'Status: ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurfaceVariant),
                                     ),
                                     Text(_getStatusLabel(state.orderStatus),
                                         style: TextStyle(
@@ -121,9 +134,12 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                                   children: [
                                     Text(
                                       'Last modified: ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurfaceVariant),
                                       maxLines: 2,
                                     ),
                                     Text(state.lastModifiedDate,
@@ -136,12 +152,13 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      "Product",
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
+                    Text("Product",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onSurface)),
                     Material(
-                      color: Theme.of(context).highlightColor,
+                      color: Theme.of(context).colorScheme.surfaceVariant,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
@@ -156,10 +173,15 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(order.objectTitle!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium),
+                                  Text(
+                                    order.objectTitle!,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant),
+                                  ),
                                   const Icon(Icons.chevron_right)
                                 ],
                               ),
@@ -168,12 +190,13 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      "Buyer",
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
+                    Text("Buyer",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onSurface)),
                     Material(
-                      color: Theme.of(context).highlightColor,
+                      color: Theme.of(context).colorScheme.surfaceVariant,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
@@ -188,10 +211,15 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(order.partnerName!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium),
+                                  Text(
+                                    order.partnerName!,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant),
+                                  ),
                                   const Icon(Icons.chevron_right)
                                 ],
                               ),
@@ -200,22 +228,28 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text(
-                      "Notes",
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
+                    Text("Notes",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onSurface)),
                     Material(
-                      color: Theme.of(context).highlightColor,
+                      color: Theme.of(context).colorScheme.surfaceVariant,
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text(order.notes),
+                        child: Text(order.notes,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color:
+                                    Theme.of(context).colorScheme.onSurface)),
                       ),
                     ),
-                    Text(
-                      "Action",
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
+                    Text("Action",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onSurface)),
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       child: Center(
@@ -254,7 +288,7 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: Theme.of(context).highlightColor,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -297,8 +331,8 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: Theme.of(context).highlightColor,
-          borderRadius: BorderRadius.all(Radius.circular(10))),
+          color: Theme.of(context).colorScheme.surfaceVariant,
+          borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -333,7 +367,7 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          color: Theme.of(context).highlightColor,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,7 +387,7 @@ class DetailedReceivedOrderViewPage extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-          color: Theme.of(context).highlightColor,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

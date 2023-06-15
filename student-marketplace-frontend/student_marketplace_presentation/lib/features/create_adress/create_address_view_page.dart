@@ -34,15 +34,15 @@ class CreateAddressViewPage extends StatelessWidget {
         builder: (context, state) {
           final bloc = BlocProvider.of<CreateAddressViewBloc>(context);
           return PlatformScaffold(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             cupertino: (context, platform) =>
                 CupertinoPageScaffoldData(resizeToAvoidBottomInset: false),
             appBar: PlatformAppBar(
-              backgroundColor: Theme.of(context).highlightColor,
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
               title: Text(
                 addressToEdit != null ? 'Edit Address' : 'New Address',
                 style: TextStyle(
-                    color: Theme.of(context).splashColor,
+                    color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.w600),
               ),
               cupertino: ((context, platform) => CupertinoNavigationBarData(
@@ -114,9 +114,11 @@ class CreateAddressViewPage extends StatelessWidget {
                           CupertinoElevatedButtonData(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(30))),
-                      color: Theme.of(context).splashColor,
+                      color: Theme.of(context).colorScheme.primary,
                       child: Text(
                         addressToEdit != null ? 'Edit Address' : 'New Address',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.background),
                       ),
                       onPressed: () async {
                         await bloc.submit(addressToEdit?.id);
@@ -138,8 +140,6 @@ class CreateAddressViewPage extends StatelessWidget {
   CupertinoTextFieldData _cupertinoTextFieldData(BuildContext context) {
     return CupertinoTextFieldData(
       cursorColor: Theme.of(context).splashColor,
-      style: Theme.of(context).textTheme.labelMedium,
-      placeholderStyle: Theme.of(context).textTheme.displayMedium,
       decoration: BoxDecoration(
           color: Theme.of(context).highlightColor,
           borderRadius: const BorderRadius.all(Radius.circular(20)),

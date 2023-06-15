@@ -29,16 +29,21 @@ class MessageItem extends StatelessWidget {
           BubbleSpecialThree(
             text: message.content,
             color: isOwn
-                ? Theme.of(context).highlightColor
-                : Theme.of(context).splashColor,
+                ? Theme.of(context).colorScheme.secondaryContainer
+                : Theme.of(context).colorScheme.primary,
             isSender: isOwn,
             tail: hasTail,
-            textStyle: Theme.of(context).textTheme.labelMedium!,
+            textStyle: TextStyle(
+              color: isOwn
+                  ? Theme.of(context).colorScheme.onSecondaryContainer
+                  : Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
           Container(
             padding: const EdgeInsets.all(5),
             child: Text(message.sendTime,
-                style: Theme.of(context).textTheme.displaySmall),
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onSurface)),
           )
         ],
       ),

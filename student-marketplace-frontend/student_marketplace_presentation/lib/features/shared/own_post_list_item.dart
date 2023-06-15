@@ -17,7 +17,7 @@ class OwnPostListItem extends StatelessWidget {
       margin: const EdgeInsets.only(right: 5, left: 5, bottom: 5),
       height: 150,
       child: OpenContainer(
-        closedColor: Theme.of(context).highlightColor,
+        closedColor: Theme.of(context).colorScheme.secondaryContainer,
         transitionType: ContainerTransitionType.fadeThrough,
         transitionDuration: const Duration(milliseconds: 500),
         openShape: const RoundedRectangleBorder(
@@ -40,52 +40,45 @@ class OwnPostListItem extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.only(left: 10),
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           post.title,
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).splashColor,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5))),
-                          child: Center(
-                            child: Text(
-                              post.categoryName!,
-                              style:
-                                  TextStyle(fontSize: ScreenUtil().setSp(25)),
-                            ),
-                          ),
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20),
                         ),
                         Text(
                           '${post.price} RON',
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
                         ),
                         Row(
                           children: [
                             Text(
                               'Posted on: ',
-                              style: Theme.of(context).textTheme.displayMedium,
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSecondaryContainer,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16),
                             ),
                             Text(
                               post.postingDate!.toString(),
-                              style: Theme.of(context).textTheme.labelMedium,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              'Views: ',
-                              style: Theme.of(context).textTheme.displayMedium,
-                            ),
-                            Text(
-                              post.viewsCount!.toString(),
-                              style: Theme.of(context).textTheme.labelMedium,
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                  fontSize: 16),
                             ),
                           ],
                         ),

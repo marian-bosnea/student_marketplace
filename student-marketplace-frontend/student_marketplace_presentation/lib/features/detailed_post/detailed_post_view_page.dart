@@ -32,7 +32,7 @@ class DetailedPostViewPage extends StatelessWidget {
           if (state.status == PostsViewStatus.loading ||
               state.status == PostsViewStatus.initial) {
             return Container(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.surface,
               child: Center(
                 child: isCupertino(context)
                     ? CupertinoActivityIndicator(
@@ -45,9 +45,9 @@ class DetailedPostViewPage extends StatelessWidget {
             );
           }
           return PlatformScaffold(
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             appBar: PlatformAppBar(
-              backgroundColor: Theme.of(context).highlightColor,
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
               trailingActions: [
                 if (state.post!.isOwn!)
                   PlatformIconButton(
@@ -55,7 +55,7 @@ class DetailedPostViewPage extends StatelessWidget {
                         .pushNamed(RouteNames.editPost, arguments: state.post),
                     icon: Icon(
                       Icons.edit,
-                      color: Theme.of(context).splashColor,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   )
               ],
@@ -64,294 +64,270 @@ class DetailedPostViewPage extends StatelessWidget {
               automaticallyImplyLeading: true,
             ),
             body: Material(
-              color: Theme.of(context).primaryColor,
               child: Stack(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 80),
-                    color: Theme.of(context).primaryColor,
-                    child: ListView(
-                      children: [
-                        SizedBox(
-                          height: 100,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: state.post!.images.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () =>
-                                        BlocProvider.of<DetailedPostViewBloc>(
-                                                context)
-                                            .setSelectedImage(index),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .highlightColor,
-                                          border:
-                                              index == state.selectedImageIndex!
-                                                  ? Border.all(
-                                                      color: Theme.of(context)
-                                                          .splashColor)
-                                                  : null,
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(20))),
-                                      width: 80,
-                                      height: 70,
-                                      margin: const EdgeInsets.only(
-                                          left: 5, right: 5),
-                                      padding: const EdgeInsets.all(5),
-                                      child: Center(
-                                          child: Image.memory(
-                                        state.post!.images[index],
-                                        width: 40,
-                                        height: 40,
-                                      )),
-                                    ),
-                                  );
-                                }),
-                          ),
-                        ),
-                        Container(
-                            padding: const EdgeInsets.all(20),
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: PhotoView(
-                              imageProvider: MemoryImage(state
-                                  .post!.images[state.selectedImageIndex!]),
-                            )),
-                        Container(
-                          height: MediaQuery.of(context).size.height - 400,
-                          padding: const EdgeInsets.only(
-                              left: 15, right: 15, bottom: 10, top: 10),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).highlightColor,
-                            borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(40),
-                                topLeft: Radius.circular(40)),
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                margin:
-                                    const EdgeInsets.only(top: 10, bottom: 10),
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                state.post!.categoryName!,
-                                                style: TextStyle(
+                  ListView(
+                    children: [
+                      SizedBox(
+                        height: 100,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: state.post!.images.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () =>
+                                      BlocProvider.of<DetailedPostViewBloc>(
+                                              context)
+                                          .setSelectedImage(index),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surfaceVariant,
+                                        border:
+                                            index == state.selectedImageIndex!
+                                                ? Border.all(
                                                     color: Theme.of(context)
-                                                        .splashColor),
-                                              ),
-                                              Text(
-                                                state.post!.title,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelLarge,
-                                              ),
-                                            ]),
-                                      ),
-                                      if (!state.post!.isOwn!)
-                                        LikeButton(
-                                          size: 40,
-                                          isLiked: state.isFavorite,
-                                          onTap: (liked) async => BlocProvider
-                                                  .of<DetailedPostViewBloc>(
-                                                      context)
-                                              .onFavoritePressed(
-                                                  context, state.post!.postId!),
-                                        ),
-                                    ]),
-                              ),
-                              Divider(
-                                height: 0.1,
-                                color: Theme.of(context).dividerColor,
-                              ),
-                              Container(
-                                margin:
-                                    const EdgeInsets.only(top: 10, bottom: 10),
-                                width: MediaQuery.of(context).size.width,
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 5, bottom: 5),
-                                        child: Row(
+                                                        .splashColor)
+                                                : null,
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(20))),
+                                    width: 80,
+                                    height: 70,
+                                    margin: const EdgeInsets.only(
+                                        left: 5, right: 5),
+                                    padding: const EdgeInsets.all(5),
+                                    child: Center(
+                                        child: Image.memory(
+                                      state.post!.images[index],
+                                      width: 40,
+                                      height: 40,
+                                    )),
+                                  ),
+                                );
+                              }),
+                        ),
+                      ),
+                      Container(
+                          padding: const EdgeInsets.all(20),
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: PhotoView(
+                            imageProvider: MemoryImage(
+                                state.post!.images[state.selectedImageIndex!]),
+                          )),
+                      Container(
+                        height: MediaQuery.of(context).size.height - 400,
+                        padding: const EdgeInsets.only(
+                            left: 15, right: 15, bottom: 10, top: 10),
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).colorScheme.secondaryContainer,
+                          borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(40),
+                              topLeft: Radius.circular(40)),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Icon(
-                                              Icons.feed,
-                                              color:
-                                                  Theme.of(context).splashColor,
+                                            Text(
+                                              state.post!.categoryName!,
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimaryContainer),
                                             ),
                                             Text(
-                                              'Description',
-                                              textAlign: TextAlign.start,
+                                              state.post!.title,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .labelLarge,
                                             ),
-                                          ],
-                                        ),
+                                          ]),
+                                    ),
+                                    if (!state.post!.isOwn!)
+                                      LikeButton(
+                                        size: 40,
+                                        isLiked: state.isFavorite,
+                                        onTap: (liked) async => BlocProvider.of<
+                                                DetailedPostViewBloc>(context)
+                                            .onFavoritePressed(
+                                                context, state.post!.postId!),
                                       ),
-                                      Text(
-                                        state.post!.description!,
+                                  ]),
+                            ),
+                            Divider(
+                              height: 0.1,
+                              color: Theme.of(context).dividerColor,
+                            ),
+                            Container(
+                              margin:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 5, bottom: 5),
+                                      child: Text(
+                                        'Description',
                                         textAlign: TextAlign.start,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium,
-                                      )
-                                    ]),
-                              ),
-                              Divider(
-                                height: 0.1,
-                                color: Theme.of(context).dividerColor,
-                              ),
-                              Container(
-                                margin:
-                                    const EdgeInsets.only(top: 10, bottom: 10),
-                                width: MediaQuery.of(context).size.width,
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 5, bottom: 5),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.info_outline,
-                                              color:
-                                                  Theme.of(context).splashColor,
-                                            ),
-                                            Text(
-                                              'About',
-                                              textAlign: TextAlign.start,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelMedium,
-                                            ),
-                                          ],
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimaryContainer),
+                                      ),
+                                    ),
+                                    Text(
+                                      state.post!.description!,
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(),
+                                    )
+                                  ]),
+                            ),
+                            Divider(
+                              height: 0.1,
+                              color: Theme.of(context).dividerColor,
+                            ),
+                            Container(
+                              margin:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 5, bottom: 5),
+                                      child: Text(
+                                        'About',
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimaryContainer),
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text('Sold by '),
+                                        Text(
+                                          state.post!.ownerName!,
+                                          textAlign: TextAlign.start,
                                         ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Sold by ',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayMedium,
-                                          ),
-                                          Text(
-                                            state.post!.ownerName!,
-                                            textAlign: TextAlign.start,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium,
-                                          ),
-                                          PlatformTextButton(
-                                            child: Text(
-                                              'View Profile',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelLarge,
-                                            ),
-                                            onPressed: () => Navigator.of(
-                                                    context)
-                                                .push(MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        UserProfileViewPage(
-                                                            userId: state.post!
-                                                                .ownerId!))),
-                                          )
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Posted on  ',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayMedium,
-                                          ),
-                                          Text(
-                                            state.post!.postingDate!,
-                                            textAlign: TextAlign.start,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium,
-                                          ),
-                                        ],
-                                      ),
-                                    ]),
-                              ),
-                              Divider(
-                                height: 0.1,
-                                color: Theme.of(context).dividerColor,
-                              ),
-                              Container(
-                                margin:
-                                    const EdgeInsets.only(top: 10, bottom: 10),
-                                width: MediaQuery.of(context).size.width,
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 5, bottom: 5),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.insert_chart,
-                                              color:
-                                                  Theme.of(context).splashColor,
-                                            ),
-                                            Text(
-                                              'Statistics',
-                                              textAlign: TextAlign.start,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelLarge,
-                                            ),
-                                          ],
+                                        const SizedBox(
+                                          width: 50,
                                         ),
-                                      ),
-                                      Row(
+                                        PlatformTextButton(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
+                                          cupertino: (context, platform) =>
+                                              CupertinoTextButtonData(
+                                                  borderRadius:
+                                                      BorderRadius.circular(15),
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 5)),
+                                          child: Text(
+                                            'View Profile',
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                          ),
+                                          onPressed: () => Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserProfileViewPage(
+                                                          userId: state.post!
+                                                              .ownerId!))),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Posted on  ',
+                                        ),
+                                        Text(
+                                          state.post!.postingDate!,
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ],
+                                    ),
+                                  ]),
+                            ),
+                            Divider(
+                              height: 0.1,
+                              color: Theme.of(context).dividerColor,
+                            ),
+                            Container(
+                              margin:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 5, bottom: 5),
+                                      child: Row(
                                         children: [
                                           Text(
-                                            'Views: ',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayMedium,
-                                          ),
-                                          Text(
-                                            state.post!.viewsCount!.toString(),
+                                            'Statistics',
                                             textAlign: TextAlign.start,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .displayMedium,
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimaryContainer),
                                           ),
                                         ],
                                       ),
-                                    ]),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Views: ',
+                                        ),
+                                        Text(
+                                          state.post!.viewsCount!.toString(),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 200,
+                                    )
+                                  ]),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                   Positioned(
                       right: 0,
@@ -361,7 +337,8 @@ class DetailedPostViewPage extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         height: 100,
                         decoration: BoxDecoration(
-                            color: Theme.of(context).highlightColor,
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20))),
                         child: Row(
@@ -369,7 +346,9 @@ class DetailedPostViewPage extends StatelessWidget {
                           children: [
                             Text(
                               '${state.post!.price} RON',
-                              style: Theme.of(context).textTheme.labelLarge,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontSize: 20),
                             ),
                             if (!state.post!.isOwn!)
                               GestureDetector(
@@ -386,18 +365,22 @@ class DetailedPostViewPage extends StatelessWidget {
                                     width: ScreenUtil().setWidth(250),
                                     height: ScreenUtil().setWidth(80),
                                     decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .background,
                                         border: Border.all(
-                                            color:
-                                                Theme.of(context).splashColor),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .outline),
                                         borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     child: Center(
                                       child: Text('Message',
                                           style: TextStyle(
                                               fontSize: ScreenUtil().setSp(35),
-                                              color:
-                                                  Theme.of(context).splashColor,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                               fontWeight: FontWeight.w600)),
                                     ),
                                   )),
@@ -406,7 +389,8 @@ class DetailedPostViewPage extends StatelessWidget {
                                 width: ScreenUtil().setWidth(250),
                                 height: ScreenUtil().setWidth(80),
                                 decoration: BoxDecoration(
-                                    color: Theme.of(context).splashColor,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(10))),
                                 child: Center(
@@ -420,7 +404,9 @@ class DetailedPostViewPage extends StatelessWidget {
                                       'Order',
                                       style: TextStyle(
                                           fontSize: ScreenUtil().setSp(35),
-                                          color: Colors.white,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .background,
                                           fontWeight: FontWeight.w600),
                                     ),
                                   ),

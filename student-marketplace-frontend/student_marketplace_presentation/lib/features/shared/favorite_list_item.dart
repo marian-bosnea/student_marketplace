@@ -14,7 +14,7 @@ class FavoriteListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
-      closedColor: Theme.of(context).highlightColor,
+      closedColor: Theme.of(context).colorScheme.surfaceVariant,
       openColor: Theme.of(context).highlightColor,
       transitionType: ContainerTransitionType.fadeThrough,
       transitionDuration: const Duration(milliseconds: 500),
@@ -24,7 +24,6 @@ class FavoriteListItem extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(10))),
       closedBuilder: (BuildContext context, void Function() action) {
         return Container(
-          color: Theme.of(context).highlightColor,
           padding: const EdgeInsets.all(10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,36 +41,37 @@ class FavoriteListItem extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.only(left: 10),
                   child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           post.title,
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer),
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 5, bottom: 5),
                           height: ScreenUtil().setHeight(70),
                           width: ScreenUtil().setWidth(300),
                           padding: const EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5))),
-                          child: Center(
-                            child: Text(
-                              post.categoryName!,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: Theme.of(context).textTheme.displaySmall,
-                            ),
+                          child: Text(
+                            post.categoryName!,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSecondaryContainer),
                           ),
                         ),
                         Text(
                           '${post.price} RON',
                           style: TextStyle(
-                              fontSize: ScreenUtil().setSp(50),
-                              color: Theme.of(context).splashColor),
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.primary),
                         ),
                       ]),
                 ),

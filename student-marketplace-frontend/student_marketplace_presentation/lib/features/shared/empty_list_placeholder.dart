@@ -10,7 +10,6 @@ class EmptyListPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).primaryColor,
       child: SizedBox(
           height: ScreenUtil().setHeight(1000),
           child: Center(

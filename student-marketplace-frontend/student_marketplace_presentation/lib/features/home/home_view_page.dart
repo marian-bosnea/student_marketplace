@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/features/account/account_view_page.dart';
@@ -11,7 +10,6 @@ import 'package:student_marketplace_presentation/features/favorites/favorites_vi
 
 import '../add_post/add_post_view_page.dart';
 import '../favorites/favorites_view_page.dart';
-import '../posts_view/posts_view_bloc.dart';
 import '../posts_view/posts_view_page.dart';
 import 'home_view_state.dart';
 import 'home_view_bloc.dart';
@@ -65,9 +63,20 @@ class _HomeViewPageState extends State<HomeViewPage> {
             ),
           ),
           bottomNavBar: PlatformNavBar(
-            cupertino: (context, platform) =>
-                CupertinoTabBarData(activeColor: Theme.of(context).splashColor),
-            backgroundColor: Theme.of(context).primaryColor,
+            material: (context, platform) => MaterialNavBarData(
+                unselectedItemColor:
+                    Theme.of(context).colorScheme.onSurfaceVariant,
+                selectedItemColor: Theme.of(context).colorScheme.tertiary,
+                currentIndex: state.currentPageIndex,
+                backgroundColor:
+                    Theme.of(context).colorScheme.tertiaryContainer,
+                itemChanged: (index) {
+                  BlocProvider.of<FavoritesViewBloc>(context)
+                      .fetchFavoritePosts();
+                  _pageBloc.setCurrentPageIndex(index);
+                }),
+            cupertino: (context, platform) => CupertinoTabBarData(
+                activeColor: Theme.of(context).colorScheme.onPrimaryContainer),
             items: [
               BottomNavigationBarItem(
                   label: 'Discover',
@@ -75,39 +84,37 @@ class _HomeViewPageState extends State<HomeViewPage> {
                       size: navBarIconSize,
                       FontAwesomeIcons.solidCompass,
                       color: state.currentPageIndex == 0
-                          ? Theme.of(context).splashColor
-                          : Theme.of(context).textTheme.displayMedium!.color)),
+                          ? Theme.of(context).colorScheme.tertiary
+                          : Theme.of(context).colorScheme.onSurfaceVariant)),
               BottomNavigationBarItem(
                   label: 'Messages',
                   icon: Icon(FontAwesomeIcons.solidMessage,
                       size: navBarIconSize,
                       color: state.currentPageIndex == 1
-                          ? Theme.of(context).splashColor
-                          : Theme.of(context).textTheme.displayMedium!.color)),
+                          ? Theme.of(context).colorScheme.tertiary
+                          : Theme.of(context).colorScheme.onSurfaceVariant)),
               BottomNavigationBarItem(
                   label: 'Sell',
                   icon: Icon(FontAwesomeIcons.plus,
                       size: navBarIconSize,
                       color: state.currentPageIndex == 2
-                          ? Theme.of(context).splashColor
-                          : Theme.of(context).textTheme.displayMedium!.color)),
+                          ? Theme.of(context).colorScheme.tertiary
+                          : Theme.of(context).colorScheme.onSurfaceVariant)),
               BottomNavigationBarItem(
                   label: 'Favorites',
-                  icon: Icon(
-                    FontAwesomeIcons.solidHeart,
-                    size: navBarIconSize,
-                    color: state.currentPageIndex == 3
-                        ? Theme.of(context).splashColor
-                        : Theme.of(context).textTheme.displayMedium!.color,
-                  )),
+                  icon: Icon(FontAwesomeIcons.solidHeart,
+                      size: navBarIconSize,
+                      color: state.currentPageIndex == 3
+                          ? Theme.of(context).colorScheme.tertiary
+                          : Theme.of(context).colorScheme.onSurfaceVariant)),
               BottomNavigationBarItem(
                   label: 'Profile',
                   icon: Icon(
                     FontAwesomeIcons.solidUser,
                     size: navBarIconSize,
                     color: state.currentPageIndex == 4
-                        ? Theme.of(context).splashColor
-                        : Theme.of(context).textTheme.displayMedium!.color,
+                        ? Theme.of(context).colorScheme.tertiary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
                   ))
             ],
             itemChanged: (index) {

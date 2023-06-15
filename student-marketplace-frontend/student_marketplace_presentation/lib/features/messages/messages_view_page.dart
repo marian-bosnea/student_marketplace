@@ -38,10 +38,10 @@ class MessagesViewPage extends StatelessWidget {
             cupertino: (context, platform) =>
                 CupertinoPageScaffoldData(resizeToAvoidBottomInset: true),
             appBar: PlatformAppBar(
-              backgroundColor: Theme.of(context).highlightColor,
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
               title: Text(
                 room.partnerName,
-                style: Theme.of(context).textTheme.labelMedium,
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
               ),
               trailingActions: [
                 if (state.room != null)
@@ -55,7 +55,7 @@ class MessagesViewPage extends StatelessWidget {
                   previousPageTitle: 'Messages'),
             ),
             body: Material(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.surface,
               child: Stack(
                 children: [
                   Padding(
@@ -74,26 +74,20 @@ class MessagesViewPage extends StatelessWidget {
                     bottom: 0,
                     left: 0,
                     child: Container(
-                      color: Theme.of(context).primaryColor,
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       height: 80,
                       width: MediaQuery.of(context).size.width,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
-                            width: MediaQuery.of(context).size.width - 80,
+                            width: MediaQuery.of(context).size.width - 100,
                             height: 40,
                             child: PlatformTextField(
                                 controller: _textController,
                                 cupertino: (context, platform) =>
                                     CupertinoTextFieldData(
-                                        placeholderStyle: Theme.of(context)
-                                            .textTheme
-                                            .displayMedium,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium,
                                         padding: const EdgeInsets.only(
                                             left: 10, right: 10),
                                         decoration: BoxDecoration(
@@ -102,7 +96,8 @@ class MessagesViewPage extends StatelessWidget {
                                                     Radius.circular(20)),
                                             border: Border.all(
                                                 color: Theme.of(context)
-                                                    .highlightColor))),
+                                                    .colorScheme
+                                                    .outline))),
                                 hintText: 'Message',
                                 onSubmitted: (text) =>
                                     _onSubmited(context, text)),
@@ -111,7 +106,7 @@ class MessagesViewPage extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(50)),
-                                color: Theme.of(context).splashColor),
+                                color: Theme.of(context).colorScheme.primary),
                             width: 45,
                             height: 45,
                             child: PlatformIconButton(

@@ -34,7 +34,6 @@ class FavoritesViewPage extends StatelessWidget {
 
   Widget getLoadedItemsList(BuildContext context, FavoritesViewState state) {
     return Container(
-      color: Theme.of(context).primaryColor,
       child: ListView.builder(
           shrinkWrap: true,
           itemCount: state.posts.length,

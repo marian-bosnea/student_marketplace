@@ -40,7 +40,7 @@ class AccountViewPage extends StatelessWidget {
 
   Widget _getBodyWidget(BuildContext context, AccountViewState state) {
     return Material(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).colorScheme.surface,
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: ListView(children: [
@@ -95,7 +95,7 @@ class AccountViewPage extends StatelessWidget {
   BoxDecoration _getPanelDecoration(BuildContext context) {
     return BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
-        color: Theme.of(context).highlightColor);
+        color: Theme.of(context).colorScheme.surfaceVariant);
   }
 }
 
@@ -111,7 +111,7 @@ class DashboardActionsPanel extends StatelessWidget {
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
-          color: Theme.of(context).highlightColor),
+          color: Theme.of(context).colorScheme.surfaceVariant),
       child: Column(
         children: [
           ListActionItem(
@@ -162,15 +162,7 @@ class AccountPanel extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withAlpha(100),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: const Offset(0, 3), // changes position of shadow
-            ),
-          ],
-          color: Theme.of(context).highlightColor,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -199,21 +191,45 @@ class AccountPanel extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            PlatformText(
+                            Text(
                               '${state.firstName} ',
-                              style: Theme.of(context).textTheme.labelLarge,
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20),
                             ),
-                            PlatformText('${state.lastName} ',
-                                style: Theme.of(context).textTheme.labelLarge),
+                            Text(
+                              '${state.lastName} ',
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20),
+                            ),
                             if (state.secondLastName != 'null')
-                              PlatformText(state.secondLastName,
-                                  style:
-                                      Theme.of(context).textTheme.labelLarge),
+                              Text(
+                                state.secondLastName,
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 20),
+                              ),
                           ],
                         ),
-                        PlatformText(state.facultyName,
-                            style: Theme.of(context).textTheme.displayMedium),
-                        PlatformText(state.emailAdress,
+                        Text(
+                          state.facultyName,
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                              fontSize: 16),
+                        ),
+                        Text(state.emailAdress,
                             style: TextStyle(
                                 fontSize: ScreenUtil().setSp(50),
                                 color: Colors.white)),

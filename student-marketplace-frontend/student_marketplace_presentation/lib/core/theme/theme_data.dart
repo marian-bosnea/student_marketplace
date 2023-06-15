@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:student_marketplace_presentation/core/theme/color_schemes.g.dart';
 
 //Color accentColor = const Color.fromARGB(255, 94, 64, 175);
 Color accentColor = const Color.fromARGB(255, 255, 127, 80);
+ThemeData purpleLightThemeData() => ThemeData(
+    textTheme: GoogleFonts.robotoTextTheme(), colorScheme: lightColorScheme);
+ThemeData purpleDarkThemeData() => ThemeData(
+    textTheme: GoogleFonts.robotoTextTheme(), colorScheme: darkColorScheme);
 
 ThemeData lightTheme() => ThemeData(
       primaryColor: Colors.white,

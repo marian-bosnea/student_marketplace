@@ -55,13 +55,10 @@ class AddPostPage extends StatelessWidget {
     final bloc = BlocProvider.of<AddPostViewBloc>(context);
 
     return Material(
-      color: Theme.of(context).primaryColor,
       child: Theme(
         data: ThemeData(
-          primaryColor: Theme.of(context).splashColor,
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-                primary: Theme.of(context).splashColor,
-              ),
+          primaryColor: Theme.of(context).colorScheme.primary,
+          colorScheme: Theme.of(context).colorScheme,
         ),
         child: Stepper(
             physics: const NeverScrollableScrollPhysics(),
@@ -76,7 +73,7 @@ class AddPostPage extends StatelessWidget {
                     children: [
                       if (bloc.canGoToNextStep())
                         PlatformElevatedButton(
-                          color: Theme.of(context).splashColor,
+                          color: Theme.of(context).colorScheme.primary,
                           padding: const EdgeInsets.only(
                               left: 15, right: 15, bottom: 5, top: 5),
                           cupertino: ((context, platform) =>
@@ -90,12 +87,13 @@ class AddPostPage extends StatelessWidget {
                                     ? 'Save Changes'
                                     : 'Post your item')
                                 : 'Next',
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary),
                           ),
                         ),
                       if (details.currentStep > 0)
                         PlatformElevatedButton(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           padding: const EdgeInsets.only(
                               left: 15, right: 15, bottom: 5, top: 5),
                           cupertino: ((context, platform) =>
@@ -105,8 +103,10 @@ class AddPostPage extends StatelessWidget {
                           onPressed: details.onStepCancel,
                           child: Text(
                             'Back',
-                            style:
-                                TextStyle(color: Theme.of(context).splashColor),
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer),
                           ),
                         )
                     ],
@@ -117,12 +117,14 @@ class AddPostPage extends StatelessWidget {
                   isActive: state.currentStep == 0,
                   title: Text(
                     'What do you want to sell?',
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 20),
                   ),
                   content: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor,
+                        color: Theme.of(context).colorScheme.secondaryContainer,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10))),
                     child: Column(
@@ -135,7 +137,11 @@ class AddPostPage extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Text(
                             'Try to include esential words that describe your item the best',
-                            style: Theme.of(context).textTheme.displaySmall,
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -154,12 +160,14 @@ class AddPostPage extends StatelessWidget {
                   isActive: state.currentStep == 1,
                   title: Text(
                     'Tell us more about you object',
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 20),
                   ),
                   content: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor,
+                        color: Theme.of(context).colorScheme.secondaryContainer,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10))),
                     child: Column(
@@ -173,7 +181,11 @@ class AddPostPage extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Text(
                             'Describe your product as detailed as you can. Include details about its condition, features, color, sizes, etc',
-                            style: Theme.of(context).textTheme.displaySmall,
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
                           ),
                         ),
                         PlatformTextField(
@@ -192,12 +204,14 @@ class AddPostPage extends StatelessWidget {
                   isActive: state.currentStep == 2,
                   title: Text(
                     'What is the price?',
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 20),
                   ),
                   content: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor,
+                        color: Theme.of(context).colorScheme.secondaryContainer,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10))),
                     child: Column(
@@ -211,7 +225,11 @@ class AddPostPage extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Text(
                             'Decide how much is your item worth. Take into account its grade of wear, how old it is, etc',
-                            style: Theme.of(context).textTheme.displaySmall,
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -235,12 +253,14 @@ class AddPostPage extends StatelessWidget {
                   isActive: state.currentStep == 3,
                   title: Text(
                     'What category does the item belongs to?',
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 20),
                   ),
                   content: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor,
+                        color: Theme.of(context).colorScheme.secondaryContainer,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10))),
                     child: Column(
@@ -254,7 +274,11 @@ class AddPostPage extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Text(
                             'Select the most appropriate category for your item. This will help others find your product more easily.',
-                            style: Theme.of(context).textTheme.displaySmall,
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -276,12 +300,14 @@ class AddPostPage extends StatelessWidget {
                   isActive: state.currentStep == 4,
                   title: Text(
                     'Add some photos',
-                    style: Theme.of(context).textTheme.labelLarge,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontSize: 20),
                   ),
                   content: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor,
+                        color: Theme.of(context).colorScheme.secondaryContainer,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(10))),
                     child: Column(
@@ -295,7 +321,11 @@ class AddPostPage extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Text(
                             'Besides you description, you will need to add at least on photo to detail your post. Try to add  clear photos and include only the item you want to sell to avoid confusion.',
-                            style: Theme.of(context).textTheme.displaySmall,
+                            style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -309,8 +339,9 @@ class AddPostPage extends StatelessWidget {
                                     BlocProvider.of<AddPostViewBloc>(context)
                                         .setPhotos(),
                                 child: Card(
-                                  elevation: 5,
-                                  color: Theme.of(context).highlightColor,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
                                   child: SizedBox(
                                       width: ScreenUtil().setWidth(400),
                                       child: state.images.isNotEmpty
@@ -324,8 +355,9 @@ class AddPostPage extends StatelessWidget {
                                     BlocProvider.of<AddPostViewBloc>(context)
                                         .setPhotos(),
                                 child: Card(
-                                  elevation: 5,
-                                  color: Theme.of(context).highlightColor,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
                                   child: SizedBox(
                                       width: ScreenUtil().setWidth(400),
                                       child: state.images.length >= 2
@@ -339,8 +371,9 @@ class AddPostPage extends StatelessWidget {
                                     BlocProvider.of<AddPostViewBloc>(context)
                                         .setPhotos(),
                                 child: Card(
-                                  elevation: 5,
-                                  color: Theme.of(context).highlightColor,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
                                   child: SizedBox(
                                       width: ScreenUtil().setWidth(400),
                                       child: state.images.length >= 3

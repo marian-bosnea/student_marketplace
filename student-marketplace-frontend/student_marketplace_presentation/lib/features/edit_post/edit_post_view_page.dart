@@ -15,7 +15,7 @@ class EditPostViewPage extends StatelessWidget {
       appBar: PlatformAppBar(
         title: Text(
           'Edit post',
-          style: TextStyle(color: Theme.of(context).splashColor),
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
         ),
         cupertino: (context, platform) =>
             CupertinoNavigationBarData(previousPageTitle: 'Post'),

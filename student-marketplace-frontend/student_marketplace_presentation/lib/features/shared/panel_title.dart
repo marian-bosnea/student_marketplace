@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PanelTitle extends StatelessWidget {
@@ -10,10 +9,11 @@ class PanelTitle extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 10),
       padding: const EdgeInsets.only(left: 10),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.displayMedium,
-      ),
+      child: Text(title,
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 20,
+              fontWeight: FontWeight.w600)),
     );
   }
 }

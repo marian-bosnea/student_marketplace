@@ -35,8 +35,8 @@ class _PostItemState extends State<PostItem> {
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
       transitionDuration: const Duration(milliseconds: 500),
-      closedElevation: 5,
-      closedColor: Theme.of(context).highlightColor,
+      closedColor: Theme.of(context).colorScheme.surfaceVariant,
+      closedElevation: 0,
       openColor: Theme.of(context).primaryColor,
       openShape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -46,9 +46,6 @@ class _PostItemState extends State<PostItem> {
         return Stack(
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).highlightColor,
-              ),
               padding: const EdgeInsets.only(
                   left: 10, right: 10, top: 10, bottom: 10),
               child: Column(
@@ -67,7 +64,7 @@ class _PostItemState extends State<PostItem> {
                                 widget.post.images.first,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, erorr, stacktrace) =>
-                                    Text("Error"),
+                                    const Text("Error"),
                               )),
                         ),
                       ),
@@ -77,12 +74,15 @@ class _PostItemState extends State<PostItem> {
                     Text(
                       widget.post.title,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.labelMedium,
+                      style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onTertiaryContainer,
+                          fontSize: 16),
                     ),
                     Text('${widget.post.price} RON',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: Theme.of(context).splashColor,
+                            color: Theme.of(context).colorScheme.primary,
                             fontSize: 16,
                             fontWeight: FontWeight.w700)),
                   ])
@@ -96,8 +96,8 @@ class _PostItemState extends State<PostItem> {
                 child: Container(
                   padding: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                      color: Theme.of(context).highlightColor,
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                      borderRadius: const BorderRadius.all(Radius.circular(5))),
                   child: Center(
                     child: LikeButton(
                       isLiked: _isFavorite,

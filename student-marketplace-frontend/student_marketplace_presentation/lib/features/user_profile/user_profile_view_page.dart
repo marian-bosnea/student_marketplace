@@ -6,7 +6,6 @@ import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:student_marketplace_presentation/core/constants/enums.dart';
-import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/features/shared/empty_list_placeholder.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_bloc.dart';
 import 'package:student_marketplace_presentation/features/user_profile/user_profile_view_state.dart';
@@ -27,113 +26,128 @@ class UserProfileViewPage extends StatelessWidget {
       child: BlocBuilder<UserProfileViewBloc, UserProfileViewState>(
           builder: (context, state) {
         return PlatformScaffold(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           appBar: isMaterial(context)
               ? PlatformAppBar(
-                  backgroundColor: Theme.of(context).highlightColor,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primaryContainer,
                   automaticallyImplyLeading: true,
                   cupertino: (context, platform) =>
                       CupertinoNavigationBarData(previousPageTitle: 'Posts'),
                 )
               : null,
-          body: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: CustomScrollView(slivers: [
-              if (isCupertino(context))
-                CupertinoSliverNavigationBar(
-                  previousPageTitle: 'Posts',
-                  backgroundColor: Theme.of(context).highlightColor,
-                  largeTitle: Text(
-                    'Profile',
-                    style: TextStyle(color: Theme.of(context).splashColor),
-                  ),
+          body: CustomScrollView(slivers: [
+            if (isCupertino(context))
+              CupertinoSliverNavigationBar(
+                previousPageTitle: 'Posts',
+                backgroundColor:
+                    Theme.of(context).colorScheme.secondaryContainer,
+                largeTitle: Text(
+                  'Profile',
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary),
                 ),
-              _getBodyWidget(context, state),
-              if (state.status == ProfilePageStatus.loading)
-                SliverToBoxAdapter(
-                  child: Center(
-                      child: isMaterial(context)
-                          ? const CircularProgressIndicator()
-                          : const CupertinoActivityIndicator()),
-                ),
-              if (state.posts.isEmpty &&
-                  state.status == ProfilePageStatus.loaded)
-                const SliverToBoxAdapter(
-                  child: EmptyListPlaceholder(
-                      message: 'User has not listed any item on marketplace'),
-                )
-            ]),
-          ),
+              ),
+            _getBodyWidget(context, state),
+            if (state.status == ProfilePageStatus.loading)
+              SliverToBoxAdapter(
+                child: Center(
+                    child: isMaterial(context)
+                        ? const CircularProgressIndicator()
+                        : const CupertinoActivityIndicator()),
+              ),
+            if (state.posts.isEmpty && state.status == ProfilePageStatus.loaded)
+              const SliverToBoxAdapter(
+                child: EmptyListPlaceholder(
+                    message: 'User has not listed any item on marketplace'),
+              )
+          ]),
         );
       }),
     );
   }
 
   Widget _getBodyWidget(BuildContext context, UserProfileViewState state) {
-    return SliverList(
-        delegate: SliverChildBuilderDelegate(childCount: state.posts.length + 1,
-            (context, index) {
-      if (index == 0) {
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          child: Material(
-              color: Theme.of(context).highlightColor,
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (state.avatarBytes != null)
-                      SizedBox(
-                        width: ScreenUtil().setWidth(200),
-                        height: ScreenUtil().setHeight(200),
-                        child: CircleAvatar(
-                            foregroundImage: Image.memory(
-                          state.avatarBytes!,
-                        ).image),
-                      ),
-                    Center(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 20),
-                        width: ScreenUtil().setWidth(500),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Row(
-                                children: [
-                                  PlatformText(
-                                    '${state.firstName} ',
-                                    style:
-                                        Theme.of(context).textTheme.labelMedium,
-                                  ),
-                                  PlatformText('${state.lastName} ',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium),
-                                  if (state.secondLastName != 'null')
-                                    PlatformText(state.secondLastName,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium),
-                                ],
-                              ),
-                              PlatformText(state.facultyName,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayMedium),
-                            ]),
-                      ),
-                    )
-                  ],
-                ),
-              )),
-        );
-      }
+    return SliverPadding(
+      padding: const EdgeInsets.all(10),
+      sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+              childCount: state.posts.length + 1, (context, index) {
+        if (index == 0) {
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            child: Material(
+                color: Theme.of(context).colorScheme.secondaryContainer,
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (state.avatarBytes != null)
+                        SizedBox(
+                          width: ScreenUtil().setWidth(200),
+                          height: ScreenUtil().setHeight(200),
+                          child: CircleAvatar(
+                              foregroundImage: Image.memory(
+                            state.avatarBytes!,
+                          ).image),
+                        ),
+                      Center(
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 20),
+                          width: ScreenUtil().setWidth(500),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    PlatformText(
+                                      '${state.firstName} ',
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimaryContainer,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20),
+                                    ),
+                                    PlatformText(
+                                      '${state.lastName} ',
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimaryContainer,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20),
+                                    ),
+                                    if (state.secondLastName != 'null')
+                                      PlatformText(
+                                        state.secondLastName,
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onPrimaryContainer,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 20),
+                                      ),
+                                  ],
+                                ),
+                                PlatformText(
+                                  state.facultyName,
+                                ),
+                              ]),
+                        ),
+                      )
+                    ],
+                  ),
+                )),
+          );
+        }
 
-      return OwnPostListItem(post: state.posts.elementAt(index - 1));
-    }));
+        return OwnPostListItem(post: state.posts.elementAt(index - 1));
+      })),
+    );
   }
 }

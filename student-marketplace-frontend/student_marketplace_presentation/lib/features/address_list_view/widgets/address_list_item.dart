@@ -9,7 +9,7 @@ class AddressListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).highlightColor,
+      color: Theme.of(context).colorScheme.surfaceVariant,
       elevation: 1,
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: Padding(
@@ -17,17 +17,21 @@ class AddressListItem extends StatelessWidget {
         child: Column(children: [
           Text(
             address.name,
-            style: Theme.of(context).textTheme.labelLarge,
+            style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSecondaryContainer),
           ),
           Row(
             children: [
               Text(
                 'County: ',
-                style: Theme.of(context).textTheme.displayMedium,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer),
               ),
               Text(
                 address.county,
-                style: Theme.of(context).textTheme.labelMedium,
               )
             ],
           ),
@@ -35,11 +39,12 @@ class AddressListItem extends StatelessWidget {
             children: [
               Text(
                 'City: ',
-                style: Theme.of(context).textTheme.displayMedium,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer),
               ),
               Text(
                 address.city,
-                style: Theme.of(context).textTheme.labelMedium,
               )
             ],
           ),
@@ -47,12 +52,13 @@ class AddressListItem extends StatelessWidget {
             children: [
               Text(
                 'Address: ',
-                style: Theme.of(context).textTheme.displayMedium,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer),
               ),
               Text(
                 address.description,
                 maxLines: 3,
-                style: Theme.of(context).textTheme.labelMedium,
               )
             ],
           )

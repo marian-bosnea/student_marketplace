@@ -45,7 +45,7 @@ class _SearchViewPageState extends State<SearchViewPage> {
       builder: (context, state) {
         final bloc = BlocProvider.of<SearchViewBloc>(context);
         return Scaffold(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: Padding(
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             child: SafeArea(
@@ -85,61 +85,58 @@ class SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Material(
-        elevation: 2,
-        color: Theme.of(context).highlightColor,
-        type: MaterialType.card,
+        type: MaterialType.transparency,
         borderRadius: BorderRadius.circular(25),
         child: Container(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-              color: Theme.of(context).highlightColor,
-              borderRadius: BorderRadius.circular(25)),
-          height: 70,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(25)),
+          height: 50,
           width: MediaQuery.of(context).size.width - 20,
           child: Row(
             children: [
+              SizedBox(
+                width: 70,
+                child: PlatformIconButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      bloc.reset();
+                      Navigator.of(context).pop();
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      size: 30,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    )),
+              ),
               Hero(
                 tag: 'search',
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width - 110,
+                  width: MediaQuery.of(context).size.width - 150,
                   height: 50,
-                  child: PlatformTextField(
-                    hintText: 'What are you looking for today?',
-                    onChanged: onSubmit,
-                    cupertino: (context, platform) => CupertinoTextFieldData(
-                      placeholderStyle:
-                          Theme.of(context).textTheme.displayMedium,
-                      prefix: SizedBox(
-                        width: 50,
-                        child: Icon(
-                          FontAwesomeIcons.magnifyingGlass,
-                          color: Theme.of(context).splashColor,
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: PlatformTextField(
+                      hintText: 'Search on marketplace',
+                      onChanged: onSubmit,
+                      cupertino: (context, platform) => CupertinoTextFieldData(
+                        prefix: SizedBox(
+                          width: 50,
+                          child: Icon(
+                            FontAwesomeIcons.magnifyingGlass,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
                         ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                width: 1,
+                                color: Theme.of(context).colorScheme.outline)),
                       ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                              width: 1, color: Theme.of(context).splashColor)),
                     ),
                   ),
                 ),
               ),
-              Expanded(
-                child: PlatformTextButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    bloc.reset();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).textTheme.labelMedium!.color!),
-                  ),
-                ),
-              )
             ],
           ),
         ),
@@ -167,14 +164,11 @@ class CategoriesPanel extends StatelessWidget {
             width:
                 isACategorySelected ? 200 : MediaQuery.of(context).size.width,
             child: Material(
-              elevation: 1,
-              type: MaterialType.card,
-              color: Theme.of(context).highlightColor,
               borderRadius: BorderRadius.circular(25),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
-                    color: Theme.of(context).highlightColor,
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                     borderRadius: BorderRadius.circular(25)),
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 height: isACategorySelected ? 70 : 210,

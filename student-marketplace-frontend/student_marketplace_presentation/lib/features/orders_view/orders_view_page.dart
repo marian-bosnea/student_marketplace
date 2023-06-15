@@ -26,24 +26,25 @@ class OrdersViewPage extends StatelessWidget {
           return PlatformScaffold(
             appBar: isMaterial(context)
                 ? PlatformAppBar(
-                    backgroundColor: Theme.of(context).highlightColor,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondaryContainer,
                     automaticallyImplyLeading: true,
-                    title: Text(
-                      'My Orders',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
+                    title: Text('My Orders',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary)),
                   )
                 : null,
             body: Material(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).colorScheme.surface,
               child: CustomScrollView(
                 slivers: [
                   if (isCupertino(context))
                     CupertinoSliverNavigationBar(
                       largeTitle: Text('My Orders',
-                          style:
-                              TextStyle(color: Theme.of(context).splashColor)),
-                      backgroundColor: Theme.of(context).highlightColor,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary)),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
                       automaticallyImplyLeading: true,
                       previousPageTitle: 'Account',
                     ),
@@ -58,17 +59,20 @@ class OrdersViewPage extends StatelessWidget {
                           minHeight: 70.0,
                           cornerRadius: 20.0,
                           initialLabelIndex: state.type.index,
-                          activeFgColor: Colors.white,
-                          inactiveBgColor: Colors.white,
-                          inactiveFgColor: Theme.of(context).splashColor,
+                          activeFgColor:
+                              Theme.of(context).colorScheme.background,
+                          inactiveBgColor:
+                              Theme.of(context).colorScheme.surfaceVariant,
+                          inactiveFgColor:
+                              Theme.of(context).colorScheme.primary,
                           totalSwitches: 2,
                           labels: const ["Sent", "Received"],
                           iconSize: 30.0,
                           borderWidth: 1.0,
-                          borderColor: [Theme.of(context).splashColor],
+                          borderColor: [Theme.of(context).colorScheme.outline],
                           activeBgColors: [
-                            [Theme.of(context).splashColor],
-                            [Theme.of(context).splashColor],
+                            [Theme.of(context).colorScheme.primary],
+                            [Theme.of(context).colorScheme.primary],
                           ],
                           onToggle: (index) =>
                               BlocProvider.of<OrdersViewBloc>(context)

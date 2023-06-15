@@ -8,7 +8,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:student_marketplace_business_logic/domain/entities/order_entity.dart';
 import 'package:student_marketplace_presentation/core/config/on_generate_route.dart';
-import 'package:student_marketplace_presentation/core/theme/theme_data.dart';
 import 'package:student_marketplace_presentation/features/orders_view/utils/status_data.dart';
 
 class DetailedSentOrderViewPage extends StatelessWidget {
@@ -42,38 +41,42 @@ class DetailedSentOrderViewPage extends StatelessWidget {
     return PlatformScaffold(
       appBar: isMaterial(context)
           ? PlatformAppBar(
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
               automaticallyImplyLeading: true,
+              title: Text("Order",
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary)),
               cupertino: ((context, platform) => CupertinoNavigationBarData(
                   automaticallyImplyLeading: true,
                   previousPageTitle: 'Orders')),
             )
           : null,
       body: Material(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).colorScheme.surface,
         child: CustomScrollView(slivers: [
           if (isCupertino(context))
             CupertinoSliverNavigationBar(
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
               automaticallyImplyLeading: true,
               previousPageTitle: 'Orders',
               largeTitle: Text("Order",
-                  style: TextStyle(color: Theme.of(context).splashColor)),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.all(20),
-              height: ScreenUtil().setHeight(500),
+              //height: ScreenUtil().setHeight(500),
               child: Column(children: [
                 Container(
                   margin: const EdgeInsets.only(bottom: 20),
                   height: ScreenUtil().setHeight(300),
                   child: statusesData[order.status]!.image,
                 ),
-                Text(
-                  statusesData[order.status]!.message,
-                  style: Theme.of(context).textTheme.displayMedium,
-                )
+                Text(statusesData[order.status]!.message,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurface))
               ]),
             ),
           ),
@@ -81,12 +84,13 @@ class DetailedSentOrderViewPage extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             sliver: SliverList(
                 delegate: SliverChildListDelegate([
-              Text(
-                "Shipping",
-                style: Theme.of(context).textTheme.displayMedium,
-              ),
+              Text("Shipping",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface)),
               Material(
-                color: Theme.of(context).highlightColor,
+                color: Theme.of(context).colorScheme.surfaceVariant,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
@@ -100,13 +104,20 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 'Address: ',
-                                style:
-                                    Theme.of(context).textTheme.displayMedium,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant),
                                 maxLines: 2,
                               ),
                               Text(order.addressDescription!,
-                                  style:
-                                      Theme.of(context).textTheme.labelMedium),
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant)),
                             ],
                           ),
                           Row(
@@ -114,8 +125,12 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 'Status: ',
-                                style:
-                                    Theme.of(context).textTheme.displayMedium,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant),
                               ),
                               Text(_getStatusLabel(order.status),
                                   style: TextStyle(
@@ -129,14 +144,21 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 'Last modified: ',
-                                style:
-                                    Theme.of(context).textTheme.displayMedium,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant),
                                 maxLines: 2,
                               ),
                               Text(
                                 order.lastModifiedDate,
-                                style:
-                                    Theme.of(context).textTheme.displayMedium,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant),
                               ),
                             ],
                           ),
@@ -146,14 +168,21 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                               children: [
                                 Text(
                                   'AWB: ',
-                                  style:
-                                      Theme.of(context).textTheme.displayMedium,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant),
                                   maxLines: 2,
                                 ),
                                 Text(
                                   order.awb!,
-                                  style:
-                                      Theme.of(context).textTheme.labelMedium,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant),
                                 ),
                                 PlatformIconButton(
                                     padding: EdgeInsets.zero,
@@ -177,10 +206,13 @@ class DetailedSentOrderViewPage extends StatelessWidget {
               ),
               Text(
                 "Product",
-                style: Theme.of(context).textTheme.displayMedium,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface),
               ),
               Material(
-                color: Theme.of(context).highlightColor,
+                color: Theme.of(context).colorScheme.surfaceVariant,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -196,7 +228,12 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                           children: [
                             Text(
                               order.objectTitle!,
-                              style: Theme.of(context).textTheme.labelMedium,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant),
                             ),
                             const Icon(Icons.chevron_right)
                           ],
@@ -211,10 +248,12 @@ class DetailedSentOrderViewPage extends StatelessWidget {
               ),
               Text(
                 "Seller",
-                style: Theme.of(context).textTheme.displayMedium,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSurface),
               ),
               Material(
-                color: Theme.of(context).highlightColor,
+                color: Theme.of(context).colorScheme.surfaceVariant,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -230,7 +269,12 @@ class DetailedSentOrderViewPage extends StatelessWidget {
                           children: [
                             Text(
                               order.partnerName!,
-                              style: Theme.of(context).textTheme.labelMedium,
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant),
                             ),
                             const Icon(Icons.chevron_right)
                           ],
@@ -245,14 +289,22 @@ class DetailedSentOrderViewPage extends StatelessWidget {
               ),
               Text(
                 "Notes",
-                style: Theme.of(context).textTheme.displayMedium,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface),
               ),
               Material(
-                color: Theme.of(context).highlightColor,
+                color: Theme.of(context).colorScheme.surfaceVariant,
                 borderRadius: const BorderRadius.all(Radius.circular(10)),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: Text(order.notes),
+                  child: Text(
+                    order.notes,
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  ),
                 ),
               ),
             ])),

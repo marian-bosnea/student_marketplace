@@ -10,7 +10,6 @@ import 'package:student_marketplace_presentation/features/register/register_view
 import 'package:student_marketplace_presentation/features/register/register_view_bloc.dart';
 
 import '../../core/constants/enums.dart';
-import '../../core/theme/theme_data.dart';
 import '../login/login_view_page.dart';
 
 @immutable
@@ -52,7 +51,7 @@ class RegisterViewPage extends StatelessWidget {
     return PlatformScaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: PlatformAppBar(
-        backgroundColor: Theme.of(context).highlightColor,
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         automaticallyImplyLeading: true,
         cupertino: ((context, platform) =>
             CupertinoNavigationBarData(previousPageTitle: 'Login')),
@@ -75,15 +74,13 @@ class RegisterViewPage extends StatelessWidget {
     }
     final bloc = BlocProvider.of<RegisterViewBloc>(context);
     return Material(
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).colorScheme.surface,
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Theme(
           data: ThemeData(
-            primaryColor: Theme.of(context).splashColor,
-            colorScheme: Theme.of(context).colorScheme.copyWith(
-                  primary: Theme.of(context).splashColor,
-                ),
+            primaryColor: Theme.of(context).colorScheme.primary,
+            colorScheme: Theme.of(context).colorScheme,
           ),
           child: Stepper(
               currentStep: state.currentStep,
@@ -98,7 +95,7 @@ class RegisterViewPage extends StatelessWidget {
                       children: [
                         if (bloc.canGoToNextStep())
                           PlatformElevatedButton(
-                            color: Theme.of(context).splashColor,
+                            color: Theme.of(context).colorScheme.primary,
                             padding: const EdgeInsets.only(
                                 left: 15, right: 15, bottom: 5, top: 5),
                             cupertino: ((context, platform) =>
@@ -108,12 +105,16 @@ class RegisterViewPage extends StatelessWidget {
                             onPressed: details.onStepContinue,
                             child: Text(
                               state.currentStep == 2 ? 'Register' : 'Next',
-                              style: const TextStyle(color: Colors.white),
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.background),
                             ),
                           ),
                         if (state.currentStep != 0)
                           PlatformElevatedButton(
-                            color: Colors.white,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .secondaryContainer,
                             padding: const EdgeInsets.only(
                                 left: 15, right: 15, bottom: 5, top: 5),
                             cupertino: ((context, platform) =>
@@ -124,7 +125,7 @@ class RegisterViewPage extends StatelessWidget {
                             child: Text(
                               'Back',
                               style: TextStyle(
-                                  color: Theme.of(context).splashColor),
+                                  color: Theme.of(context).colorScheme.primary),
                             ),
                           )
                       ],
@@ -204,7 +205,7 @@ class RegisterViewPage extends StatelessWidget {
         ),
       ),
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius:
               BorderRadius.all(Radius.circular(textFieldBorderRadius)),
           border: Border.all(color: Colors.black12)),
@@ -224,7 +225,7 @@ class RegisterViewPage extends StatelessWidget {
         ),
       ),
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius:
               BorderRadius.all(Radius.circular(textFieldBorderRadius)),
           border: Border.all(color: Colors.black12)),
@@ -247,7 +248,7 @@ class RegisterViewPage extends StatelessWidget {
         ),
       ),
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surfaceVariant,
           borderRadius:
               BorderRadius.all(Radius.circular(textFieldBorderRadius)),
           border: Border.all(color: Colors.black12)),

@@ -21,8 +21,7 @@ class ReceivedOrderListItem extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(top: 5, bottom: 5),
         decoration: BoxDecoration(
-            color: Theme.of(context).highlightColor,
-            border: Border.all(width: 2, color: Colors.black12),
+            color: Theme.of(context).colorScheme.surfaceVariant,
             borderRadius: const BorderRadius.all(Radius.circular(10))),
         padding: const EdgeInsets.all(10),
         height: 120,
@@ -46,11 +45,15 @@ class ReceivedOrderListItem extends StatelessWidget {
                       children: [
                         Text(
                           order.objectTitle!,
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer),
                         ),
                         Text(
                           '#${order.id}',
-                          style: Theme.of(context).textTheme.labelMedium,
                         )
                       ],
                     ),
@@ -63,10 +66,16 @@ class ReceivedOrderListItem extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: Text(order.addressDescription!,
-                              maxLines: 5,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.displayMedium),
+                          child: Text(
+                            order.addressDescription!,
+                            maxLines: 5,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSecondaryContainer),
+                          ),
                         ),
                       ],
                     ),
