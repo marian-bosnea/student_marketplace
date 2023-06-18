@@ -27,6 +27,7 @@ getCategories = (req, res) => {
    });
 }
 
+
 insert = async (req, res) => {
    const title = req.body.title;
    const description = req.body.description;
@@ -34,6 +35,8 @@ insert = async (req, res) => {
    const ownerID = res.locals.decryptedId;
    const categoryID = req.body.categoryId;
    const date = req.body.date;
+
+   console.log('** Requested insertion of a post **');
 
    const client = await pool.connect()
 
@@ -300,8 +303,11 @@ searchWithTextQuery = async (req, res) => {
       for (i = offset; i < offset + limit; i++) {
          if (i == filteredResults.length)
             break;
-         saleObjectsJson.push(filteredResults[i].item);
-         console.log(`Added: ${results.rows[i].title}`);
+         if(filteredResults[i]){
+            saleObjectsJson.push(filteredResults[i].item);
+            console.log(`Added: ${results.rows[i].title}`);
+         }
+
       }
 
       console.log('***End of request***');

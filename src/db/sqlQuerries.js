@@ -210,14 +210,15 @@ INNER JOIN user_profile p ON u.profile_id = p.id
 WHERE buyer_id = $1`;
 
 module.exports.ORDER_READ_SELLER = `
-SELECT o.id, o.object_id, d.title as object_title, o.buyer_id as buyer_id, p.last_name as buyer_name, concat(\`Jud. \`, a.county, \`, Loc.\`, a.city, \`, Adresa: \`, a.description) as address_name, o.notes, o.awb, o.status, o.date
+SELECT o.id, o.object_id, d.title AS object_title, o.buyer_id AS buyer_id, p.last_name AS buyer_name, CONCAT('Jud. ', a.county, ', Loc.', a.city, ', Adresa: ', a.description) AS address_name, o.notes, o.awb, o.status, o.date
 FROM orders o
 INNER JOIN address a ON a.id = o.address_id 
 INNER JOIN sale_object s ON o.object_id = s.id 
 INNER JOIN object_description d ON s.description_id = d.id 
 INNER JOIN user_centralized u ON o.buyer_id = u.id
 INNER JOIN user_profile p ON u.profile_id = p.id
-WHERE s.owner_id = $1`
+WHERE s.owner_id = $1`;
+
 module.exports.ORDER_UPDATE = `UPDATE orders SET status = $1, awb = $2, date = $3 WHERE id = $4`;
 module.exports.ORDER_DELETE = `DELETE FROM orders WHERE id = $1`;
 

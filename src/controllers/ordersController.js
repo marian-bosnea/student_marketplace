@@ -88,8 +88,10 @@ readBySeller = async (req, res) => {
                 date: ord.date
             });
         }
+        console.log(`Sent ${orders.length} of received orders to ${owner_id}`);
         res.status(codes.POST_SUCCESS_CODE).send(orders);
     } catch (e) {
+        console.log(e);
         res.status(codes.INVALID_INPUT_CODE)
         res.send({ message: e.message });
     } finally {
