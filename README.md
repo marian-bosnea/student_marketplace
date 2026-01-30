@@ -9,6 +9,18 @@ A high-performance, cross-platform marketplace ecosystem designed for students. 
 
 ---
 
+## 📱 Screenshots
+
+<p align="center">
+  <img src="assets/landing_page.jpeg" height="400" />
+  <img src="assets/profile_page.jpeg" height="400" />
+  <img src="assets/order_page.jpeg" height="400" />
+  <img src="assets/private_chat_page.jpeg" height="400" />
+  <img src="assets/edit_post_page.jpeg" height="400" />
+</p>
+
+---
+
 ## 🏗️ Architecture Overview
 
 This project follows **Clean Architecture** principles, ensuring that the business logic is entirely decoupled from the UI and the data sources.
