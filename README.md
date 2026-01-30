@@ -9,6 +9,18 @@ A high-performance, cross-platform marketplace ecosystem designed for students. 
 
 ---
 
+## 📱 Screenshots
+
+<p align="center">
+  <img src="assets/landing_page.jpeg" height="400" />
+  <img src="assets/profile_page.jpeg" height="400" />
+  <img src="assets/order_page.jpeg" height="400" />
+  <img src="assets/private_chat_page.jpeg" height="400" />
+  <img src="assets/edit_post_page.jpeg" height="400" />
+</p>
+
+---
+
 ## 🏗️ Architecture Overview
 
 This project follows **Clean Architecture** principles, ensuring that the business logic is entirely decoupled from the UI and the data sources.
@@ -43,11 +55,4 @@ A Node.js REST API serving as the central data hub.
 ├── student-marketplace-backend/    # Node.js + Express API
 │   ├── src/
 │   │   ├── controllers/            # Request logic
-│   │   ├── db/                     # Postgres config & models
-│   │   └── routes/                 # API Endpoints
-│   └── uploads/                    # Product & Profile images
-└── student-marketplace-frontend/
-    ├── business_logic/             # Pure Dart Logic (Domain/Data layers)
-    │   └── lib/domain/usecases/    # Business rules (orders, auth, etc.)
-    └── presentation/               # Flutter App (UI/BLoC)
-        └── lib/features/           # Individual UI modules
+│   │   ├── db/
